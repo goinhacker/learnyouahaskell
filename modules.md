@@ -85,7 +85,7 @@ Element와 리스트를 입력받아서, 리스트의 Element 사이사이에 �
 
 위와같이 3개의 리스트를 `transpose`하면 지수를 리스트의 인덱스로 설정하여 재배열한 후, 더하면 원하는 결과를 얻을 수 있습니다.
 
-#### foldl'와 foldl1'
+#### foldl' && foldl1'
 
 각각 `foldl`, `foldl1` 함수에 비해 게으르지않고 엄격한 함수 입니다. 매우 큰 리스트를 게으르게 fold할때 스택 오버플로우 에러를 종종 볼 수 있습니다. 이런 에러를 발생시키는 주범은 fold를 할때 accumulator값이 실제로 갱신되지 않아서 입니다. 실제로는 accumulator가 실제 결과\(thunk라고 불림\)가 만들어질때 그 값을 계산하는데, 이것은 모든 중간 accumulator에서 발생하고, 모든 이런 thunk들이 스택 오버플로우를 발생시킵니다. `foldl'`와 `foldl1'`는 게으른 함수가 아니라서 thunk를 스택에 쌓는대신 그때그때 중간 값을 계산합니다. 따라서 스택 오버플로우가 발생한다면 `foldl'`, `foldl1'` 함수로 전환해 볼 수 있습니다.
 
@@ -115,7 +115,7 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 ![](/assets/스크린샷 2017-03-10 오전 12.20.28.png)
 
-#### any와 all
+#### any && all
 
 `any`는 조건문(predicate)과 리스트를 입력받아서 리스트의 값들중 하나라고 조건문에 참이면 `True`를 리턴하는 함수입니다. 
 `all`은 조건문(predicate)과 리스트를 입력받아서 모든 리스트의 값들이 조건문에 참이면 `True`를 리턴하는 함수입니다.  
@@ -150,12 +150,253 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 #### dropWhile
 
+`takeWhile`와 유사하게 조건문이 거짓일때까지의 값들일 제외한 리스트를 리턴하는 함수입니다.
+
+![](/assets/스크린샷 2017-03-10 오전 2.42.31.png)
+
+`(Stock, year, month, date)`로 구성된 튜플의 리스트를 받았을때, stock이 천달러를 초과하는 시점은 아래와 같이 구할 수 있습니다. 
+
+![](/assets/스크린샷 2017-03-10 오전 2.46.07.png)
+   
+#### span  
  
-  
- 
+`takeWhile`과 유사하지만 리스트 쌍을 리턴하는 함수입니다. 동일한 조건(predicate)에 동일한 리스트를 입력으로 `takeWhile`을 호출한 결과 리스트가 첫번째 리스트가 됩니다. 반대로 두번째 리스트를 `takeWhile`에 의해서 제외된 값들의 리스트입니다. 
+
+```haskell
+ghci> let (fw, rest) = span (/=' ') "This is a sentence" in "First word:" ++ fw ++ ", the rest:" ++ rest  
+"First word: This, the rest: is a sentence" 
+```
+
+#### break
+
+`span` 함수와 유사하지만 `break` 함수는 조건문이 첫번째 참일때 중단합니다. `break p`는 `span (not . p)`와 동일한 기능을 합니다. 
+
+![](/assets/스크린샷 2017-03-10 오전 3.06.41.png) 
+
+위 예제와 같이 `break` 함수는 두번째 리스트의 첫번째 값이 조건문을 만족하는 첫번째 값입니다. 
+
+#### sort
+
+리스트를 정렬하는 함수입니다. 리스트내 값들의 타입클래스를 `Ord`에 포함되어야 합니다. 순서를 판단할 수 없는 값은 정렬을 할수없습니다. 
+
+![](/assets/스크린샷 2017-03-10 오전 3.10.28.png)
+
+#### group
+
+리스트를 받아서 동일한 값이 인접해 있으면 하위 리스트로 묶어주는 함수 입니다. 
+
+![](/assets/스크린샷 2017-03-10 오전 3.12.31.png)
+
+만약 리스트를 그룹핑하기 전에 정렬하면 리스트에서 각 값들이 몇번 나왔는지 알 수 있습니다. 
+
+![](/assets/스크린샷 2017-03-10 오전 3.15.31.png)
+
+#### inits && tails
+
+
+#### isInfixOf
+
+
+#### isPrefixOf && isSuffixOf 
+
+
+#### elem && notElem
+
+
+#### partition
+
+
+#### find
+
+
+#### elemIndex
 
 
 
+#### elemIndices
+
+
+#### findIndex && findIndices
+
+
+#### zip3 && zip4 && zipWith3 && zipWith4
+
+
+#### lines
+
+
+
+#### unlines
+
+
+#### words && unwords
+
+
+#### nub
+
+
+
+#### delete
+
+
+
+
+#### //
+
+
+
+#### union
+
+
+#### intersect
+
+
+#### insert
+
+
+
+#### genericLength && genericTake && genericDrop && genericSplitAt && genericIndex && genericReplicate
+
+
+
+
+
+#### nubBy && deleteBy && unionBy && intersectBy && groupBy
+
+
+
+#### on
+
+
+
+
+#### sortBy && insertBy && maximumBy && minimumBy
+
+
+## Data.Char
+
+
+#### isControl 
+checks whether a character is a control character.
+
+#### isSpace 
+checks whether a character is a white-space characters. That includes spaces, tab characters, newlines, etc.
+
+#### isLower 
+checks whether a character is lower-cased.
+
+#### isUpper 
+checks whether a character is upper-cased.
+
+#### isAlpha 
+checks whether a character is a letter.
+
+#### isAlphaNum 
+checks whether a character is a letter or a number.
+
+#### isPrint 
+checks whether a character is printable. Control characters, for instance, are not printable.
+
+#### isDigit 
+checks whether a character is a digit.
+
+#### isOctDigit 
+checks whether a character is an octal digit.
+
+#### isHexDigit 
+checks whether a character is a hex digit.
+
+#### isLetter 
+checks whether a character is a letter.
+
+#### isMark 
+checks for Unicode mark characters. Those are characters that combine with preceding letters to form latters with accents. Use this if you are French.
+
+#### isNumber 
+checks whether a character is numeric.
+
+#### isPunctuation 
+checks whether a character is punctuation.
+
+#### isSymbol 
+checks whether a character is a fancy mathematical or currency symbol.
+
+#### isSeparator 
+checks for Unicode spaces and separators.
+
+#### isAscii 
+checks whether a character falls into the first 128 characters of the Unicode character set.
+
+#### isLatin1 
+checks whether a character falls into the first 256 characters of Unicode.
+
+#### isAsciiUpper 
+checks whether a character is ASCII and upper-case.
+
+#### isAsciiLower 
+checks whether a character is ASCII and lower-case.
+
+#### toUpper
+
+#### toLower
+
+#### toTitle
+
+#### digitToInt
+
+#### intToDigit
+
+#### ord
+
+
+
+
+## Data.Map
+
+#### fromList
+
+#### empty
+
+#### insert
+
+#### null
+
+#### size
+
+#### singleton
+
+#### lookup
+
+#### member
+
+#### map && filter
+
+#### toList
+
+#### keys && elems
+
+#### fromListWith
+
+#### insertWith
+
+
+
+
+## Data.Set
+
+#### fromList
+
+#### intersection
+
+#### difference
+
+#### union
+
+#### null && size && member && empty && singleton && insert && delete
+
+#### map && filter
+
+#### toList
 
 
 
