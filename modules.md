@@ -333,49 +333,61 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### union
 
-#### ![](/assets/스크린샷 2017-03-11 오후 9.15.32.png)
+두개의 리스트를 받아서 두번째 리스트에서 첫번째 리스트와 중복되는 구성요소를 모두 제거하고 두개의 리스트를 합친 리스트를 리턴합니다.
+
+![](/assets/스크린샷 2017-03-11 오후 9.15.32.png)
 
 #### intersect
 
-#### ![](/assets/스크린샷 2017-03-11 오후 9.15.41.png)
+두개의 리스트를 입력받아서 양쪽에 모두 존재하는 구성요소들의 리스트를 리턴합니다. 
+
+![](/assets/스크린샷 2017-03-11 오후 9.15.41.png)
 
 #### insert
 
-#### ![](/assets/스크린샷 2017-03-11 오후 9.15.50.png)
+리스트에 삽입할 값과 정렬이 가능한 리스트를 받아서 대상 리스트에 넣을 값보다 작거나 같은 구성요소 다음에 값을 넣는 함수입니다.
 
+![](/assets/스크린샷 2017-03-11 오후 9.15.50.png)
 
+이 예제에서 `4`는 `3`과 `5` 사이의 숫자로 해당 위치에 넣은 것을 확인할 수 있습니다.  
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.59.png)
 
+만약 이미 정렬된 리스트에 넣는다면 결과 리스트도 정렬된 리스트입니다. 
 
+#### genericLength, genericTake, genericDrop, genericSplitAt, genericIndex, genericReplicate
 
-#### genericLength && genericTake && genericDrop && genericSplitAt && genericIndex && genericReplicate
+`length`, `take`, `drop`, `splitAt`, `!!`, `replicate`는 모두 입력 인자로 `Int`를 받거나, `Int`를 리턴하는 함수입니다. 함수에 따라서 `Integral`이나 `Num` 일부 타입클래스(함수에 따라서)를 받는다면 좀 더 일반적이고 유용하게 사용될 수 있습니다. 이렇게 보다 일반적인 함수들을 `genericXXX` 형태 제공합니다. 예를들어 `length`의 타입은 `length :: [a] -> Int`입니다. 만약 `let xs = [1..6] in sum xs / length xs`로 숫자들의 리스트의 평균을 구한다면, `/`는 `Int`를 사용할 수 없기때문에 타입에러가 발생합니다. 반대로 `genericLength`의 타입은 `genericLength :: (Num a) => [b] -> a` 입니다. `Num`은 부동소수점처럼 동작할 수 있기때문에 `let xs = [1..6] in sum xs / genericLength xs`는 잘 동작합니다.  
 
-#### 
+#### nubBy, deleteBy, unionBy, intersectBy, groupBy
 
-#### 
-
-#### nubBy && deleteBy && unionBy && intersectBy && groupBy
-
-#### 
+`nub`, `delete`, `union`, `intersect`, `group`은 각각 좀 더 일반적인 함수로 `nubBy`, `deleteBy`, `unionBy`, `intersectBy`, `groupBy` 함수를 가지고 있습니다. `genericXXX` 함수들은 동등성 체크를 `==`으로 하는반면에 `xxxBy` 함수들은 동등 함수를 받아서 비교한다는 점(예를들어 `group`은 `groupBy (==)`과 동일)에서 함수명 규칙을 다르게 적용하였습니다.  
 
 ![](/assets/스크린샷 2017-03-11 오후 9.21.44.png)
 
-
+값이 0보다 큰것과 작은것을 기준으로 하위 리스트로 분류하는 함수입니다. 만약 여기서 `group`을 사용했다면 인접한 값을 함께 그룹핑할 것입니다. 하지만 여기서 우리가 얻고자 하는 것은 음수인지 아닌지에 따라서 분류하는 것입니다. 이 예제에서는 음수 섹션과 양수 섹션으로 명확히 구분된 것을 볼 수 있습니다. 동등 함수는 두개의 요소를 받아서 둘다 양수이거나 둘다 음수이면 `True`를 리턴합니다. `Data.Function.on`의 `on` 함수를 활용하면 동등함수를 좀 더 명확하게 작성할 수 있습니다.  
 
 #### on
 
+`on` 함수는 두개의 인자를 입력받는 함수(f), 한개의 인자를 받는 함수(g)를 받아서 두개의 값을 받아서 각각에 g를 적용하고 두개의 결과를 f를 적용하는 함수를 리턴합니다. `on` 함수는 아래와 같이 정의될 수 있습니다.    
 
+```haskell
+on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
+f `on` g = \x y -> f (g x) (g y)
+```
+
+따라서 `(==) `on` (> 0)`은 `\x y -> (x > 0) == (y > 0)`과 같은 동등함수를 리턴합니다. `on`은 아래 예제와 같이 _By_ 함수와 함께 자주 사용됩니다. 
 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.37.png)
 
+#### sortBy, insertBy, maximumBy, minimumBy
 
+`sort`, `insert`, `maximum`, `minimum` 함수도 좀더 일반적인 함수들을 가지고 있습니다. `groupBy`와 같은 함수들은 두개의 값이 동일한지를 결정하는 함수를 받습니다. `sortBy`, `insertBy`, `maximumBy`, `minimumBy` 함수는 한개의 값이 다른 값보다 큰지, 작은지, 같은지를 판단하는 함수를 입력받습니다. `sortBy`의 타입은 `sortBy :: (a -> a -> Ordering) -> [a] -> [a]` 입니다. `Ordering`은 `LT`, `EQ`, `GT`를 값으로 가집니다. `sort`는 `sortBy compare`와 같습니다. 왜냐하면 `compare`는 `Ord` 타입클래스인 두개의 값을 받아서 순서 관계를 리턴하기 때문입니다. 
 
-#### sortBy && insertBy && maximumBy && minimumBy
+리스트들은 비교할 수는 있지만 사전식으로 비교가 됩니다. 만약 리스트의 리스트가 있을때  
 
-## 
+![](/assets/스크린샷 2017-03-11 오후 9.22.47.png)
 
-## ![](/assets/스크린샷 2017-03-11 오후 9.22.47.png)
 
 ## Data.Char
 
