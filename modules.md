@@ -384,9 +384,12 @@ f `on` g = \x y -> f (g x) (g y)
 
 `sort`, `insert`, `maximum`, `minimum` 함수도 좀더 일반적인 함수들을 가지고 있습니다. `groupBy`와 같은 함수들은 두개의 값이 동일한지를 결정하는 함수를 받습니다. `sortBy`, `insertBy`, `maximumBy`, `minimumBy` 함수는 한개의 값이 다른 값보다 큰지, 작은지, 같은지를 판단하는 함수를 입력받습니다. `sortBy`의 타입은 `sortBy :: (a -> a -> Ordering) -> [a] -> [a]` 입니다. `Ordering`은 `LT`, `EQ`, `GT`를 값으로 가집니다. `sort`는 `sortBy compare`와 같습니다. 왜냐하면 `compare`는 `Ord` 타입클래스인 두개의 값을 받아서 순서 관계를 리턴하기 때문입니다. 
 
-리스트들은 비교할 수는 있지만 사전식으로 비교가 됩니다. 만약 리스트의 리스트가 있을때  
+리스트들은 비교할 수는 있지만 사전식으로 비교가 됩니다. 만약 리스트의 리스트가 있을때 리스트의 내용이 아니라 내부 리스트의 길이에 따라서 정렬하려면 어떻게 해야할까요? 아래 예와 같이 `sortBy`를 사용해서 해결할 수 있습니다. 
 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.47.png)
+
+여기서 `compare `on` length`는 마치 영어 문장을 쓰는 것 처럼 자연스러운 것을 볼 수 있습니다. `compare `on` length`는 `\x y -> length x `compare` length y`와 동일합니다. _By_ 함수에서 동등함수(equality function)를 받을때는 주로 `(==) `on` something` 형태로 쓰고, 비교함수(ordering function)를 받을때는 주로 `compare `on` something` 형태로 사용합니다.
+
 
 
 ## Data.Char
