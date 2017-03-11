@@ -376,7 +376,7 @@ on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
 f `on` g = \x y -> f (g x) (g y)
 ```
 
-따라서 `(==) `on` (> 0)`은 `\x y -> (x > 0) == (y > 0)`과 같은 동등함수를 리턴합니다. `on`은 아래 예제와 같이 _By_ 함수와 함께 자주 사용됩니다. 
+따라서 ``(==) `on` (> 0)``은 `\x y -> (x > 0) == (y > 0)`과 같은 동등함수를 리턴합니다. `on`은 아래 예제와 같이 _By_ 함수와 함께 자주 사용됩니다. 
 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.37.png)
 
@@ -388,7 +388,7 @@ f `on` g = \x y -> f (g x) (g y)
 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.47.png)
 
-여기서 `compare `on` length`는 마치 영어 문장을 쓰는 것 처럼 자연스러운 것을 볼 수 있습니다. `compare `on` length`는 `\x y -> length x `compare` length y`와 동일합니다. _By_ 함수에서 동등함수(equality function)를 받을때는 주로 `(==) `on` something` 형태로 쓰고, 비교함수(ordering function)를 받을때는 주로 `compare `on` something` 형태로 사용합니다.
+여기서 ``compare `on` length``는 마치 영어 문장을 쓰는 것 처럼 자연스러운 것을 볼 수 있습니다. ``compare `on` length``는 ``\x y -> length x `compare` length y``와 동일합니다. _By_ 함수에서 동등함수(equality function)를 받을때는 주로 `(==) `on` something` 형태로 쓰고, 비교함수(ordering function)를 받을때는 주로 ``compare `on` something`` 형태로 사용합니다.
 
 
 
