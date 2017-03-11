@@ -9,5 +9,5 @@
 * [함수](syntax-in-functions.md)
 * [재귀](recursion.md)
 * [고계 함수](highorderfunction.md)
-* [Modules](modules.md)
+* [모듈](modules.md)
 
