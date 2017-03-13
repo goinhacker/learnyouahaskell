@@ -834,11 +834,70 @@ import Geometry
 
 모듈을 사용하기 위해서는 먼저 import 합니다. `Geometry.hs` 파일은 import하는 프로그램과 동일한 폴더에 있어야 합니다. 
 
-모듈들은 계층적인 구조로 만들수도 잇습니다. 각 모듈은 여러개의 서브모듈을 가질 수 있고 서브모듈들은 또 자신의 서브모듈들을 가질 수 있습니다.
+모듈들은 계층적인 구조로 만들수도 잇습니다. 각 모듈은 여러개의 서브모듈을 가질 수 있고 서브모듈들은 또 자신의 서브모듈들을 가질 수 있습니다. 여기서는 `Geometry`를 세개의 서브모듈을 가지 모듈로 쪼개보도록 하겠습니다. 
 
+우선 `Geometry`라는 폴더를 만들겠습니다. 여기서 폴더의 첫글자가 대문자라는 점을 명심하세요. 이 폴더에 `Sphere.hs`, `Cuboid.hs`, `Cube.hs` 파일을 만듭니다. 그리고 각 파일을 아래와 같이 작성합니다. 
 
+`Sphere.hs`
 
+```haskell
+module Geometry.Sphere  
+( volume  
+, area  
+) where  
+  
+volume :: Float -> Float  
+volume radius = (4.0 / 3.0) * pi * (radius ^ 3)  
+  
+area :: Float -> Float  
+area radius = 4 * pi * (radius ^ 2)
+```
 
+`Cuboid.hs`
 
+```haskell
+module Geometry.Cuboid  
+( volume  
+, area  
+) where  
+  
+volume :: Float -> Float -> Float -> Float  
+volume a b c = rectangleArea a b * c  
+  
+area :: Float -> Float -> Float -> Float  
+area a b c = rectangleArea a b * 2 + rectangleArea a c * 2 + rectangleArea c b * 2  
+  
+rectangleArea :: Float -> Float -> Float  
+rectangleArea a b = a * b
+```
+
+`Cube.hs`
+
+```haskell
+module Geometry.Cube  
+( volume  
+, area  
+) where  
+  
+import qualified Geometry.Cuboid as Cuboid  
+  
+volume :: Float -> Float  
+volume side = Cuboid.volume side side side  
+  
+area :: Float -> Float  
+area side = Cuboid.area side side side
+```
+
+먼저 `Geometry.Sphere`는 Geometry 폴더내에 있고 모듈이름은 `Geometry.Sphere` 입니다. 다른 두 모듈에도 동일하 방식으로 처리했습니다. 또한 각 모듈에 동일한 이름의 함수가 있습니다. 각 함수는 다른 모듈에 있기때문에 동일한 이름으로 정의할 수 있습니다. 대신 특정 모듈의 함수를 가져다 쓸때는 qualified import를 사용해야 합니다. 
+
+```haskell
+import qualified Geometry.Sphere as Sphere  
+import qualified Geometry.Cuboid as Cuboid  
+import qualified Geometry.Cube as Cube
+```  
+
+위와같이 qualified import를 한 후에 `Sphere.area`, `Sphere.volume`, `Cuboid.area`와 같이 호출해서 사용할 수 있습니다. 
+
+다음 번에는 실제로 많은 기능을 가진 파일을 작성할때 공통된 용도의 기능을 확인하고 별도의 모듈로 분리해보시기 바랍니다. 그리고 동일한 기능을 필요로하는 프로그램을 작성할때 모듈을 재사용할 수 있습니다. 
 
 
