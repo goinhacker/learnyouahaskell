@@ -725,19 +725,76 @@ phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 
 ## Data.Set
 
+**Set은 내부적으로 트리로 구현되어 있기때문에 모든 구성요소들에는 중복이 없고, 순서가 있습니다.** Set은 리스트와 동일한 기능을할때 더 빠르게 동작합니다. Set의 주요 동작은 멤버쉽을 확인하거나, 추가, 삭제, Set을 리스트로 변환 등을 할 수 있습니다. 
+
+```haskell
+import qualified Data.Set as Set
+```
+
+`Data.Set`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다. 
+
+```haskell
+text1 = "I just had an anime dream. Anime... Reality... Are they so different?"  
+text2 = "The old man left his garbage can out and now his trash is all over my lawn!" 
+```
+
+위와같은 두개의 텍스트가 있을때, 양쪽에서 모두 사용되는 문자들을 찾아보겠습니다. 
+
 #### fromList
+
+리스트를 받아서 Set으로 바꾸는 함수입니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.45.07.png)
+
+위 예제에서 볼 수 있듯이 Set안의 모든 아이템은 유일하고, 순서가 있습니다. 
 
 #### intersection
 
+두개의 Set을 받아서 양쪽에서 동일하게 가지고 구성요소들의 리스트를 리턴합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.48.00.png)
+
 #### difference
+
+두개의 Set을 받아서 첫번째 Set에는 있는데 두번째 Set에는 없는 구성요소들의 리스트를 리턴합니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 1.52.29.png)
 
 #### union
 
-#### null && size && member && empty && singleton && insert && delete
+두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 1.54.59.png)
+
+#### null, size, member, empty, singleton, insert, delete
+
+![](/assets/스크린샷 2017-03-14 오전 1.56.06.png)
+
+#### isSubsetOf
+
+두개의 Set을 받아서 첫번째 Set이 두번째 Set의 subset인지 확인합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 2.01.40.png)
 
 #### map && filter
 
+![](/assets/스크린샷 2017-03-14 오전 2.02.03.png)
+
 #### toList
+
+Set은 가끔 리스트에서 중복된 값을 제거하기 위해서 사용됩니다. `fromList`로 리스트를  Set으로 바꾸고 `toList`로 다시 리스트로 만들면 중복 데이터가 제거됩니다.`Data.List`에는 이미 중복 제거를 위한 `nub` 함수이 있지만 거대한 리스트에서 중복을 제거할때는 'nub'을 사용하는 것보다 빠릅니다. 그러나 `nub`은 구성요소의 타입이 `Eq`이면 사용이 가능하지만, Set을 사용하는 방법은 `Ord`이어야 합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 2.11.05.png)
+
+크기가 큰 리스트에서는 `setNub`은 일반적으로 `nub`보다 빠릅니다. 하지만 위 예제에서 볼 수 있듯이 `nub`은 `setNub`과 다르게 리스트의 구성요소의 순서를 보존합니다. 
+
+## 모듈 만들기
+
+
+
+
+
+
 
 
 
