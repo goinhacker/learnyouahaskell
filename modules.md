@@ -394,125 +394,156 @@ f `on` g = \x y -> f (g x) (g y)
 
 ## Data.Char
 
-#### 
-
-#### 
+문자를 다루는데 유용한 함수를 포함하고 있는 모듈입니다. 문자열에 대한 filter나 mapping도 `Data.Char` 모듈에 포함됩니다. 
+`Data.Char`에는 문자들에 대한 속성을 체크할 수 있는 여러가지 함수를 제공합니다. 
 
 #### isControl
 
-checks whether a character is a control character.
+문자가 control 문자인지 확인합니다.
 
 #### isSpace
 
-checks whether a character is a white-space characters. That includes spaces, tab characters, newlines, etc.
+문자가 공백문자(space, tab, newline, etc)인지 확인합니다.
 
 #### isLower
 
-checks whether a character is lower-cased.
+소문자인지 확인합니다.
 
 #### isUpper
 
-checks whether a character is upper-cased.
+대문자인지 확인합니다.
 
 #### isAlpha
 
-checks whether a character is a letter.
+문자가 알파벳인지 확인합니다.
 
 #### isAlphaNum
 
-checks whether a character is a letter or a number.
+문자가 알파벳이나 숫자인지 확인합니다.
 
 #### isPrint
 
-checks whether a character is printable. Control characters, for instance, are not printable.
+출력가능한 문자인지 확인합니다. 예를들어 control 문자는 출력이 불가능합니다.
 
 #### isDigit
 
-checks whether a character is a digit.
+문자가 0-9의 10진수 숫자인지 확인합니다.
 
 #### isOctDigit
 
-checks whether a character is an octal digit.
+문자가 0-7 8진수 숫자인지 확인합니다.
 
 #### isHexDigit
 
-checks whether a character is a hex digit.
+문자가 0-F 16진수 숫자인지 확인합니다.
 
 #### isLetter
 
-checks whether a character is a letter.
+문자가 알파벳인지 확인합니다. 
 
 #### isMark
 
-checks for Unicode mark characters. Those are characters that combine with preceding letters to form latters with accents. Use this if you are French.
+문자가 유니코드 마크 문자인지 확인합니다. 앞글자와 결합하여 악센트가 있는 마디를 만드는 문자로서 예를들면 프랑스어가 있습니다. 
 
 #### isNumber
 
-checks whether a character is numeric.
+문자가 numeric인지 확인합니다.
 
 #### isPunctuation
 
-checks whether a character is punctuation.
+문자가 구두점인지 확인합니다. 
 
 #### isSymbol
 
-checks whether a character is a fancy mathematical or currency symbol.
+문자가 수학기호나 화폐문자인지 확인합니다.
 
 #### isSeparator
 
-checks for Unicode spaces and separators.
+유니코드 공백과 구분 기호를 확인합니다.
 
 #### isAscii
 
-checks whether a character falls into the first 128 characters of the Unicode character set.
+유니코드 문자셋의 처음 128개 문자인지 확인합니다.
 
 #### isLatin1
 
-checks whether a character falls into the first 256 characters of Unicode.
+유니코드 문자셋의 처음 256개 문자인지 확인합니다.
 
 #### isAsciiUpper
 
-checks whether a character is ASCII and upper-case.
+아스키 대문자인지 확인합니다.
 
 #### isAsciiLower
 
-checks whether a character is ASCII and lower-case.
-
-#### 
-
-#### ![](/assets/스크린샷 2017-03-11 오후 9.22.58.png)
-
-#### ![](/assets/스크린샷 2017-03-11 오후 9.23.08.png)
-
-#### ![](/assets/스크린샷 2017-03-11 오후 9.23.16.png)
+아스키 소문자인지 확인합니다.
 
 
+지금까지 살펴본 함수들의 타입은 `Char -> Bool`입니다. 문자열같은 것을 필터링하거나 `Data.List`의 `all` 함수와 함께 활용되기도 합니다. 
+ 
+![](/assets/스크린샷 2017-03-11 오후 9.22.58.png)
+
+`all`은 조건문(predicate)와 리스트를 받아서 모든 값이 조건을 만족하면 `True`를 리턴합니다.
+
+![](/assets/스크린샷 2017-03-11 오후 9.23.08.png)
+
+`isSpace`를 활용해서 `words` 함수를 흉내낸 예제입니다. 하지만 공백이 제거되지 않고 있습니다.
+
+![](/assets/스크린샷 2017-03-11 오후 9.23.16.png)
+
+`filter`를 사용하여 공백문자를 제거하였습니다. 
 
 ![](/assets/스크린샷 2017-03-11 오후 9.23.27.png)
 
+`GeneralCategory`은 `Ordering`과 같은 열거형(enumeration) 타입입니다. 이것은 문자를 몇가지 가능한 카테고리로 보여줍니다. 이 카테로기를 확인할 수 있는 함수로 `generalCategory`가 있습니다. 이 함수의 타입은 `generalCategory :: Char -> GeneralCategory`입니다.  이 함수는 총 31개의 카테고리를 가지고 잇습니다. `GeneralCategory`는 `Eq` 타입클래스에 속해있고, `generalCategory c == Space`와 같이 테스트할 수 있습니다.
+
 #### toUpper
+
+문자를 대문자로 바꾸어 줍니다. 공백이나 숫자등은 변경되지 않습니다.
 
 #### toLower
 
+문자를 소문자로 바꾸어 줍니다.
+
 #### toTitle
+
+문자를 title-case로 바꾸어 줍니다. 여기서 title-case를 대문자와 동일합니다.
 
 #### digitToInt
 
-#### ![](/assets/스크린샷 2017-03-11 오후 9.23.36.png)
+문자를 `Int`로 바꾸어 줍니다. 이때 문자는 `'0'..'9'`, `'a'..'f'`, `'A'..'F'` 범위내에 있어야 합니다.
 
-#### 
+![](/assets/스크린샷 2017-03-11 오후 9.23.36.png)
 
 #### intToDigit
 
-#### ![](/assets/스크린샷 2017-03-11 오후 9.23.43.png)
+`digitToInt`와 반대입니다. `0..15` 범위의 `Int`를 받아서 소문자로 바꾸어 줍니다. 
 
-#### 
+![](/assets/스크린샷 2017-03-11 오후 9.23.43.png)
 
-#### ord
+#### ord, ord
 
-## ![](/assets/스크린샷 2017-03-11 오후 9.23.50.png)
+문자를 상응하는 아스키 코드 숫자로 바꾸어 주거나 그 반대로 바꾸어 줍니다.
+
+![](/assets/스크린샷 2017-03-11 오후 9.23.50.png)
+
+두 문자의 `ord` 차이는 곧 유니코드 테이블에서 얼마나 떨어져있는지를 의미합니다.
+
+```haskell
+encode :: Int -> String -> String
+encode shift msg = 
+    let ords = map ord msg
+        shifted = map (+ shift) ords
+    in  map chr shifted
+```
+
+Caesar cipher는 문자를 알파벳의 고정된 숫자만큼 이동시켜 메시지를 암호화하는 원시적인 방법입니다.
+먼저, 문자열을 숫자들의 리스트로 바꾸고, 숫자들의 리스트를 다시 문자로 바꾸기전에 각 숫자에 shift한 양을 추가합니다.
+만약 composition을 사용한다면 함수의 몸제는 `map (chr . (+shift) . ord) msg`와 같이 작성될 수 있습니다 실행하면 아래와 같은 결과를 볼 수 있습니다.  
 
 ![](/assets/스크린샷 2017-03-11 오후 9.24.02.png)
+
+
+
 
 ![](/assets/스크린샷 2017-03-11 오후 9.24.11.png)
 
