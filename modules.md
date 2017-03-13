@@ -553,31 +553,175 @@ decode shift msg = encode (negate shift) msg
 
 ## Data.Map
 
+연관 리스트(또는 사전)는 순서가 중요하지않은 키값 쌍을 저장하는데 사용되는 리스트입니다. 예를들어 핸드폰 번호를 저장하기 위해서 사람의 이름을 키로하고, 전화번호를 값으로 하여 연관 리스트에 넣을 수 있습니다. 저장되는 순서는 중요하지 않고, 단지 올바른 사람에 해당하는 올바른 번호를 가져올 수 있으면 됩니다. 
+
+```haskell
+phoneBook =   
+    [("betty","555-2938")  
+    ,("bonnie","452-2928")  
+    ,("patsy","493-2928")  
+    ,("lucille","205-2928")  
+    ,("wendy","939-8282")  
+    ,("penny","853-2492")  
+    ]
+```
+
+첫번째 값은 key이고 두번째값은 value 입니다. 
+
+```haskell
+findKey :: (Eq k) => k -> [(k,v)] -> v
+findKey key xs = snd . head . filter (\(k,v) -> key == k) $ xs
+```
+
+주어진 key에 해당하는 value를 찾아주는 함수입니다. 간단하게 key와 리스트를 받아서, 리스트에 key와 같은 것으로 filter합니다. 필터링한 리스트의 첫번째 key-value에서 value만 리턴합니다. 만약 찾는 key가 리스트에 없다면 filter한 리스트는 빈리스트가 되어 head를 가져오는 과정에서 런타임 에러가 발생합니다. 따라서 에러를 막기위해 `Maybe`를 사용합니다.  
+
+```haskell
+findKey :: (Eq k) => k -> [(k,v)] -> Maybe v
+findKey key [] = Nothing
+findKey key ((k,v):xs) = if key == k
+                         then Just v
+                         else findKey key xs  
+```
+
+만약 key를 찾지못하면 `Nothing`을 리턴하고, 찾으면 key에 상응하는 값인 `Just something`을 리턴합니다. 이 예제는 종료조건 -> 리스트의 head, tail  분리 -> 재귀호출로 이어지는 fold 패턴입니다. 따라서 아래와 같이 fold를 사용하여 구현할 수 있습니다. 
+
+```haskell
+findKey :: (Eq k) => k -> [(k,v)] -> Maybe v
+findKey key = foldr (\(k,v) acc -> if key == k then Just v else acc) Nothing
+```
+
+**일반적으로 표준 리스트 재귀 패턴을 직접 사용하는 것보다는 fold를 사용하는 것이 가독성과 식별이 쉽습니다.** `foldr`이 보이면 모든 사람은 fold를 한다는 것을 알지만, 재귀를 쓰면 코드를 이해하기 위해서 시간을 들여야 합니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 12.23.32.png)
+
+우리는 `Data.List`에서도 `lookup` 함수를 구현할 수 있습니다. key 해당하는 value를 얻고 싶으면 찾을때까지 리스트를 순회할 수 있습니다. `Data.Map` 모듈은 이것은 좀 더 빠르게 하는(내부적으로 트리를 가지고 있기때문에) 함수를 제공하고, 또한 많은 유틸리티 함수들을 제공합니다. 여기서부터는 연관리스트 대신에 맵의 동작을 살펴보겠습니다.
+
+```haskell
+import qualified Data.Map as Map
+```
+
+`Data.Map`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다. 
+`Data.Map`에 제공하는 함수들을 추리면 아래와 같습니다. 
+
 #### fromList
+
+연관리스트를 받아서 동일한 연관성을 가지는 맵을 리턴합니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 12.36.16.png)
+
+만약 연관리스트에 중복된 키가 있다면 제거됩니다. `fromList`의 타입은 아래와 같습니다. 
+
+```haskell
+Map.fromList :: (Ord k) => [(k, v)] -> Map.Map k v
+```
+
+타입을 보면 `k`,`v` 쌍의 리스트를 받아서 타입`k`의 키들을 타입`v`로 맵핑하는 맵을 리턴합니다. 주목할 점은 일반 리스트를 연관 리스트로 만들때, 키는 같지만(Eq 타입클래스) 여기서는 트리내에 배치되기 위해서 순서가 있어야합니다. 
+
+키값이 `Ord` 타입클래스가 아닐때를 제외하면, key-value 연관을 위해서 항상 `Data.Map`을 사용해야 합니다. 
 
 #### empty
 
+비어있는 맵을 나타내는 것으로서 입력이 없고 단지 비어있는 냅을 리턴합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 12.47.30.png)
+
 #### insert
+
+key, value, map을 입력받아서 맵에 해당 key, value를 포함한 새로운 맵을 리턴합니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 12.50.20.png)
+
+비어있는 맵과 `insert`를 사용하면 `fromList`를 직접 구현할 수 있습니다.
+
+```haskell
+fromList' :: (Ord k) => [(k,v)] -> Map.Map k v
+fromList' = foldr (\(k,v) acc -> Map.insert k v acc) Map.empty
+```
+
+foldr를 사용하여 비어있는 맵에서 오른쪽부터 접으면서 key-value 쌍을 accumulator에 넣습니다.
 
 #### null
 
+맵이 비어있는지 검사합니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 12.56.18.png)
+
 #### size
+
+맵의 크기를 알려줍니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 12.57.20.png)
 
 #### singleton
 
+key, value를 받아서 입력받은 key-value쌍 한개만 가진 맵을 리턴합니다.
+
 #### lookup
+
+`Data.List``lookup`처럼 맵에서 동작합니다. 찾는 것이 있으면 `Just something`, 없으면 `Nothing`을 리턴합니다.
 
 #### member
 
+key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 1.02.12.png)
+
 #### map && filter
+
+리스트의 `map`,`filter`와 동일한 기능을 합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.03.01.png)
 
 #### toList
 
+`fromList`와 반대의 기능을 합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.03.39.png)
+
 #### keys && elems
+
+`keys`는 key의 리스트를 리턴하고 `map fst . Map.toList`와 동일합니다. 
+`elems`는 value의 리스트를 리턴하고 `map snd . Map.toList`와 동일합니다.
 
 #### fromListWith
 
+`fromList`와 유사하지만 중복된 키들을 버리지 않고, 함수에 적용하여 결정하는 함수입니다. 
+
+![](/assets/스크린샷 2017-03-14 오전 1.10.03.png)
+
+```haskell
+phoneBookToMap :: (Ord k) => [(k, String)] -> Map.Map k String  
+phoneBookToMap xs = Map.fromListWith (\number1 number2 -> number1 ++ ", " ++ number2) xs
+```
+![](/assets/스크린샷 2017-03-14 오전 1.13.39.png)
+
+여기서 만약 `fromList`를 사용한다면, 키가 중복된 몇몇 값들을 사라질 것입니다. 위와 같이 `fromListWith`를 사용하여  customize할 수 있습니다. 
+
+```haskell
+phoneBookToMap :: (Ord k) => [(k, a)] -> Map.Map k [a]  
+phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
+```
+![](/assets/스크린샷 2017-03-14 오전 1.17.15.png)
+
+만약 중복된 키가 있으면 해당하는 키의 값들을 묶어서 찾은 키에 해당하는 모든 값들을 하나의 리스트에 리턴합니다. 번호들을 묶기 위해서 `++`를 사용할 수 있습니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.19.39.png)
+
+또다른 예로 중복된 키가 발견되면 값들중 가장 큰 것만 남기는 함수를 만들 수 있습니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.23.14.png)
+
+또는 중복된 키의 값들을 모두 더할 수도 있습니다.
+
 #### insertWith
+
+`fromList`에 `fromListWith`가 있는 것처럼 `insert`에는 `insertWith`가 잇습니다. 맵에 key-value쌍을 넣지만, 만약 맵에 키가 이미 존재한다면 무엇을 해야할지를 결정하는 함수를 제공합니다.
+
+![](/assets/스크린샷 2017-03-14 오전 1.26.57.png)
+
+
+여기서는 `Data.Map`에 있는 몇개의 함수만 알아보았습니다. 
+
 
 ## Data.Set
 
