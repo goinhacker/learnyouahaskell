@@ -790,7 +790,51 @@ Set은 가끔 리스트에서 중복된 값을 제거하기 위해서 사용됩�
 
 ## 모듈 만들기
 
+하스켈도 다른언어와 마찬가지로 모드를 여러개의 파일로 분리할 수 있습니다. 프로그래밍을 할때 비슷한 기능을 하는 함수를 하나의 모듈로 묶어서 관리하는 것은 좋은 습관입니다. 이렇게하면 다른 모듈에서 import해서 함수를 재사용할 수 있습니다. 
 
+여기서는 기하학적 물체의 부피와 면적을 계산하는 몇가지 기능을 제공하는 모듈을 `Geometry.hs` 파일에 만들겟습니다. 그리고 모듈명은 `Geometry`로 하겠습니다. 먼저 제공할 함수들을 명시하고, 각 함수를 구현해보겠습니다. 
+
+```haskell
+module Geometry  
+( sphereVolume  
+, sphereArea  
+, cubeVolume  
+, cubeArea  
+, cuboidArea  
+, cuboidVolume  
+) where  
+  
+sphereVolume :: Float -> Float  
+sphereVolume radius = (4.0 / 3.0) * pi * (radius ^ 3)  
+  
+sphereArea :: Float -> Float  
+sphereArea radius = 4 * pi * (radius ^ 2)  
+  
+cubeVolume :: Float -> Float  
+cubeVolume side = cuboidVolume side side side  
+  
+cubeArea :: Float -> Float  
+cubeArea side = cuboidArea side side side  
+  
+cuboidVolume :: Float -> Float -> Float -> Float  
+cuboidVolume a b c = rectangleArea a b * c  
+  
+cuboidArea :: Float -> Float -> Float -> Float  
+cuboidArea a b c = rectangleArea a b * 2 + rectangleArea a c * 2 + rectangleArea c b * 2  
+  
+rectangleArea :: Float -> Float -> Float  
+rectangleArea a b = a * b
+```
+
+꽤 표준적이 기하학이지만 유의할 점이 몇가지 있습니다. 여기서 큐브는 직육면체의 특별한 경우일 뿐이므로 모든 길이가 같은 직육면체로 처리하여 면적과 부피를 정의했습니다. 변의 길이에 따라서 사각형의 넓이를 계산하는 `rectangleArea`라는 헬퍼함수도 정의했습니다. `cuboidArea`와 `cuboidVolume` 함수에서 이 헬퍼함수를 사용했지만 export하지는 않았습니다. 왜냐하면 이 모듈에서는 3차원 객체를 다루기위한 함수를 제공하는 모듈이기 때문입니다.
+
+```haskell
+import Geometry
+```
+
+모듈을 사용하기 위해서는 먼저 import 합니다. `Geometry.hs` 파일은 import하는 프로그램과 동일한 폴더에 있어야 합니다. 
+
+모듈들은 계층적인 구조로 만들수도 잇습니다. 각 모듈은 여러개의 서브모듈을 가질 수 있고 서브모듈들은 또 자신의 서브모듈들을 가질 수 있습니다.
 
 
 
