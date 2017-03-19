@@ -162,7 +162,7 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 #### span
 
-`takeWhile`과 유사하지만 리스트 쌍을 리턴하는 함수입니다. 동일한 조건\(predicate\)에 동일한 리스트를 입력으로 `takeWhile`을 호출한 결과 리스트가 첫번째 리스트가 됩니다. 반대로 두번째 리스트를 `takeWhile`에 의해서 제외된 값들의 리스트입니다.
+`takeWhile`과 유사하지만 리스트 쌍을 리턴하는 함수입니다. 동일한 조건\(predicate\)에 동일한 리스트를 입력으로 `takeWhile`을 호출한 결과가 첫번째 리스트가 되고 `takeWhile`에 의해서 제외된 값들이 두번째 리스트가 됩니다.
 
 ![](/assets/스크린샷 2017-03-19 오후 10.21.07.png)
 
@@ -192,7 +192,7 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 #### inits, tails
 
-`init`과 `tail`를 재귀적으로 아무것도 없을때 까지 호출한 결과의 리스트를 리턴합니다. 아래 화면을 보면 쉽게 이해할 수 있습니다.
+`init`과 `tail`를 재귀적으로 아무것도 없을때 까지 호출한 결과들의 리스트를 리턴합니다. 아래 화면을 보면 쉽게 이해할 수 있습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.35.40.png)
 
@@ -215,7 +215,7 @@ search needle haystack =
 
 #### isPrefixOf, isSuffixOf
 
-`isPrefixOf`는 하위 리스트가 대상 리스트에 시작인지 확인하는 함수입니다.   
+`isPrefixOf`는 하위 리스트가 대상 리스트에 시작인지 확인하는 함수입니다.  
 `isSuffixOf`는 하위 리스트가 대상 리스트에 마지막인지 확인하는 함수입니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.06.png)
@@ -272,17 +272,17 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### findIndex, findIndices
 
-`findIndex`는 `find`와 동일한 기능을 하지만 조건에 만족하는 첫번째 구성요소의 index를 리턴합니다.   
+`findIndex`는 `find`와 동일한 기능을 하지만 조건에 만족하는 첫번째 구성요소의 index를 리턴합니다.  
 `findIndices`는 조건에 만족하는 모든 구성요소의 index 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.57.png)
 
 #### zip3, zip4, zipWith3, zipWith4
 
-`zip3`는 3개의 리스트를 받아서 3개의 튜플의 리스트로 묶는 함수입니다.   
-`zip4`는 4개의 리스트를 받아서 4개의 튜플의 리스트로 묶는 함수입니다.   
-`zipWith3`는 3개의 인자를 받는 함수와 3개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다.   
-`zipWith4`는 4개의 인자를 받는 함수와 4개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다.   
+`zip3`는 3개의 리스트를 받아서 3개의 튜플의 리스트로 묶는 함수입니다.  
+`zip4`는 4개의 리스트를 받아서 4개의 튜플의 리스트로 묶는 함수입니다.  
+`zipWith3`는 3개의 인자를 받는 함수와 3개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다.  
+`zipWith4`는 4개의 인자를 받는 함수와 4개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다.  
 이런 `zip`과 `zipWith`의 변종 함수는 7개까지 있습니다. 또한 무한개의 리스트를 묶을때도 매우 좋은 방법이 있지만, 여기서는 다루지 않겠습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.05.png)
@@ -305,7 +305,7 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### words, unwords
 
-`words`는 하나의 라인을 문자열로 받아서 단어들의 리스트로 분리합니다.   
+`words`는 하나의 라인을 문자열로 받아서 단어들의 리스트로 분리합니다.  
 `unwords`는 단어들의 리스트를 하나의 문자열로 합칩니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.29.png)
@@ -391,7 +391,7 @@ f `on` g = \x y -> f (g x) (g y)
 
 ## Data.Char
 
-문자를 다루는데 유용한 함수를 포함하고 있는 모듈입니다. 문자열에 대한 filter나 mapping도 `Data.Char` 모듈에 포함됩니다.   
+문자를 다루는데 유용한 함수를 포함하고 있는 모듈입니다. 문자열에 대한 filter나 mapping도 `Data.Char` 모듈에 포함됩니다.  
 `Data.Char`에는 문자들에 대한 속성을 체크할 수 있는 여러가지 함수를 제공합니다.
 
 #### isControl
@@ -596,7 +596,7 @@ findKey key = foldr (\(k,v) acc -> if key == k then Just v else acc) Nothing
 import qualified Data.Map as Map
 ```
 
-`Data.Map`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다.   
+`Data.Map`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다.  
 `Data.Map`에 제공하는 함수들을 추리면 아래와 같습니다.
 
 #### fromList
@@ -676,7 +676,7 @@ key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 
 #### keys && elems
 
-`keys`는 key의 리스트를 리턴하고 `map fst . Map.toList`와 동일합니다.   
+`keys`는 key의 리스트를 리턴하고 `map fst . Map.toList`와 동일합니다.  
 `elems`는 value의 리스트를 리턴하고 `map snd . Map.toList`와 동일합니다.
 
 #### fromListWith
