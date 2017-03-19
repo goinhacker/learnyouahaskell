@@ -4,7 +4,7 @@
 
 하스켈의 표준 라이브러리는 각각 공통의 목적을 제공하는 함수와 타입들로 분리되어 있습니다. 여기에는 리스트를 다루는 모듈, 복잡한 숫자를 다루는 모듈, 동시성 프로그래밍을 위한 모듈 등이 있습니다. 지금까지 다루었던 모든 함수, 타입, 타입클래스들은 Prelude 모듈의 일부였고, 하스켈에 기본으로 imported되어 있습니다. 이번 챕터에서는 몇가지 유용한 모듈과 여기서 제공하는 함수들에 대해서 알아보겠습니다.
 
-하스켈은 문법적으로 `import <module name>`로 모듈들을 가져옵니다. 이 구문은 반드시 어떤 함수가 선언되기 이전에 나와야 해서 파일의 최상당에 위치하는 것이 일반적입니다. 하나의 파일에서는 여러개의 모듈을 가져올 수 있고, 라인단위로 구분해서 import문을 추가하면 됩니다. 
+하스켈은 문법적으로 `import <module name>`로 모듈들을 가져옵니다. 이 구문은 반드시 어떤 함수가 선언되기 이전에 나와야 해서 파일의 최상당에 위치하는 것이 일반적입니다. 하나의 파일에서는 여러개의 모듈을 가져올 수 있고, 라인단위로 구분해서 import문을 추가하면 됩니다.
 
 `Data.List` 모듈은 리스트를 동작시키는 유용한 함수들을 제공합니다.
 
@@ -61,27 +61,27 @@ import qualified Data.Map as M
 
 ## Data.List
 
-`Data.List` 모듈은 리스트 다루는 모든 기능을 제공합니다. 편의를 위해서 `Data.List`의 일부 함수\(`map`, `filter` 등\)들은 `Prelude` 모듈에 export되어 있습니다. 또한 `Prelude`와 `Data.List`의 함수들은 이름 충돌이 발생하지 않습니다. 여기서는 `Data.List`에서 제공하는 함수들에 대해서 살펴보겠습니다.
+`Data.List` 모듈은 리스트 다루는 모든 함수를 제공합니다. 편의를 위해서 `Data.List`의 일부 함수\(`map`, `filter` 등\)들은 `Prelude` 모듈에 export되어 있습니다. 또한 `Prelude`와 `Data.List`의 함수들은 이름 충돌이 발생하지 않습니다. 여기서는 `Data.List`에서 제공하는 함수들에 대해서 살펴보겠습니다.
 
 #### intersperse
 
-Element와 리스트를 입력받아서, 리스트의 Element 사이사이에 입력된 Element를 넣은 리스트를 만들어 줍니다.
+리스트의 구성요소 하나와 리스트를 입력받아서, 리스트의 구성요소 사이사이에 입력받은 구성요소를 넣은 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-08 오전 1.45.08.png)
 
 #### intercalate
 
-리스트들의 리스트와 리스트를 입력받아서, 리스트와 리스트 사이사이에 입력된 리스트를 넣은 리스트를 만들어 줍니다.
+중첩 리스트와 리스트를 입력받아서, 중첩 리스트의 리스트 사이사이에 입력된 리스트를 넣은 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-08 오전 1.49.38.png)
 
 #### transpose
 
-리스트의 리스트를 재배열합니다. 중첩 리스트를 행렬로 본다면 열을 행으로 행을 열로 바뀐 리스트를 반환합니다.
+중첩 리스트를 재배열합니다. 중첩 리스트를 행렬로 본다면 열을 행으로 행을 열로 바꾼 리스트를 반환합니다.
 
 ![](/assets/스크린샷 2017-03-08 오전 1.53.19.png)
 
-다항식 $$3x^2 + 5x + 9$$, $$10x^3 + 9$$, $$8x^3 + 5x^2 + x - 1$$를 모두 더할때, 리스트로 `[0,3,5,9]`, `[10,0,0,9]`, `[8,5,1,-1]`와 같이 표현한다면 아래와 같이 계산할 수 있습니다.
+다항식 $$3x^2 + 5x + 9$$, $$10x^3 + 9$$, $$8x^3 + 5x^2 + x - 1$$를 더할때, 리스트로 `[0,3,5,9]`, `[10,0,0,9]`, `[8,5,1,-1]`와 같이 표현한다면 아래와 같이 계산할 수 있습니다.
 
 ![](/assets/스크린샷 2017-03-08 오전 2.01.17.png)
 
@@ -89,15 +89,15 @@ Element와 리스트를 입력받아서, 리스트의 Element 사이사이에 �
 
 #### foldl', foldl1'
 
-각각 `foldl`, `foldl1` 함수에 비해 게으르지않고 엄격한 함수 입니다. 매우 큰 리스트를 게으르게 fold할때 스택 오버플로우 에러를 종종 볼 수 있습니다. 이런 에러를 발생시키는 주범은 fold를 할때 accumulator값이 실제로 갱신되지 않아서 입니다. 실제로는 accumulator가 실제 결과\(thunk라고 불림\)가 만들어질때 그 값을 계산하는데, 이것은 모든 중간 accumulator에서 발생하고, 모든 이런 thunk들이 스택 오버플로우를 발생시킵니다. `foldl'`와 `foldl1'`는 게으른 함수가 아니라서 thunk를 스택에 쌓는대신 그때그때 중간 값을 계산합니다. 따라서 스택 오버플로우가 발생한다면 `foldl'`, `foldl1'` 함수로 전환해 볼 수 있습니다.
+각각 `foldl`, `foldl1` 함수에 비해 게으르지않고 엄격한 함수 입니다. 매우 큰 리스트를 게으르게 fold할때 스택 오버플로우 에러를 종종 볼 수 있습니다. 이런 에러를 발생시키는 주범은 fold를 할때 accumulator값이 실제로 갱신되지 않아서 입니다. 실제로는 accumulator가 실제 결과\(thunk라고 불림\)로 만들어질때 그 값을 계산하는데, 이것은 재귀호출 중간에 만들어지는 모든  accumulator에서 thunk들을 만들어 스택 오버플로우를 발생시킵니다. `foldl'`와 `foldl1'`는 게으른 함수가 아니라서 thunk를 스택에 쌓는대신 그때그때 중간 값을 계산합니다. 따라서 스택 오버플로우가 발생한다면 `foldl'`, `foldl1'` 함수로 전환해 볼 수 있습니다.
 
 #### concat
 
-리스트의 리스트를 요소들을 하나의 리스트에 넣어주는 함수입니다.
+중첩 리스트를 하나의 리스트로 이어주는 함수입니다.
 
 ![](/assets/스크린샷 2017-03-08 오전 2.32.44.png)
 
-이 함수는 1레벨만 중첩을 제거합니다. 따라서 리스트의 리스트의 리스트를 하나의 리스트로 만들고 싶다면 `concat`을 두번해야 합니다. 예를들어 `[[[2,3],[3,4,5],[2]],[[2,3],[3,4]]]`를 하나의 리스트로 만들기 위해서는 `concat`을 두번 호출해야 합니다.
+이 함수는 1레벨만 중첩을 제거합니다. 따라서 두번 중첩된 리스트를 하나의 리스트로 만들고 싶다면 `concat`을 두번해야 합니다. 예를들어 `[[[2,3],[3,4,5],[2]],[[2,3],[3,4]]]`를 하나의 리스트로 만들기 위해서는 `concat`을 두번 호출해야 합니다.
 
 #### concatMap
 
@@ -119,7 +119,7 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 #### any, all
 
-`any`는 조건문\(predicate\)과 리스트를 입력받아서 리스트의 값들중 하나라고 조건문에 참이면 `True`를 리턴하는 함수입니다.   
+`any`는 조건문\(predicate\)과 리스트를 입력받아서 리스트의 값들중 하나라고 조건문에 참이면 `True`를 리턴하는 함수입니다.  
 `all`은 조건문\(predicate\)과 리스트를 입력받아서 모든 리스트의 값들이 조건문에 참이면 `True`를 리턴하는 함수입니다.  
 `any`와 `all`은 리스트의 모든 구성요소를 조건문에 확인해야할때 `and`나 `or` 대신에 사용됩니다.
 
@@ -152,7 +152,7 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 #### dropWhile
 
-`takeWhile`와 유사하게 조건문이 거짓일때까지의 값들일 제외한 리스트를 리턴하는 함수입니다.
+`takeWhile`와 유사하게 조건문이 거짓일때까지의 값들을 제외한 리스트를 리턴하는 함수입니다.
 
 ![](/assets/스크린샷 2017-03-10 오전 2.42.31.png)
 
@@ -164,10 +164,7 @@ boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하
 
 `takeWhile`과 유사하지만 리스트 쌍을 리턴하는 함수입니다. 동일한 조건\(predicate\)에 동일한 리스트를 입력으로 `takeWhile`을 호출한 결과 리스트가 첫번째 리스트가 됩니다. 반대로 두번째 리스트를 `takeWhile`에 의해서 제외된 값들의 리스트입니다.
 
-```haskell
-ghci> let (fw, rest) = span (/=' ') "This is a sentence" in "First word:" ++ fw ++ ", the rest:" ++ rest  
-"First word: This, the rest: is a sentence"
-```
+![](/assets/스크린샷 2017-03-19 오후 10.21.07.png)
 
 #### break
 
@@ -195,11 +192,11 @@ ghci> let (fw, rest) = span (/=' ') "This is a sentence" in "First word:" ++ fw 
 
 #### inits, tails
 
-`init`과 `tail`를 재귀적으로 아무것도 없을때 까지 호출한 결과의 리스트를 리턴합니다. 아래 화면을 보면 쉽게 이해할 수 있습니다. 
+`init`과 `tail`를 재귀적으로 아무것도 없을때 까지 호출한 결과의 리스트를 리턴합니다. 아래 화면을 보면 쉽게 이해할 수 있습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.35.40.png)
 
-`fold` 함수를 사용해서 하위 리스트의 리스트를 검색하는 것을 구현하면 아래와 같습니다. 
+`fold` 함수를 사용해서 하위 리스트의 리스트를 검색하는 것을 구현하면 아래와 같습니다.
 
 ```haskell
 search :: (Eq a) => [a] -> [a] -> Bool
@@ -209,7 +206,7 @@ search needle haystack =
 ```
 
 먼저 검색할 대상 리스트에 `tails`를 호출하여 tail의 리스트를 만들고, 각 tail가 찾고있는 것으로 시작하는지 확인합니다. 여기서 `take nlen x == needle`가 x가 needle로 시작하는지 확인하는 방법입니다.
- 
+
 #### isInfixOf
 
 입력받은 첫번째 하위 리스트가 두번째 대상 리스트에 포함되는 검색하는 함수입니다. 만약 대상 리스트내의 어디에든 하위 리스트가 포함되면 `True`를 리턴합니다.
@@ -218,7 +215,7 @@ search needle haystack =
 
 #### isPrefixOf, isSuffixOf
 
-`isPrefixOf`는 하위 리스트가 대상 리스트에 시작인지 확인하는 함수입니다. 
+`isPrefixOf`는 하위 리스트가 대상 리스트에 시작인지 확인하는 함수입니다.   
 `isSuffixOf`는 하위 리스트가 대상 리스트에 마지막인지 확인하는 함수입니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.06.png)
@@ -229,11 +226,11 @@ search needle haystack =
 
 #### partition
 
-조건문(predicate)과 리스트를 입력받아서 리스트의 쌍을 리턴합니다. 첫번째 리스트는 조건문에 만족하는 구성요소들의 리스트이고, 두번째 리스트는 나머지 구성요소들의 리스트입니다.
+조건문\(predicate\)과 리스트를 입력받아서 리스트의 쌍을 리턴합니다. 첫번째 리스트는 조건문에 만족하는 구성요소들의 리스트이고, 두번째 리스트는 나머지 구성요소들의 리스트입니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.13.png)
 
-`span`과 `break`와 어떻게 다른지 이해하는 것이 중요합니다. 
+`span`과 `break`와 어떻게 다른지 이해하는 것이 중요합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.20.png)
 
@@ -241,51 +238,51 @@ search needle haystack =
 
 #### find
 
-조거문(predicate)과 리스트를 입력받아서 조건을 만족하는 첫번째 구성요소가 `Maybe`값으로 랩핑된 구성요소로 리턴됩니다. 다음 챕터에서 대수적인 데이터 타입에 대해서 더 자세히 다룰 것입니다. 여기서는 알아야 할 것은 **`Maybe`값은 어떤 값을 가지거나 아무것도 없을 수 있다는 점입니다.** 마치 리스트가 비어있거나 어떤 구성요소를 가질 수 있는 것처럼 `Maybe`값은 아무 것도 없거나 하나의 구성요소를 가질 수 있습니다. Integer의 리스트의 타입이 `[Int]`인 것처럼 interger를 가질수도 있는 타입을 `Maybe Int`로 합니다. 
+조거문\(predicate\)과 리스트를 입력받아서 조건을 만족하는 첫번째 구성요소가 `Maybe`값으로 랩핑된 구성요소로 리턴됩니다. 다음 챕터에서 대수적인 데이터 타입에 대해서 더 자세히 다룰 것입니다. 여기서는 알아야 할 것은 `Maybe`**값은 어떤 값을 가지거나 아무것도 없을 수 있다는 점입니다.** 마치 리스트가 비어있거나 어떤 구성요소를 가질 수 있는 것처럼 `Maybe`값은 아무 것도 없거나 하나의 구성요소를 가질 수 있습니다. Integer의 리스트의 타입이 `[Int]`인 것처럼 interger를 가질수도 있는 타입을 `Maybe Int`로 합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.28.png)
 
-`find`의 리턴 타입은 `Maybe a`입니다. 따라서 `find`의 결과는 구성요소가 있거나 없을수도 있습니다. 
+`find`의 리턴 타입은 `Maybe a`입니다. 따라서 `find`의 결과는 구성요소가 있거나 없을수도 있습니다.
 
-주가가 1000$를 넘는 순간을 찾는 문제는 아래와 같이 풀 수도 있습니다.  
+주가가 1000$를 넘는 순간을 찾는 문제는 아래와 같이 풀 수도 있습니다.
 
 ```haskell
 head (dropWhile (\(val,y,m,d) -> val < 1000) stock)
 ```
 
-여기서 `head`를 사용하는 것은 안전하지 않다는 점에 유의해야 합니다. 주가가 영원히 1000$를 넘지않는다면 어떻게 될까요? `dropWhile`은 빈리스트를 리턴하고 head가 없기때문에 에러가 발생합니다. 하지만 `find`를 사용하면 아래와 같이 재작성될 수 있습니다. 
+여기서 `head`를 사용하는 것은 안전하지 않다는 점에 유의해야 합니다. 주가가 영원히 1000$를 넘지않는다면 어떻게 될까요? `dropWhile`은 빈리스트를 리턴하고 head가 없기때문에 에러가 발생합니다. 하지만 `find`를 사용하면 아래와 같이 재작성될 수 있습니다.
 
 ```haskell
 find (\(val,y,m,d) -> val > 1000) stock
 ```
 
-이 경우는 주가가 영원히 1000$를 넘지않아도 `Nothing`을 리턴하기 때문에 안전합니다. 만약 유효한 값이 있다면 `Just (1001.4,2008,9,4)`와 같이 리턴할 것입니다. 
+이 경우는 주가가 영원히 1000$를 넘지않아도 `Nothing`을 리턴하기 때문에 안전합니다. 만약 유효한 값이 있다면 `Just (1001.4,2008,9,4)`와 같이 리턴할 것입니다.
 
 #### elemIndex
 
-`elem`과 동일한 기능을 하지만 boolean값을 리턴하지않습니다. 찾고있는 구성요소의 index를 리턴합니다. 만약 찾는 구성요소가 리스트에 없으면 `Nothing`을 리턴합니다.   
+`elem`과 동일한 기능을 하지만 boolean값을 리턴하지않습니다. 찾고있는 구성요소의 index를 리턴합니다. 만약 찾는 구성요소가 리스트에 없으면 `Nothing`을 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.40.png)
 
 #### elemIndices
 
-`elemIndex`와 동일한 기능을 하지만 찾고있는 구성요소가 여러개인 경우 index들의 리스트를 리턴합니다. 구성요소가 한개도 없는 경우는 `Nothing`과 유사하게 빈리스트를 반환합니다. 
+`elemIndex`와 동일한 기능을 하지만 찾고있는 구성요소가 여러개인 경우 index들의 리스트를 리턴합니다. 구성요소가 한개도 없는 경우는 `Nothing`과 유사하게 빈리스트를 반환합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.49.png)
 
 #### findIndex, findIndices
 
-`findIndex`는 `find`와 동일한 기능을 하지만 조건에 만족하는 첫번째 구성요소의 index를 리턴합니다. 
+`findIndex`는 `find`와 동일한 기능을 하지만 조건에 만족하는 첫번째 구성요소의 index를 리턴합니다.   
 `findIndices`는 조건에 만족하는 모든 구성요소의 index 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.57.png)
 
 #### zip3, zip4, zipWith3, zipWith4
 
-`zip3`는 3개의 리스트를 받아서 3개의 튜플의 리스트로 묶는 함수입니다. 
-`zip4`는 4개의 리스트를 받아서 4개의 튜플의 리스트로 묶는 함수입니다. 
-`zipWith3`는 3개의 인자를 받는 함수와 3개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다. 
-`zipWith4`는 4개의 인자를 받는 함수와 4개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다. 
+`zip3`는 3개의 리스트를 받아서 3개의 튜플의 리스트로 묶는 함수입니다.   
+`zip4`는 4개의 리스트를 받아서 4개의 튜플의 리스트로 묶는 함수입니다.   
+`zipWith3`는 3개의 인자를 받는 함수와 3개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다.   
+`zipWith4`는 4개의 인자를 받는 함수와 4개의 리스트를 받아서 묶은 후, 각 튜플을 입력받은 함수에 적용한 결과의 리스트를 리턴합니다.   
 이런 `zip`과 `zipWith`의 변종 함수는 7개까지 있습니다. 또한 무한개의 리스트를 묶을때도 매우 좋은 방법이 있지만, 여기서는 다루지 않겠습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.05.png)
@@ -298,7 +295,7 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.13.png)
 
-예제에서 `\n`은 unix의 개행문자입니다. 하스켈의 문자열이나 문자들에서 백슬래쉬(\)는 특별한 의미를 가집니다.
+예제에서 `\n`은 unix의 개행문자입니다. 하스켈의 문자열이나 문자들에서 백슬래쉬\(\)는 특별한 의미를 가집니다.
 
 #### unlines
 
@@ -308,14 +305,14 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### words, unwords
 
-`words`는 하나의 라인을 문자열로 받아서 단어들의 리스트로 분리합니다. 
+`words`는 하나의 라인을 문자열로 받아서 단어들의 리스트로 분리합니다.   
 `unwords`는 단어들의 리스트를 하나의 문자열로 합칩니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.29.png)
 
 #### nub
 
-리스트를 받아서 중복된 값들을 제거하고 유일한 값들의 리스트를 리턴합니다. 
+리스트를 받아서 중복된 값들을 제거하고 유일한 값들의 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.36.png)
 
@@ -327,11 +324,11 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### //
 
-두개의 리스트를 입력받아서 왼쪽 리스트에서 오른쪽 리스트와 매칭되는 값만 삭제한 리스트를 리턴합니다. 
+두개의 리스트를 입력받아서 왼쪽 리스트에서 오른쪽 리스트와 매칭되는 값만 삭제한 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.38.02.png)
 
-`[1..10] // [2,5,9]`는 `delete 2 . delete 5 . delete 9 $ [1..10]`과 동일한 동작을 합니다. 
+`[1..10] // [2,5,9]`는 `delete 2 . delete 5 . delete 9 $ [1..10]`과 동일한 동작을 합니다.
 
 #### union
 
@@ -341,7 +338,7 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### intersect
 
-두개의 리스트를 입력받아서 양쪽에 모두 존재하는 구성요소들의 리스트를 리턴합니다. 
+두개의 리스트를 입력받아서 양쪽에 모두 존재하는 구성요소들의 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.41.png)
 
@@ -351,53 +348,51 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.50.png)
 
-이 예제에서 `4`는 `3`과 `5` 사이의 숫자로 해당 위치에 넣은 것을 확인할 수 있습니다.  
+이 예제에서 `4`는 `3`과 `5` 사이의 숫자로 해당 위치에 넣은 것을 확인할 수 있습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.59.png)
 
-만약 이미 정렬된 리스트에 넣는다면 결과 리스트도 정렬된 리스트입니다. 
+만약 이미 정렬된 리스트에 넣는다면 결과 리스트도 정렬된 리스트입니다.
 
 #### genericLength, genericTake, genericDrop, genericSplitAt, genericIndex, genericReplicate
 
-`length`, `take`, `drop`, `splitAt`, `!!`, `replicate`는 모두 입력 인자로 `Int`를 받거나, `Int`를 리턴하는 함수입니다. 함수에 따라서 `Integral`이나 `Num` 일부 타입클래스(함수에 따라서)를 받는다면 좀 더 일반적이고 유용하게 사용될 수 있습니다. 이렇게 보다 일반적인 함수들을 `genericXXX` 형태 제공합니다. 예를들어 `length`의 타입은 `length :: [a] -> Int`입니다. 만약 `let xs = [1..6] in sum xs / length xs`로 숫자들의 리스트의 평균을 구한다면, `/`는 `Int`를 사용할 수 없기때문에 타입에러가 발생합니다. 반대로 `genericLength`의 타입은 `genericLength :: (Num a) => [b] -> a` 입니다. `Num`은 부동소수점처럼 동작할 수 있기때문에 `let xs = [1..6] in sum xs / genericLength xs`는 잘 동작합니다.  
+`length`, `take`, `drop`, `splitAt`, `!!`, `replicate`는 모두 입력 인자로 `Int`를 받거나, `Int`를 리턴하는 함수입니다. 함수에 따라서 `Integral`이나 `Num` 일부 타입클래스\(함수에 따라서\)를 받는다면 좀 더 일반적이고 유용하게 사용될 수 있습니다. 이렇게 보다 일반적인 함수들을 `genericXXX` 형태 제공합니다. 예를들어 `length`의 타입은 `length :: [a] -> Int`입니다. 만약 `let xs = [1..6] in sum xs / length xs`로 숫자들의 리스트의 평균을 구한다면, `/`는 `Int`를 사용할 수 없기때문에 타입에러가 발생합니다. 반대로 `genericLength`의 타입은 `genericLength :: (Num a) => [b] -> a` 입니다. `Num`은 부동소수점처럼 동작할 수 있기때문에 `let xs = [1..6] in sum xs / genericLength xs`는 잘 동작합니다.
 
 #### nubBy, deleteBy, unionBy, intersectBy, groupBy
 
-`nub`, `delete`, `union`, `intersect`, `group`은 각각 좀 더 일반적인 함수로 `nubBy`, `deleteBy`, `unionBy`, `intersectBy`, `groupBy` 함수를 가지고 있습니다. `genericXXX` 함수들은 동등성 체크를 `==`으로 하는반면에 `xxxBy` 함수들은 동등 함수를 받아서 비교한다는 점(예를들어 `group`은 `groupBy (==)`과 동일)에서 함수명 규칙을 다르게 적용하였습니다.  
+`nub`, `delete`, `union`, `intersect`, `group`은 각각 좀 더 일반적인 함수로 `nubBy`, `deleteBy`, `unionBy`, `intersectBy`, `groupBy` 함수를 가지고 있습니다. `genericXXX` 함수들은 동등성 체크를 `==`으로 하는반면에 `xxxBy` 함수들은 동등 함수를 받아서 비교한다는 점\(예를들어 `group`은 `groupBy (==)`과 동일\)에서 함수명 규칙을 다르게 적용하였습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.21.44.png)
 
-값이 0보다 큰것과 작은것을 기준으로 하위 리스트로 분류하는 함수입니다. 만약 여기서 `group`을 사용했다면 인접한 값을 함께 그룹핑할 것입니다. 하지만 여기서 우리가 얻고자 하는 것은 음수인지 아닌지에 따라서 분류하는 것입니다. 이 예제에서는 음수 섹션과 양수 섹션으로 명확히 구분된 것을 볼 수 있습니다. 동등 함수는 두개의 요소를 받아서 둘다 양수이거나 둘다 음수이면 `True`를 리턴합니다. `Data.Function.on`의 `on` 함수를 활용하면 동등함수를 좀 더 명확하게 작성할 수 있습니다.  
+값이 0보다 큰것과 작은것을 기준으로 하위 리스트로 분류하는 함수입니다. 만약 여기서 `group`을 사용했다면 인접한 값을 함께 그룹핑할 것입니다. 하지만 여기서 우리가 얻고자 하는 것은 음수인지 아닌지에 따라서 분류하는 것입니다. 이 예제에서는 음수 섹션과 양수 섹션으로 명확히 구분된 것을 볼 수 있습니다. 동등 함수는 두개의 요소를 받아서 둘다 양수이거나 둘다 음수이면 `True`를 리턴합니다. `Data.Function.on`의 `on` 함수를 활용하면 동등함수를 좀 더 명확하게 작성할 수 있습니다.
 
 #### on
 
-`on` 함수는 두개의 인자를 입력받는 함수(f), 한개의 인자를 받는 함수(g)를 받아서 두개의 값을 받아서 각각에 g를 적용하고 두개의 결과를 f를 적용하는 함수를 리턴합니다. `on` 함수는 아래와 같이 정의될 수 있습니다.    
+`on` 함수는 두개의 인자를 입력받는 함수\(f\), 한개의 인자를 받는 함수\(g\)를 받아서 두개의 값을 받아서 각각에 g를 적용하고 두개의 결과를 f를 적용하는 함수를 리턴합니다. `on` 함수는 아래와 같이 정의될 수 있습니다.
 
 ```haskell
 on :: (b -> b -> c) -> (a -> b) -> a -> a -> c
 f `on` g = \x y -> f (g x) (g y)
 ```
 
-따라서 ``(==) `on` (> 0)``은 `\x y -> (x > 0) == (y > 0)`과 같은 동등함수를 리턴합니다. `on`은 아래 예제와 같이 _By_ 함수와 함께 자주 사용됩니다. 
+따라서 ``(==) `on` (> 0)``은 `\x y -> (x > 0) == (y > 0)`과 같은 동등함수를 리턴합니다. `on`은 아래 예제와 같이 _By_ 함수와 함께 자주 사용됩니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.37.png)
 
 #### sortBy, insertBy, maximumBy, minimumBy
 
-`sort`, `insert`, `maximum`, `minimum` 함수도 좀더 일반적인 함수들을 가지고 있습니다. `groupBy`와 같은 함수들은 두개의 값이 동일한지를 결정하는 함수를 받습니다. `sortBy`, `insertBy`, `maximumBy`, `minimumBy` 함수는 한개의 값이 다른 값보다 큰지, 작은지, 같은지를 판단하는 함수를 입력받습니다. `sortBy`의 타입은 `sortBy :: (a -> a -> Ordering) -> [a] -> [a]` 입니다. `Ordering`은 `LT`, `EQ`, `GT`를 값으로 가집니다. `sort`는 `sortBy compare`와 같습니다. 왜냐하면 `compare`는 `Ord` 타입클래스인 두개의 값을 받아서 순서 관계를 리턴하기 때문입니다. 
+`sort`, `insert`, `maximum`, `minimum` 함수도 좀더 일반적인 함수들을 가지고 있습니다. `groupBy`와 같은 함수들은 두개의 값이 동일한지를 결정하는 함수를 받습니다. `sortBy`, `insertBy`, `maximumBy`, `minimumBy` 함수는 한개의 값이 다른 값보다 큰지, 작은지, 같은지를 판단하는 함수를 입력받습니다. `sortBy`의 타입은 `sortBy :: (a -> a -> Ordering) -> [a] -> [a]` 입니다. `Ordering`은 `LT`, `EQ`, `GT`를 값으로 가집니다. `sort`는 `sortBy compare`와 같습니다. 왜냐하면 `compare`는 `Ord` 타입클래스인 두개의 값을 받아서 순서 관계를 리턴하기 때문입니다.
 
-리스트들은 비교할 수는 있지만 사전식으로 비교가 됩니다. 만약 리스트의 리스트가 있을때 리스트의 내용이 아니라 내부 리스트의 길이에 따라서 정렬하려면 어떻게 해야할까요? 아래 예와 같이 `sortBy`를 사용해서 해결할 수 있습니다. 
+리스트들은 비교할 수는 있지만 사전식으로 비교가 됩니다. 만약 리스트의 리스트가 있을때 리스트의 내용이 아니라 내부 리스트의 길이에 따라서 정렬하려면 어떻게 해야할까요? 아래 예와 같이 `sortBy`를 사용해서 해결할 수 있습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.47.png)
 
-여기서 ``compare `on` length``는 마치 영어 문장을 쓰는 것 처럼 자연스러운 것을 볼 수 있습니다. ``compare `on` length``는 ``\x y -> length x `compare` length y``와 동일합니다. _By_ 함수에서 동등함수(equality function)를 받을때는 주로 `(==) `on` something` 형태로 쓰고, 비교함수(ordering function)를 받을때는 주로 ``compare `on` something`` 형태로 사용합니다.
-
-
+여기서 ``compare `on` length``는 마치 영어 문장을 쓰는 것 처럼 자연스러운 것을 볼 수 있습니다. ``compare `on` length``는 ``\x y -> length x `compare` length y``와 동일합니다. _By_ 함수에서 동등함수\(equality function\)를 받을때는 주로 `(==)`on`something` 형태로 쓰고, 비교함수\(ordering function\)를 받을때는 주로 ``compare `on` something`` 형태로 사용합니다.
 
 ## Data.Char
 
-문자를 다루는데 유용한 함수를 포함하고 있는 모듈입니다. 문자열에 대한 filter나 mapping도 `Data.Char` 모듈에 포함됩니다. 
-`Data.Char`에는 문자들에 대한 속성을 체크할 수 있는 여러가지 함수를 제공합니다. 
+문자를 다루는데 유용한 함수를 포함하고 있는 모듈입니다. 문자열에 대한 filter나 mapping도 `Data.Char` 모듈에 포함됩니다.   
+`Data.Char`에는 문자들에 대한 속성을 체크할 수 있는 여러가지 함수를 제공합니다.
 
 #### isControl
 
@@ -405,7 +400,7 @@ f `on` g = \x y -> f (g x) (g y)
 
 #### isSpace
 
-문자가 공백문자(space, tab, newline, etc)인지 확인합니다.
+문자가 공백문자\(space, tab, newline, etc\)인지 확인합니다.
 
 #### isLower
 
@@ -441,11 +436,11 @@ f `on` g = \x y -> f (g x) (g y)
 
 #### isLetter
 
-문자가 알파벳인지 확인합니다. 
+문자가 알파벳인지 확인합니다.
 
 #### isMark
 
-문자가 유니코드 마크 문자인지 확인합니다. 앞글자와 결합하여 악센트가 있는 마디를 만드는 문자로서 예를들면 프랑스어가 있습니다. 
+문자가 유니코드 마크 문자인지 확인합니다. 앞글자와 결합하여 악센트가 있는 마디를 만드는 문자로서 예를들면 프랑스어가 있습니다.
 
 #### isNumber
 
@@ -453,7 +448,7 @@ f `on` g = \x y -> f (g x) (g y)
 
 #### isPunctuation
 
-문자가 구두점인지 확인합니다. 
+문자가 구두점인지 확인합니다.
 
 #### isSymbol
 
@@ -479,12 +474,11 @@ f `on` g = \x y -> f (g x) (g y)
 
 아스키 소문자인지 확인합니다.
 
+지금까지 살펴본 함수들의 타입은 `Char -> Bool`입니다. 문자열같은 것을 필터링하거나 `Data.List`의 `all` 함수와 함께 활용되기도 합니다.
 
-지금까지 살펴본 함수들의 타입은 `Char -> Bool`입니다. 문자열같은 것을 필터링하거나 `Data.List`의 `all` 함수와 함께 활용되기도 합니다. 
- 
 ![](/assets/스크린샷 2017-03-11 오후 9.22.58.png)
 
-`all`은 조건문(predicate)와 리스트를 받아서 모든 값이 조건을 만족하면 `True`를 리턴합니다.
+`all`은 조건문\(predicate\)와 리스트를 받아서 모든 값이 조건을 만족하면 `True`를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.23.08.png)
 
@@ -492,11 +486,11 @@ f `on` g = \x y -> f (g x) (g y)
 
 ![](/assets/스크린샷 2017-03-11 오후 9.23.16.png)
 
-`filter`를 사용하여 공백문자를 제거하였습니다. 
+`filter`를 사용하여 공백문자를 제거하였습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.23.27.png)
 
-`GeneralCategory`은 `Ordering`과 같은 열거형(enumeration) 타입입니다. 이것은 문자를 몇가지 가능한 카테고리로 보여줍니다. 이 카테로기를 확인할 수 있는 함수로 `generalCategory`가 있습니다. 이 함수의 타입은 `generalCategory :: Char -> GeneralCategory`입니다.  이 함수는 총 31개의 카테고리를 가지고 잇습니다. `GeneralCategory`는 `Eq` 타입클래스에 속해있고, `generalCategory c == Space`와 같이 테스트할 수 있습니다.
+`GeneralCategory`은 `Ordering`과 같은 열거형\(enumeration\) 타입입니다. 이것은 문자를 몇가지 가능한 카테고리로 보여줍니다. 이 카테로기를 확인할 수 있는 함수로 `generalCategory`가 있습니다. 이 함수의 타입은 `generalCategory :: Char -> GeneralCategory`입니다.  이 함수는 총 31개의 카테고리를 가지고 잇습니다. `GeneralCategory`는 `Eq` 타입클래스에 속해있고, `generalCategory c == Space`와 같이 테스트할 수 있습니다.
 
 #### toUpper
 
@@ -518,7 +512,7 @@ f `on` g = \x y -> f (g x) (g y)
 
 #### intToDigit
 
-`digitToInt`와 반대입니다. `0..15` 범위의 `Int`를 받아서 소문자로 바꾸어 줍니다. 
+`digitToInt`와 반대입니다. `0..15` 범위의 `Int`를 받아서 소문자로 바꾸어 줍니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.23.43.png)
 
@@ -538,13 +532,13 @@ encode shift msg =
     in  map chr shifted
 ```
 
-Caesar cipher는 문자를 알파벳의 고정된 숫자만큼 이동시켜 메시지를 암호화하는 원시적인 방법입니다.
-먼저, 문자열을 숫자들의 리스트로 바꾸고, 숫자들의 리스트를 다시 문자로 바꾸기전에 각 숫자에 shift한 양을 추가합니다.
-만약 composition을 사용한다면 함수의 몸제는 `map (chr . (+shift) . ord) msg`와 같이 작성될 수 있습니다 실행하면 아래와 같은 결과를 볼 수 있습니다.  
+Caesar cipher는 문자를 알파벳의 고정된 숫자만큼 이동시켜 메시지를 암호화하는 원시적인 방법입니다.  
+먼저, 문자열을 숫자들의 리스트로 바꾸고, 숫자들의 리스트를 다시 문자로 바꾸기전에 각 숫자에 shift한 양을 추가합니다.  
+만약 composition을 사용한다면 함수의 몸제는 `map (chr . (+shift) . ord) msg`와 같이 작성될 수 있습니다 실행하면 아래와 같은 결과를 볼 수 있습니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.24.02.png)
 
-메시지를 디코딩하는 것은 기본적으로 메시지를 처음 옮긴 장소의 수만큼 뒤로 이동하는 것입니다. 
+메시지를 디코딩하는 것은 기본적으로 메시지를 처음 옮긴 장소의 수만큼 뒤로 이동하는 것입니다.
 
 ```haskell
 decode :: Int -> String -> String
@@ -555,7 +549,7 @@ decode shift msg = encode (negate shift) msg
 
 ## Data.Map
 
-연관 리스트(또는 사전)는 순서가 중요하지않은 키값 쌍을 저장하는데 사용되는 리스트입니다. 예를들어 핸드폰 번호를 저장하기 위해서 사람의 이름을 키로하고, 전화번호를 값으로 하여 연관 리스트에 넣을 수 있습니다. 저장되는 순서는 중요하지 않고, 단지 올바른 사람에 해당하는 올바른 번호를 가져올 수 있으면 됩니다. 
+연관 리스트\(또는 사전\)는 순서가 중요하지않은 키값 쌍을 저장하는데 사용되는 리스트입니다. 예를들어 핸드폰 번호를 저장하기 위해서 사람의 이름을 키로하고, 전화번호를 값으로 하여 연관 리스트에 넣을 수 있습니다. 저장되는 순서는 중요하지 않고, 단지 올바른 사람에 해당하는 올바른 번호를 가져올 수 있으면 됩니다.
 
 ```haskell
 phoneBook =   
@@ -568,58 +562,58 @@ phoneBook =
     ]
 ```
 
-첫번째 값은 key이고 두번째값은 value 입니다. 
+첫번째 값은 key이고 두번째값은 value 입니다.
 
 ```haskell
 findKey :: (Eq k) => k -> [(k,v)] -> v
 findKey key xs = snd . head . filter (\(k,v) -> key == k) $ xs
 ```
 
-주어진 key에 해당하는 value를 찾아주는 함수입니다. 간단하게 key와 리스트를 받아서, 리스트에 key와 같은 것으로 filter합니다. 필터링한 리스트의 첫번째 key-value에서 value만 리턴합니다. 만약 찾는 key가 리스트에 없다면 filter한 리스트는 빈리스트가 되어 head를 가져오는 과정에서 런타임 에러가 발생합니다. 따라서 에러를 막기위해 `Maybe`를 사용합니다.  
+주어진 key에 해당하는 value를 찾아주는 함수입니다. 간단하게 key와 리스트를 받아서, 리스트에 key와 같은 것으로 filter합니다. 필터링한 리스트의 첫번째 key-value에서 value만 리턴합니다. 만약 찾는 key가 리스트에 없다면 filter한 리스트는 빈리스트가 되어 head를 가져오는 과정에서 런타임 에러가 발생합니다. 따라서 에러를 막기위해 `Maybe`를 사용합니다.
 
 ```haskell
 findKey :: (Eq k) => k -> [(k,v)] -> Maybe v
 findKey key [] = Nothing
 findKey key ((k,v):xs) = if key == k
                          then Just v
-                         else findKey key xs  
+                         else findKey key xs
 ```
 
-만약 key를 찾지못하면 `Nothing`을 리턴하고, 찾으면 key에 상응하는 값인 `Just something`을 리턴합니다. 이 예제는 종료조건 -> 리스트의 head, tail  분리 -> 재귀호출로 이어지는 fold 패턴입니다. 따라서 아래와 같이 fold를 사용하여 구현할 수 있습니다. 
+만약 key를 찾지못하면 `Nothing`을 리턴하고, 찾으면 key에 상응하는 값인 `Just something`을 리턴합니다. 이 예제는 종료조건 -&gt; 리스트의 head, tail  분리 -&gt; 재귀호출로 이어지는 fold 패턴입니다. 따라서 아래와 같이 fold를 사용하여 구현할 수 있습니다.
 
 ```haskell
 findKey :: (Eq k) => k -> [(k,v)] -> Maybe v
 findKey key = foldr (\(k,v) acc -> if key == k then Just v else acc) Nothing
 ```
 
-**일반적으로 표준 리스트 재귀 패턴을 직접 사용하는 것보다는 fold를 사용하는 것이 가독성과 식별이 쉽습니다.** `foldr`이 보이면 모든 사람은 fold를 한다는 것을 알지만, 재귀를 쓰면 코드를 이해하기 위해서 시간을 들여야 합니다. 
+**일반적으로 표준 리스트 재귀 패턴을 직접 사용하는 것보다는 fold를 사용하는 것이 가독성과 식별이 쉽습니다.** `foldr`이 보이면 모든 사람은 fold를 한다는 것을 알지만, 재귀를 쓰면 코드를 이해하기 위해서 시간을 들여야 합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 12.23.32.png)
 
-우리는 `Data.List`에서도 `lookup` 함수를 구현할 수 있습니다. key 해당하는 value를 얻고 싶으면 찾을때까지 리스트를 순회할 수 있습니다. `Data.Map` 모듈은 이것은 좀 더 빠르게 하는(내부적으로 트리를 가지고 있기때문에) 함수를 제공하고, 또한 많은 유틸리티 함수들을 제공합니다. 여기서부터는 연관리스트 대신에 맵의 동작을 살펴보겠습니다.
+우리는 `Data.List`에서도 `lookup` 함수를 구현할 수 있습니다. key 해당하는 value를 얻고 싶으면 찾을때까지 리스트를 순회할 수 있습니다. `Data.Map` 모듈은 이것은 좀 더 빠르게 하는\(내부적으로 트리를 가지고 있기때문에\) 함수를 제공하고, 또한 많은 유틸리티 함수들을 제공합니다. 여기서부터는 연관리스트 대신에 맵의 동작을 살펴보겠습니다.
 
 ```haskell
 import qualified Data.Map as Map
 ```
 
-`Data.Map`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다. 
-`Data.Map`에 제공하는 함수들을 추리면 아래와 같습니다. 
+`Data.Map`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다.   
+`Data.Map`에 제공하는 함수들을 추리면 아래와 같습니다.
 
 #### fromList
 
-연관리스트를 받아서 동일한 연관성을 가지는 맵을 리턴합니다. 
+연관리스트를 받아서 동일한 연관성을 가지는 맵을 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 12.36.16.png)
 
-만약 연관리스트에 중복된 키가 있다면 제거됩니다. `fromList`의 타입은 아래와 같습니다. 
+만약 연관리스트에 중복된 키가 있다면 제거됩니다. `fromList`의 타입은 아래와 같습니다.
 
 ```haskell
 Map.fromList :: (Ord k) => [(k, v)] -> Map.Map k v
 ```
 
-타입을 보면 `k`,`v` 쌍의 리스트를 받아서 타입`k`의 키들을 타입`v`로 맵핑하는 맵을 리턴합니다. 주목할 점은 일반 리스트를 연관 리스트로 만들때, 키는 같지만(Eq 타입클래스) 여기서는 트리내에 배치되기 위해서 순서가 있어야합니다. 
+타입을 보면 `k`,`v` 쌍의 리스트를 받아서 타입`k`의 키들을 타입`v`로 맵핑하는 맵을 리턴합니다. 주목할 점은 일반 리스트를 연관 리스트로 만들때, 키는 같지만\(Eq 타입클래스\) 여기서는 트리내에 배치되기 위해서 순서가 있어야합니다.
 
-키값이 `Ord` 타입클래스가 아닐때를 제외하면, key-value 연관을 위해서 항상 `Data.Map`을 사용해야 합니다. 
+키값이 `Ord` 타입클래스가 아닐때를 제외하면, key-value 연관을 위해서 항상 `Data.Map`을 사용해야 합니다.
 
 #### empty
 
@@ -629,7 +623,7 @@ Map.fromList :: (Ord k) => [(k, v)] -> Map.Map k v
 
 #### insert
 
-key, value, map을 입력받아서 맵에 해당 key, value를 포함한 새로운 맵을 리턴합니다. 
+key, value, map을 입력받아서 맵에 해당 key, value를 포함한 새로운 맵을 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 12.50.20.png)
 
@@ -644,13 +638,13 @@ foldr를 사용하여 비어있는 맵에서 오른쪽부터 접으면서 key-va
 
 #### null
 
-맵이 비어있는지 검사합니다. 
+맵이 비어있는지 검사합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 12.56.18.png)
 
 #### size
 
-맵의 크기를 알려줍니다. 
+맵의 크기를 알려줍니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 12.57.20.png)
 
@@ -660,11 +654,11 @@ key, value를 받아서 입력받은 key-value쌍 한개만 가진 맵을 리턴
 
 #### lookup
 
-`Data.List``lookup`처럼 맵에서 동작합니다. 찾는 것이 있으면 `Just something`, 없으면 `Nothing`을 리턴합니다.
+```Data.List``lookup```처럼 맵에서 동작합니다. 찾는 것이 있으면 `Just something`, 없으면 `Nothing`을 리턴합니다.
 
 #### member
 
-key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다. 
+key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 1.02.12.png)
 
@@ -682,12 +676,12 @@ key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 
 #### keys && elems
 
-`keys`는 key의 리스트를 리턴하고 `map fst . Map.toList`와 동일합니다. 
+`keys`는 key의 리스트를 리턴하고 `map fst . Map.toList`와 동일합니다.   
 `elems`는 value의 리스트를 리턴하고 `map snd . Map.toList`와 동일합니다.
 
 #### fromListWith
 
-`fromList`와 유사하지만 중복된 키들을 버리지 않고, 함수에 적용하여 결정하는 함수입니다. 
+`fromList`와 유사하지만 중복된 키들을 버리지 않고, 함수에 적용하여 결정하는 함수입니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 1.10.03.png)
 
@@ -695,14 +689,16 @@ key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 phoneBookToMap :: (Ord k) => [(k, String)] -> Map.Map k String  
 phoneBookToMap xs = Map.fromListWith (\number1 number2 -> number1 ++ ", " ++ number2) xs
 ```
+
 ![](/assets/스크린샷 2017-03-14 오전 1.13.39.png)
 
-여기서 만약 `fromList`를 사용한다면, 키가 중복된 몇몇 값들을 사라질 것입니다. 위와 같이 `fromListWith`를 사용하여  customize할 수 있습니다. 
+여기서 만약 `fromList`를 사용한다면, 키가 중복된 몇몇 값들을 사라질 것입니다. 위와 같이 `fromListWith`를 사용하여  customize할 수 있습니다.
 
 ```haskell
 phoneBookToMap :: (Ord k) => [(k, a)] -> Map.Map k [a]  
 phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 ```
+
 ![](/assets/스크린샷 2017-03-14 오전 1.17.15.png)
 
 만약 중복된 키가 있으면 해당하는 키의 값들을 묶어서 찾은 키에 해당하는 모든 값들을 하나의 리스트에 리턴합니다. 번호들을 묶기 위해서 `++`를 사용할 수 있습니다.
@@ -721,26 +717,24 @@ phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 
 ![](/assets/스크린샷 2017-03-14 오전 1.26.57.png)
 
-
-여기서는 `Data.Map`에 있는 몇개의 함수만 알아보았습니다. 
-
+여기서는 `Data.Map`에 있는 몇개의 함수만 알아보았습니다.
 
 ## Data.Set
 
-**Set은 내부적으로 트리로 구현되어 있기때문에 모든 구성요소들에는 중복이 없고, 순서가 있습니다.** Set은 리스트와 동일한 기능을할때 더 빠르게 동작합니다. Set의 주요 동작은 멤버쉽을 확인하거나, 추가, 삭제, Set을 리스트로 변환 등을 할 수 있습니다. 
+**Set은 내부적으로 트리로 구현되어 있기때문에 모든 구성요소들에는 중복이 없고, 순서가 있습니다.** Set은 리스트와 동일한 기능을할때 더 빠르게 동작합니다. Set의 주요 동작은 멤버쉽을 확인하거나, 추가, 삭제, Set을 리스트로 변환 등을 할 수 있습니다.
 
 ```haskell
 import qualified Data.Set as Set
 ```
 
-`Data.Set`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다. 
+`Data.Set`은 `Prelude` 및 `Data.List`와 충돌하는 함수를 가지고 있으므로 qualified import를 사용합니다.
 
 ```haskell
 text1 = "I just had an anime dream. Anime... Reality... Are they so different?"  
-text2 = "The old man left his garbage can out and now his trash is all over my lawn!" 
+text2 = "The old man left his garbage can out and now his trash is all over my lawn!"
 ```
 
-위와같은 두개의 텍스트가 있을때, 양쪽에서 모두 사용되는 문자들을 찾아보겠습니다. 
+위와같은 두개의 텍스트가 있을때, 양쪽에서 모두 사용되는 문자들을 찾아보겠습니다.
 
 #### fromList
 
@@ -748,7 +742,7 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 
 ![](/assets/스크린샷 2017-03-14 오전 1.45.07.png)
 
-위 예제에서 볼 수 있듯이 Set안의 모든 아이템은 유일하고, 순서가 있습니다. 
+위 예제에서 볼 수 있듯이 Set안의 모든 아이템은 유일하고, 순서가 있습니다.
 
 #### intersection
 
@@ -758,13 +752,13 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 
 #### difference
 
-두개의 Set을 받아서 첫번째 Set에는 있는데 두번째 Set에는 없는 구성요소들의 리스트를 리턴합니다. 
+두개의 Set을 받아서 첫번째 Set에는 있는데 두번째 Set에는 없는 구성요소들의 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 1.52.29.png)
 
 #### union
 
-두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다. 
+두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 1.54.59.png)
 
@@ -788,13 +782,13 @@ Set은 가끔 리스트에서 중복된 값을 제거하기 위해서 사용됩�
 
 ![](/assets/스크린샷 2017-03-14 오전 2.11.05.png)
 
-크기가 큰 리스트에서는 `setNub`은 일반적으로 `nub`보다 빠릅니다. 하지만 위 예제에서 볼 수 있듯이 `nub`은 `setNub`과 다르게 리스트의 구성요소의 순서를 보존합니다. 
+크기가 큰 리스트에서는 `setNub`은 일반적으로 `nub`보다 빠릅니다. 하지만 위 예제에서 볼 수 있듯이 `nub`은 `setNub`과 다르게 리스트의 구성요소의 순서를 보존합니다.
 
 ## 모듈 만들기
 
-하스켈도 다른언어와 마찬가지로 모드를 여러개의 파일로 분리할 수 있습니다. 프로그래밍을 할때 비슷한 기능을 하는 함수를 하나의 모듈로 묶어서 관리하는 것은 좋은 습관입니다. 이렇게하면 다른 모듈에서 import해서 함수를 재사용할 수 있습니다. 
+하스켈도 다른언어와 마찬가지로 모드를 여러개의 파일로 분리할 수 있습니다. 프로그래밍을 할때 비슷한 기능을 하는 함수를 하나의 모듈로 묶어서 관리하는 것은 좋은 습관입니다. 이렇게하면 다른 모듈에서 import해서 함수를 재사용할 수 있습니다.
 
-여기서는 기하학적 물체의 부피와 면적을 계산하는 몇가지 기능을 제공하는 모듈을 `Geometry.hs` 파일에 만들겟습니다. 그리고 모듈명은 `Geometry`로 하겠습니다. 먼저 제공할 함수들을 명시하고, 각 함수를 구현해보겠습니다. 
+여기서는 기하학적 물체의 부피와 면적을 계산하는 몇가지 기능을 제공하는 모듈을 `Geometry.hs` 파일에 만들겟습니다. 그리고 모듈명은 `Geometry`로 하겠습니다. 먼저 제공할 함수들을 명시하고, 각 함수를 구현해보겠습니다.
 
 ```haskell
 module Geometry  
@@ -805,25 +799,25 @@ module Geometry
 , cuboidArea  
 , cuboidVolume  
 ) where  
-  
+
 sphereVolume :: Float -> Float  
 sphereVolume radius = (4.0 / 3.0) * pi * (radius ^ 3)  
-  
+
 sphereArea :: Float -> Float  
 sphereArea radius = 4 * pi * (radius ^ 2)  
-  
+
 cubeVolume :: Float -> Float  
 cubeVolume side = cuboidVolume side side side  
-  
+
 cubeArea :: Float -> Float  
 cubeArea side = cuboidArea side side side  
-  
+
 cuboidVolume :: Float -> Float -> Float -> Float  
 cuboidVolume a b c = rectangleArea a b * c  
-  
+
 cuboidArea :: Float -> Float -> Float -> Float  
 cuboidArea a b c = rectangleArea a b * 2 + rectangleArea a c * 2 + rectangleArea c b * 2  
-  
+
 rectangleArea :: Float -> Float -> Float  
 rectangleArea a b = a * b
 ```
@@ -834,11 +828,11 @@ rectangleArea a b = a * b
 import Geometry
 ```
 
-모듈을 사용하기 위해서는 먼저 import 합니다. `Geometry.hs` 파일은 import하는 프로그램과 동일한 폴더에 있어야 합니다. 
+모듈을 사용하기 위해서는 먼저 import 합니다. `Geometry.hs` 파일은 import하는 프로그램과 동일한 폴더에 있어야 합니다.
 
-모듈들은 계층적인 구조로 만들수도 잇습니다. 각 모듈은 여러개의 서브모듈을 가질 수 있고 서브모듈들은 또 자신의 서브모듈들을 가질 수 있습니다. 여기서는 `Geometry`를 세개의 서브모듈을 가지 모듈로 쪼개보도록 하겠습니다. 
+모듈들은 계층적인 구조로 만들수도 잇습니다. 각 모듈은 여러개의 서브모듈을 가질 수 있고 서브모듈들은 또 자신의 서브모듈들을 가질 수 있습니다. 여기서는 `Geometry`를 세개의 서브모듈을 가지 모듈로 쪼개보도록 하겠습니다.
 
-우선 `Geometry`라는 폴더를 만들겠습니다. 여기서 폴더의 첫글자가 대문자라는 점을 명심하세요. 이 폴더에 `Sphere.hs`, `Cuboid.hs`, `Cube.hs` 파일을 만듭니다. 그리고 각 파일을 아래와 같이 작성합니다. 
+우선 `Geometry`라는 폴더를 만들겠습니다. 여기서 폴더의 첫글자가 대문자라는 점을 명심하세요. 이 폴더에 `Sphere.hs`, `Cuboid.hs`, `Cube.hs` 파일을 만듭니다. 그리고 각 파일을 아래와 같이 작성합니다.
 
 `Sphere.hs`
 
@@ -847,10 +841,10 @@ module Geometry.Sphere
 ( volume  
 , area  
 ) where  
-  
+
 volume :: Float -> Float  
 volume radius = (4.0 / 3.0) * pi * (radius ^ 3)  
-  
+
 area :: Float -> Float  
 area radius = 4 * pi * (radius ^ 2)
 ```
@@ -862,13 +856,13 @@ module Geometry.Cuboid
 ( volume  
 , area  
 ) where  
-  
+
 volume :: Float -> Float -> Float -> Float  
 volume a b c = rectangleArea a b * c  
-  
+
 area :: Float -> Float -> Float -> Float  
 area a b c = rectangleArea a b * 2 + rectangleArea a c * 2 + rectangleArea c b * 2  
-  
+
 rectangleArea :: Float -> Float -> Float  
 rectangleArea a b = a * b
 ```
@@ -880,26 +874,25 @@ module Geometry.Cube
 ( volume  
 , area  
 ) where  
-  
+
 import qualified Geometry.Cuboid as Cuboid  
-  
+
 volume :: Float -> Float  
 volume side = Cuboid.volume side side side  
-  
+
 area :: Float -> Float  
 area side = Cuboid.area side side side
 ```
 
-먼저 `Geometry.Sphere`는 Geometry 폴더내에 있고 모듈이름은 `Geometry.Sphere` 입니다. 다른 두 모듈에도 동일하 방식으로 처리했습니다. 또한 각 모듈에 동일한 이름의 함수가 있습니다. 각 함수는 다른 모듈에 있기때문에 동일한 이름으로 정의할 수 있습니다. 대신 특정 모듈의 함수를 가져다 쓸때는 qualified import를 사용해야 합니다. 
+먼저 `Geometry.Sphere`는 Geometry 폴더내에 있고 모듈이름은 `Geometry.Sphere` 입니다. 다른 두 모듈에도 동일하 방식으로 처리했습니다. 또한 각 모듈에 동일한 이름의 함수가 있습니다. 각 함수는 다른 모듈에 있기때문에 동일한 이름으로 정의할 수 있습니다. 대신 특정 모듈의 함수를 가져다 쓸때는 qualified import를 사용해야 합니다.
 
 ```haskell
 import qualified Geometry.Sphere as Sphere  
 import qualified Geometry.Cuboid as Cuboid  
 import qualified Geometry.Cube as Cube
-```  
+```
 
-위와같이 qualified import를 한 후에 `Sphere.area`, `Sphere.volume`, `Cuboid.area`와 같이 호출해서 사용할 수 있습니다. 
+위와같이 qualified import를 한 후에 `Sphere.area`, `Sphere.volume`, `Cuboid.area`와 같이 호출해서 사용할 수 있습니다.
 
-다음 번에는 실제로 많은 기능을 가진 파일을 작성할때 공통된 용도의 기능을 확인하고 별도의 모듈로 분리해보시기 바랍니다. 그리고 동일한 기능을 필요로하는 프로그램을 작성할때 모듈을 재사용할 수 있습니다. 
-
+다음 번에는 실제로 많은 기능을 가진 파일을 작성할때 공통된 용도의 기능을 확인하고 별도의 모듈로 분리해보시기 바랍니다. 그리고 동일한 기능을 필요로하는 프로그램을 작성할때 모듈을 재사용할 수 있습니다.
 
