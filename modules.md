@@ -205,11 +205,11 @@ search needle haystack =
     in foldl (\acc x -> if take nlen x == needle then True else acc) False (tails haystack)
 ```
 
-먼저 검색할 대상 리스트에 `tails`를 호출하여 tail의 리스트를 만들고, 각 tail가 찾고있는 것으로 시작하는지 확인합니다. 여기서 `take nlen x == needle`가 x가 needle로 시작하는지 확인하는 방법입니다.
+먼저 검색할 대상 리스트에 `tails`를 호출하여 tail의 리스트를 만들고, 각 tail가 찾고있는 것으로 시작하는지 확인합니다. 여기서 `take nlen x == needle이` x가 needle로 시작하는지 확인하는 방법입니다.
 
 #### isInfixOf
 
-입력받은 첫번째 하위 리스트가 두번째 대상 리스트에 포함되는 검색하는 함수입니다. 만약 대상 리스트내의 어디에든 하위 리스트가 포함되면 `True`를 리턴합니다.
+입력받은 첫번째 하위 리스트가 두번째 대상 리스트에 포함되는지 검색하는 함수입니다. 만약 대상 리스트내의 어디에든 하위 리스트가 포함되면 `True`를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.35.57.png)
 
@@ -238,7 +238,7 @@ search needle haystack =
 
 #### find
 
-조거문\(predicate\)과 리스트를 입력받아서 조건을 만족하는 첫번째 구성요소가 `Maybe`값으로 랩핑된 구성요소로 리턴됩니다. 다음 챕터에서 대수적인 데이터 타입에 대해서 더 자세히 다룰 것입니다. 여기서는 알아야 할 것은 `Maybe`**값은 어떤 값을 가지거나 아무것도 없을 수 있다는 점입니다.** 마치 리스트가 비어있거나 어떤 구성요소를 가질 수 있는 것처럼 `Maybe`값은 아무 것도 없거나 하나의 구성요소를 가질 수 있습니다. Integer의 리스트의 타입이 `[Int]`인 것처럼 interger를 가질수도 있는 타입을 `Maybe Int`로 합니다.
+조건문\(predicate\)과 리스트를 입력받아서 조건을 만족하는 첫번째 구성요소가 `Maybe`값으로 랩핑된 구성요소로 리턴됩니다. 다음 챕터에서 대수적인 데이터 타입에 대해서 더 자세히 다룰 것입니다. 여기서는 알아야 할 것은 `Maybe`**값은 어떤 값을 가지거나 아무것도 없을 수 있다는 점입니다.** 마치 리스트가 비어있거나 어떤 구성요소를 가질 수 있는 것처럼 `Maybe`값은 아무 것도 없거나 하나의 구성요소를 가질 수 있습니다. Integer의 리스트의 타입이 `[Int]`인 것처럼 Interger를 가질수도 있는 타입을 `Maybe Int` 라고 합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.36.28.png)
 
@@ -250,7 +250,7 @@ search needle haystack =
 head (dropWhile (\(val,y,m,d) -> val < 1000) stock)
 ```
 
-여기서 `head`를 사용하는 것은 안전하지 않다는 점에 유의해야 합니다. 주가가 영원히 1000$를 넘지않는다면 어떻게 될까요? `dropWhile`은 빈리스트를 리턴하고 head가 없기때문에 에러가 발생합니다. 하지만 `find`를 사용하면 아래와 같이 재작성될 수 있습니다.
+여기서 `head`를 사용하는 것은 안전하지 않다는 점에 유의해야 합니다. 주가가 영원히 1000$를 넘지않는다면 어떻게 될까요? `dropWhile`은 빈리스트를 리턴하고 head가 없기때문에 런타임 에러가 발생합니다. 하지만 `find`를 사용하면 아래와 같이 재작성될 수 있습니다.
 
 ```haskell
 find (\(val,y,m,d) -> val > 1000) stock
@@ -295,7 +295,7 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.13.png)
 
-예제에서 `\n`은 unix의 개행문자입니다. 하스켈의 문자열이나 문자들에서 백슬래쉬\(\)는 특별한 의미를 가집니다.
+예제에서 `\n`은 unix의 개행문자입니다. 하스켈의 문자열이나 문자들에서 백슬래쉬\(\\)는 특별한 의미를 가집니다.
 
 #### unlines
 
@@ -318,7 +318,7 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### delete
 
-한 개의 구성요소와 리스트를 받아서 리스트내에서 입력받은 구성요소와 일치하는 첫번째 구성요소만 삭제된 리스트를 리턴합니다.
+한 개의 구성요소와 리스트를 받아서 리스트내에서 입력받은 구성요소와 처음으로 일치하는 구성요소만 삭제된 리스트를 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 8.37.43.png)
 
@@ -332,19 +332,19 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### union
 
-두개의 리스트를 받아서 두번째 리스트에서 첫번째 리스트와 중복되는 구성요소를 모두 제거하고 두개의 리스트를 합친 리스트를 리턴합니다.
+두개의 리스트를 받아서 두번째 리스트에서 첫번째 리스트와 중복되는 구성요소를 제거하고 첫번째 리스트와 합친 리스트를 리턴합니다. 즉, 두 리스트의 합집합을 구합니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.32.png)
 
 #### intersect
 
-두개의 리스트를 입력받아서 양쪽에 모두 존재하는 구성요소들의 리스트를 리턴합니다.
+두개의 리스트를 입력받아서 양쪽에 모두 존재하는 구성요소들의 리스트를 리턴합니다. 즉, 교집합을 구합니다. 
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.41.png)
 
 #### insert
 
-리스트에 삽입할 값과 정렬이 가능한 리스트를 받아서 대상 리스트에 넣을 값보다 작거나 같은 구성요소 다음에 값을 넣는 함수입니다.
+리스트에 삽입할 값과 정렬이 가능한 리스트를 받아서 대상 리스트에 넣을 값보다 작거나 같은 구성요소 다음에 삽입하는 함수입니다.
 
 ![](/assets/스크린샷 2017-03-11 오후 9.15.50.png)
 
@@ -356,7 +356,7 @@ find (\(val,y,m,d) -> val > 1000) stock
 
 #### genericLength, genericTake, genericDrop, genericSplitAt, genericIndex, genericReplicate
 
-`length`, `take`, `drop`, `splitAt`, `!!`, `replicate`는 모두 입력 인자로 `Int`를 받거나, `Int`를 리턴하는 함수입니다. 함수에 따라서 `Integral`이나 `Num` 일부 타입클래스\(함수에 따라서\)를 받는다면 좀 더 일반적이고 유용하게 사용될 수 있습니다. 이렇게 보다 일반적인 함수들을 `genericXXX` 형태 제공합니다. 예를들어 `length`의 타입은 `length :: [a] -> Int`입니다. 만약 `let xs = [1..6] in sum xs / length xs`로 숫자들의 리스트의 평균을 구한다면, `/`는 `Int`를 사용할 수 없기때문에 타입에러가 발생합니다. 반대로 `genericLength`의 타입은 `genericLength :: (Num a) => [b] -> a` 입니다. `Num`은 부동소수점처럼 동작할 수 있기때문에 `let xs = [1..6] in sum xs / genericLength xs`는 잘 동작합니다.
+`length`, `take`, `drop`, `splitAt`, `!!`, `replicate`는 모두 입력 인자로 `Int`를 받거나, `Int`를 리턴하는 함수입니다. 함수에 따라서 `Integral`이나 `Num` 타입클래스\(함수에 따라서\)를 받는다면 좀 더 일반적이고 유용하게 사용될 수 있습니다. 이렇게 보다 일반적인 함수들을 `genericXXX` 형태 제공합니다. 예를들어 `length`의 타입은 `length :: [a] -> Int`입니다. 만약 `let xs = [1..6] in sum xs / length xs`로 숫자들의 리스트의 평균을 구한다면, `/`는 `Int`를 사용할 수 없기때문에 타입에러가 발생합니다. 반대로 `genericLength`의 타입은 `genericLength :: (Num a) => [b] -> a` 입니다. `Num`은 부동소수점처럼 동작할 수 있기때문에 `let xs = [1..6] in sum xs / genericLength xs`는 잘 동작합니다.
 
 #### nubBy, deleteBy, unionBy, intersectBy, groupBy
 
@@ -490,7 +490,7 @@ f `on` g = \x y -> f (g x) (g y)
 
 ![](/assets/스크린샷 2017-03-11 오후 9.23.27.png)
 
-`GeneralCategory`은 `Ordering`과 같은 열거형\(enumeration\) 타입입니다. 이것은 문자를 몇가지 가능한 카테고리로 보여줍니다. 이 카테로기를 확인할 수 있는 함수로 `generalCategory`가 있습니다. 이 함수의 타입은 `generalCategory :: Char -> GeneralCategory`입니다.  이 함수는 총 31개의 카테고리를 가지고 잇습니다. `GeneralCategory`는 `Eq` 타입클래스에 속해있고, `generalCategory c == Space`와 같이 테스트할 수 있습니다.
+`GeneralCategory`은 `Ordering`과 같은 열거형\(enumeration\) 타입입니다. 이것은 문자를 몇가지 가능한 카테고리로 보여줍니다. 이 카테고리를 확인할 수 있는 함수로 `generalCategory`가 있습니다. 이 함수의 타입은 `generalCategory :: Char -> GeneralCategory`입니다.  이 함수는 총 31개의 카테고리를 가지고 잇습니다. `GeneralCategory`는 `Eq` 타입클래스에 속해있고, `generalCategory c == Space`와 같이 테스트할 수 있습니다.
 
 #### toUpper
 
@@ -617,7 +617,7 @@ Map.fromList :: (Ord k) => [(k, v)] -> Map.Map k v
 
 #### empty
 
-비어있는 맵을 나타내는 것으로서 입력이 없고 단지 비어있는 냅을 리턴합니다.
+비어있는 맵을 나타내는 것으로서 입력이 없고 단지 비어있는 맵을 리턴합니다.
 
 ![](/assets/스크린샷 2017-03-14 오전 12.47.30.png)
 
@@ -746,7 +746,7 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 
 #### intersection
 
-두개의 Set을 받아서 양쪽에서 동일하게 가지고 구성요소들의 리스트를 리턴합니다.
+두개의 Set을 받아서 양쪽에서 동일하게 가지고 있는 구성요소들의 리스트를 리턴합니다. 즉, 교집합을 구합니다. 
 
 ![](/assets/스크린샷 2017-03-14 오전 1.48.00.png)
 
@@ -758,7 +758,7 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 
 #### union
 
-두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다.
+두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다. 
 
 ![](/assets/스크린샷 2017-03-14 오전 1.54.59.png)
 
@@ -884,7 +884,7 @@ area :: Float -> Float
 area side = Cuboid.area side side side
 ```
 
-먼저 `Geometry.Sphere`는 Geometry 폴더내에 있고 모듈이름은 `Geometry.Sphere` 입니다. 다른 두 모듈에도 동일하 방식으로 처리했습니다. 또한 각 모듈에 동일한 이름의 함수가 있습니다. 각 함수는 다른 모듈에 있기때문에 동일한 이름으로 정의할 수 있습니다. 대신 특정 모듈의 함수를 가져다 쓸때는 qualified import를 사용해야 합니다.
+먼저 `Geometry.Sphere`는 Geometry 폴더내에 있고 모듈이름은 `Geometry.Sphere` 입니다. 다른 두 모듈에도 동일한 방식으로 처리했습니다. 또한 각 모듈에 동일한 이름의 함수가 있습니다. 각 함수는 다른 모듈에 있기때문에 동일한 이름으로 정의할 수 있습니다. 대신 특정 모듈의 함수를 가져다 쓸때는 qualified import를 사용해야 합니다.
 
 ```haskell
 import qualified Geometry.Sphere as Sphere  
