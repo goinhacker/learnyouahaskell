@@ -178,12 +178,29 @@ data Person = Person { firstName :: String
 
 ![](/assets/스크린샷 2017-03-26 오전 1.28.39.png)
 
+또다른 이점은 타입에 `Show`를 사용했을때, Record를 사용하면 화면에 다른게 출력된다는 점입니다. 
+
+차를 만든 회사, 모델이름, 생산연도를 속성으로 가지는 자동차를 정의해보겠습니다. 
+
+```haskell
+data Car = Car String String Int deriving (Show)
+```
+
+![](/assets/스크린샷 2017-03-26 오전 1.34.23.png)
+              
+이것을 Record 문법을 사용해서 재정의하면 아래와 같습니다. 
+
+```haskell
+data Car = Car {company :: String, model :: String, year :: Int} deriving (Show)
+```          
      
+![](/assets/스크린샷 2017-03-26 오전 1.35.28.png)     
      
-     
-     
-     
-      
+이 예제에서 자동차를 하나 만들었습니다. 위와 같이 작성하면 생성할때 필드의 순서를 지켜서 작성할 필요가 없습니다. 만약 Record를 사용하지 않으면 반드시 순서대로 인자들을 입력해야 합니다. 
+
+**생성자에 여러 필드가 있고 명확하지 않은 경우, Record 문법을 사용합니다.** 만약 3D 벡터 타입을 만든다면, `data Vector = Vector Int Int Int`와 같이 만들 수 있습니다. 이 경우는 벡터를 구성하는 필드들이 명확합니다. 하지만 `Person`, `Car` 타입은 필드들의 타입만으로는 명확하지 않습니다. 
+
+## Type parameters
        
          
    
