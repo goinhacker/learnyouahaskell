@@ -124,12 +124,66 @@ module Shapes
 
 데이터 타입의 값 생성자를 노출하지 않으면 구현부를 숨겨서 추성화하고, 모듈의 사용자는 값 생성자와의 패턴매칭을 할 수 없습니다. 
 
-## Record syntax
+## Record 문법
 
+이제부터는 사람을 설명하는 데이터 타입을 만들어 보겠습니다. 사람에 대한 정보는 성, 이름, 나이, 키, 전화번호와 좋아하는 아이스크림 맛이 있습니다. 
 
+```haskell
+data Person = Person String String Int Float String String deriving (Show)
+```
 
+위와같이 `Person` 타입을 정의하고 사람을 만들어 보겠습니다. 
 
+![](/assets/스크린샷 2017-03-26 오전 1.11.59.png)
 
+가독성이 좋지는 않지만 사람을 만들었습니다. 만약 사람의 각 속성을 받아오는 함수를 만드려면 어떻게 할까요? 
 
+```haskell
+firstName :: Person -> String  
+firstName (Person firstname _ _ _ _ _) = firstname  
+  
+lastName :: Person -> String  
+lastName (Person _ lastname _ _ _ _) = lastname  
+  
+age :: Person -> Int  
+age (Person _ _ age _ _ _) = age  
+  
+height :: Person -> Float  
+height (Person _ _ _ height _ _) = height  
+  
+phoneNumber :: Person -> String  
+phoneNumber (Person _ _ _ _ number _) = number  
+  
+flavor :: Person -> String  
+flavor (Person _ _ _ _ _ flavor) = flavor
+```
 
+위와 같이 작성하는게 고통스럽긴 하지만.. 이 메서드들은 잘 동작합니다. 
 
+![](/assets/스크린샷 2017-03-26 오전 1.18.52.png)
+ 
+하스켈를 만든사람은 이런한 상황을 만들지 않기위해서 Record를 만들었습니다.  
+   
+```haskell
+data Person = Person { firstName :: String  
+                     , lastName :: String  
+                     , age :: Int  
+                     , height :: Float  
+                     , phoneNumber :: String  
+                     , flavor :: String  
+                     } deriving (Show)
+```    
+
+각 필드의 타입 이름만 공백으로 구분하여 나열하는 대신 괄호를 사용하엿습니다. 먼저 `firstName`과 같이 필드명을 적고 `::`를 적고 타입을 명시합니다. 이 기능의 주요 이점은 데이터 타입에서 필드를 조회하는 함수를 만드는 것입니다. 하스켈에서는 자동으로 `firstName`, `lastName`, `age`, `height`, `phoneNumber`, `flavor` 함수를 만들어줍니다. 
+
+![](/assets/스크린샷 2017-03-26 오전 1.28.39.png)
+
+     
+     
+     
+     
+     
+      
+       
+         
+   
