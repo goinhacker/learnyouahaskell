@@ -61,10 +61,64 @@ data Shape = Circle Float Float Float | Rectangle Float Float Float Float derivi
 
 ![](/assets/스크린샷 2017-03-25 오후 10.00.31.png)
 
+2차원 공간의 점을 부분 데이터 타입으로 선언하여 재활용할 수 있습니다. 타입을 분리하면 아래와 같이 `Shape`을 더 이해하기 쉽게 정의할 수 있습니다. 
+
+```haskell
+data Point = Point Float Float deriving (Show)
+data Shape = Circle Point Float | Rectangle Point Point deriving (Show)
+```
+
+`Point`를 선언할때 타입과 값 생성자에 동일하게 `Point`를 이름을 사용하였습니다. 이렇게 사용하는 것은 특별한 의미는 없지만, 일반적으로 타입에 한개의 값 생성자가 있을때 동일한 이름을 사용합니다. `Point`의 활용으로 `Circle`과 `Rectangle`이 좀 더 이해하기 쉽게 정의되었습니다. 이에따라서 `surface` 함수도 아래와 같이 재정의 됩니다. 
+
+```haskell
+surface :: Shape -> Float
+surface (Circle _ r) = pi * r ^ 2
+surface (Rectangle (Point x1 y1) (Point x2 y2)) = (abs $ x2 - x1) * (abs $ y2 - y1)
+``` 
+
+여기서는 `Circle` 패턴은 `Point` 입력을 무시하였습니다. `Rectangle` 패턴에서는 `Point`의 값을 얻기위해서 중첩된 패턴매칭을 사용하였습니다. 이렇게 `Point` 자체의 값을 받아올때 as 패턴을 사용할수도 있습니다. 
+
+![](/assets/스크린샷 2017-03-26 오전 12.09.29.png)
 
 
+도형을 조금씩 움직이는 함수를 만들어 보겠습니다. 이 함수는 도형과 x축, y축으로 얼마나 이동할지를 받아서 같은 이차원에 새로운 도형을 리턴합니다. 
 
+```haskell
+nudge :: Shape -> Float -> Float -> Shape
+nudge (Circle (Point x y) r) a b = Circle (Point (x+a) (y+b)) r
+nudge (Rectangle (Point x1 y1) (Point x2 y2)) a b = Rectangle (Point (x1+a) (y1+b)) (Point (x2+a) (y2+b))
+```
 
+이 예제에서는 직접적으로 도형의 위치에서 움직이는 양만큼 더해주었습니다. 
+
+![](/assets/스크린샷 2017-03-26 오전 12.24.44.png)
+
+만약 점을 직접적으로 다루고 싶지않다면 원점에서 어떤 크기의 도형을 만들고 조금씩 움직이는 보조 함수를 만들 수 있습니다. 
+
+```haskell
+baseCircle :: Float -> Shape
+baseCircle r = Circle (Point 0 0) r
+
+baseRect :: Float -> Float -> Shape
+baseRect width height = Rectangle (Point 0 0) (Point width height)
+```
+
+![](/assets/스크린샷 2017-03-26 오전 12.30.24.png)
+
+직접 정의한 데이터 타입은 모듈에서 노출시킬 수 있습니다. 모듈을 정의할때 노출시키는 함수와 함께 타입을 적어주고 괄호와 내부에 노출시킬 값 생성자를 콤마로 구분하여 명시하면 됩니다. 모든 값 생성자들을 노출시키려면 괄호안에 `..`를 넣어주면 됩니다. 
+
+```haskell
+module Shapes   
+( Point(..)  
+, Shape(..)  
+, surface  
+, nudge  
+, baseCircle  
+, baseRect  
+) where  
+```  
+
+`Shape(..)`은 `Shape`의 모든 값 생성자들을 노출시켜 어떤 모듈이든지 `Rectangle`과 `Circle` 값 생성자들을 사용하여 도형을 만들 수 있게합니다. 즉, `Shape (Rectangle, Circle)`과 동일합니다. 
 
 
 
