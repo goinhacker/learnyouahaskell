@@ -10,4 +10,5 @@
 * [재귀](recursion.md)
 * [고계 함수](highorderfunction.md)
 * [모듈](modules.md)
+* [Making Types](making-types.md)
 
