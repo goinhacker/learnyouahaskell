@@ -246,6 +246,22 @@ tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ "
 ```                                                                                    
 ![](/assets/스크린샷 2017-03-26 오후 11.15.13.png)
 
+만약 `Car`의 두번째 정의인 `Car a b c`라면 어떻게 될까요?
+
+```haskell
+tellCar :: (Show a) => Car String String a -> String
+tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ " was made in " ++ show y
+```
+
+이때는 `Car`의 타입을 `(Show a) => Car String String a`로 지정해야 합니다. 따라서 타입 선언이 더 복잡해졌습니다. 유일하게 얻을 수 있는 이점은 `c`의 타입으로 `Show` 타입클래스의 인스턴스인 어떤 타입이든 사용할 수 있다는 것입니다.  
+
+![](/assets/스크린샷 2017-03-26 오후 11.26.34.png)
+
+
+
+
+
+
 
 
 
