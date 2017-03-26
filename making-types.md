@@ -216,4 +216,38 @@ data Maybe a = Nothing | Just a
       
 ![](/assets/스크린샷 2017-03-26 오전 2.50.05.png)            
                
-                     
+타입 매개변수를 사용하면 데이터 타입에 담기를 원하는 타입에 따라서 여러가지 타입으로 만들 수 있습니다. `:t Just "Haha"`를 수행했을때, `Just a`의 `a`가 문자열이면 `Maybe a`의 `a`도 문자열이기때문에 `Maybe [Char]`로 타입 추론되었습니다. 
+
+`Nothing`의 타입은 `Maybe a`입니다. 만약 `Maybe Int`를 매개변수로 받는 함수가 있다면, `Nothing`을 입력으로 넣을 수 있습니다. 왜냐하면 `Nothing`은 어떤 값도 포함하고 있지않고 어떤 값이든 상관하지 않기 때문입니다. `5`가 `Int`나 `Double`로 동작할 수 있는 것 처럼, `Maybe a` 타입은 `Maybe Int`처럼 동작할 수 있습니다. 유사하게 빈리스트의 타입은 `[a]`가 됩니다. 따라서 빈리스트는 어떤 리스트든 될 수 있습니다. 이런 이유로 `[1,2,3] ++ []`와 `["ha","ha","ha"] ++ []`가 가능합니다. 
+ 
+타입 매개변수를 사용하는 것은 이점이 많지만, 적절하게 사용되어야 합니다. 일반적으로 `Maybe a` 타입처럼 데이터 타입이 보유하는 값의 타입에 관계없이 동작할때 사용합니다. 마치 타입이 일종의 박스처럼 사용될때 적합합니다. `Car`의 데이터 타입을 아래와 같이 변경할 수 있습니다. 
+
+```haskell
+data Car = Car { company :: String  
+               , model :: String  
+               , year :: Int  
+               } deriving (Show)
+```
+
+를 아래와 같이 변경할 수 있습니다. 
+
+```haskell
+data Car a b c = Car { company :: a  
+                     , model :: b  
+                     , year :: c   
+                     } deriving (Show)
+```  
+    
+하지만 위와같이 변경하는 것에 이점이 있을까요? 정답은 아마도 없다일 것입니다. 왜냐하면 `Car String String Int`에서만 동작하는 함수를 정의했기 때문입니다. 예를들어 `Car`의 첫번째 정의에서는 자동차의 속성을 작은 텍스트로 표시하는 함수를 만들 수 있습니다. 
+
+```haskell
+tellCar :: Car -> String
+tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ " was made in " ++ show y
+```                                                                                    
+![](/assets/스크린샷 2017-03-26 오후 11.15.13.png)
+
+
+
+
+
+
