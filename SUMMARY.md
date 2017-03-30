@@ -10,5 +10,5 @@
 * [재귀](recursion.md)
 * [고계 함수](highorderfunction.md)
 * [모듈](modules.md)
-* [타입 만들기](making-types.md)
+* [타입 정의](making-types.md)
 
