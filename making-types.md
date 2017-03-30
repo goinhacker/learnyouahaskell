@@ -368,4 +368,32 @@ data Bool = False | True deriving (Ord)
 data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
 ```
 
+이 예제에서는 모든 값 생성자가 매개변수를 받지않아서 `Enum` 타입클래스로 만들 수 있습니다. `Enum` 타입클래스는 predecessor와 successor들을 가진 경우에 사용됩니다. 가능한 가장 작은 값과 가능한 가장 큰 값을 가진 경우는 `Bounded` 타입클래스로 만들 수 있습니다. 그리고 여기서 다른 파생가능한 타입클래스들의 인스턴스로 만들 수 있습니다. 
+
+```haskell
+data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday   
+           deriving (Eq, Ord, Show, Read, Bounded, Enum)
+```
+
+`Show`와 `Read` 타입클래스에 속하기 때문에 문자열로 만들 수 있고,
+
+![](/assets/스크린샷 2017-03-31 오전 2.08.33.png)
+
+`Eq`와 `Ord` 타입클래스에 속하기 때문에 비교할 수 있습니다. 
+
+![](/assets/스크린샷 2017-03-31 오전 2.11.49.png)
+
+`Bounded`에 속하기 때문에 가장 작은날과 가장 높은 날을 얻을 수 있습니다. 
+
+![](/assets/스크린샷 2017-03-31 오전 2.12.50.png)
+
+`Enum` 타입이기 때문에 날짜에 대한 predecessor, successor와 리스트이 범위를 얻을 수 있습니다. 
+
+![](/assets/스크린샷 2017-03-31 오전 2.14.16.png)
+
+
+
+
+
+
 
