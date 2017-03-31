@@ -406,7 +406,7 @@ type String = [Char]
 
 만약 문자열을 대문자로 바꾸는 `toUpperString` 함수를 만든다면, `toUpperString :: [Char] -> [Char]` 또는 `toUpperString :: String -> String`와 같이 선언할 수 있습니다. 둘다 완전히 같지만, 후자가 더 읽기 좋습니다. 
 
-이전에 `Data.Map` 모듈을 다룰때, 맵안에서 변환하기 전에 관련된 리스트으로 전화번호부를 나타냈습니다. 이미 배운대로 관련된 리스트는 key-value 쌍의 리스트입니다. 
+이전에 `Data.Map` 모듈을 다룰때, 맵안에서 변환하기 전에 연관 리스트로 전화번호부를 표현했습니다. 여기서 연관 리스트는 key-value 쌍의 리스트입니다. 이 전화번호부는 아래와 같습니다. 
 
 ```haskell
 phoneBook :: [(String,String)]  
@@ -420,6 +420,7 @@ phoneBook =
     ]
 ```      
 
+여기서 `phoneBook`의 타입은 `[String, String]`입니다. 이말은 `phoneBook`은 문자열을 문자열로 변환하는 연관 리스트라는 것 입니다. 
 
 
 
