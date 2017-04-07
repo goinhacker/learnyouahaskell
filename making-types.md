@@ -556,6 +556,16 @@ data List a = Empty | Cons { listHead :: a, listTail :: List a} deriving (Show, 
 
 infix 방식의 `Cons` 생성자는 `:`를 사용하는 것 처럼 보입니다. `Empty`는 `[]`와 ``4 `Cons` (5 `Cons` Empty)``는 `4:(5:[])`와 유사합니다. 
 
+특수 문자로만 구성하여 자동으로 infix가 되는 함수를 정의할 수 있습니다. 또한 데이터 타입을 리턴하는 함수이기 때문에 생성자에서도 동일한 일을 할 수 있습니다. 
+
+```haskell
+infixr 5 :-:
+data List a = Empty | a :-: (List a) deriving (Show, Read, Eq, Ord)
+```
+
+우선 새로운 문법인 고정 선언은 함수를 연산자로 정의할 때, 연산자를 고정할 수 있습니다.(반드시 고정해야하는 것은 아님) 
+
+
 
 
 
