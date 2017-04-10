@@ -653,5 +653,7 @@ Node 5 (Node 3 (Node 1 EmptyTree EmptyTree) (Node 4 EmptyTree EmptyTree)) (Node 
 
 `foldr`에서 `treeInsert`는 folding 함수(트리와 리스트의 값을 입력받아서 새로운 트리를 리턴하는..)이고 `EmptyTree`는 초기값입니다. `nums`는 folding할 리스트입니다.
 
+![](/assets/스크린샷 2017-04-11 오전 2.26.33.png)
 
+지금까지 살펴보았듯이 대수적 데이터 구조는 하스켈에서 매우 강력한 개념입니다. boolean값과 열거형에서부터 이진 검색 트리 이상의 것을 만드는데 사용할 수 있습니다. 
 
