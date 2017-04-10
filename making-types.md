@@ -605,6 +605,53 @@ Empty .++ ys = ys
 
 `Data.Set`의 Set과 `Data.Map`의 Map은 균형잡힌 이진 검색 트리를 사용하여 구현되었습니다. 균형잡힌 트리는 한쪽으로 치우치지않고 항상 좌우가 균형잡힌 트리를 의미합니다. 여기서는 균형잡힌 트리가 아닌 일반적인 이진 검색 트리를 구현할 것 입니다.
 
+먼저 트리는 비어있거나 어떤 값과 두개의 트리를 가진 한개의 노드입니다. 이것은 대수적 데이터 타입으로 정의하면 아래와 같습니다. 
+
+```haskell
+data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)
+```
+
+수동으로 트리를 만드는것 대신에 여기서는 트리와 노드를 받아서 트리를 만들고 노드를 삽입하는 함수를 만들 것입니다. 루트 노드에 새로운 노드를 넣으려면, 값을 비교해서 값이 작으면 왼쪽에 크면 오른쪽에 넣어야 합니다. 트리의 모든 노드를 거쳐서 빈트리를 만날때까지 동일한 작업을 반복합니다. 빈트리를 만나면, 빈트리 대신 값을 포함한 노드를 넣습니다.    
+
+C와 같은 언어에서는 트리안에 포인터와 값들을 수정하여 이런 작업을 합니다. 하스켈에서는 트리를 수정하지 않습니다. 따라서 왼쪽이나 오른쪽으로 갈때마다 새로운 하위트리를 만들어야하고, 삽입 함수는 완전히 새로운 트리를 리턴합니다. 왜냐하면 하스켈은 실제로 포인터 개념이 없고 그냥 값이기 때문입니다. 그러므로 삽입 함수의 타입은 `a -> Tree a -> Tree a`와 같이 될 것 입니다. 이 함수는 **노드와 트리를 받아서 입력받은 노드를 포함한 새로운 트리를 리턴**합니다. 이것은 **비효율적인 것 처럼 보이지만 laziness가 이 문제를 해결**합니다.    
+
+아래 싱글톤 트리(한개의 노드만 가진 트리)를 만드는 유틸리티 함수와 트리에 노드를 삽입하는 함수를 구현하였습니다. 
+
+```haskell
+singleton :: a -> Tree a
+singleton x = Node x EmptyTree EmptyTree
+
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x EmptyTree = singleton x
+treeInsert x (Node a left right)
+    | x == a = Node x left right
+    | x < a  = Node a (treeInsert x left) right
+    | x > a  = Node a left (treeInsert x right) 
+```
+
+`singleton` 함수는 어떤 값과 두개의 빈 하위 트리를 가진 노드를 만들어줍니다. `treeInsert` 함수에서는 먼저 종료 조건을 정의하였습니다. 만약 빈 하위 트리를 만나면, 이것은 빈 트리를 대신해서 입력받은 값을 포함한 싱글톤 트리를 넣을 의미합니다. 종료조건에 매칭되지 않으면 몇가지 사항을 확인해야 합니다. 우선 넣을 노드가 루트 노드와 같은 경우, 동일한 트리를 리턴합니다. 넣을 노드의 값이 작으면 루트 노드와 오른쪽 하위 트리는 동일하게 리턴하고, 왼쪽 하위 트리는 새로운 값을 넣은 트리를 넣습니다. 넣은 노드의 값이 크면 반대로 오른쪽 하위 트리를 새로운 값을 넣은 트리로 대신합니다.   
+
+이제 트리안에 어떤 노드가 있는 확인하는 함수를 만들어 보겠습니다. 리스트에서 어떤 요소를 포함하는지 검사할때, 빈리스트를 만나면 찾고있는 요소가 없는 것이므로 재귀를 종료하였습니다. 마찬가지로 여기에서도 찾고있는는 노드가 빈트리를 만나는 것을 종료조건으로 합니다. 만약 찾고있는 노드의 값이 루트노드와 같다면, 해당 노드가 찾고있는 노드가 될 것입니다. 찾고있는 노드의 값이 로트노드보다 작으면 왼쪽트리에서 찾고, 크면 오른쪽 트리에서 찾아야 합니다.
+
+```haskell
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem x EmptyTree = False
+treeElem x (Node a left right)
+    | x == a = True
+    | x < a  = treeElem x left
+    | x > a  = treeElem x right
+```  
+
+여기서 트리를 수동으로 만드는 대신 리스트로부터 트리를 만들어 보겠습니다. 이전에 리스트를 하나씩 검색하여 어떤 종류의 값을 리턴하는 것은 `fold`를 사용하여 구현될 수 있다는 것을 배웠습니다. 여기서는 빈트리에서 시작해서 리스트의 오른쪽에서부터 accumulator 트리안에 노드 뒤에 새로운 노드를 추가해나갈 것입니다. 
+
+```bash
+ghci> let nums = [8,6,4,1,7,3,5]  
+ghci> let numsTree = foldr treeInsert EmptyTree nums  
+ghci> numsTree  
+Node 5 (Node 3 (Node 1 EmptyTree EmptyTree) (Node 4 EmptyTree EmptyTree)) (Node 7 (Node 6 EmptyTree EmptyTree) (Node 8 EmptyTree EmptyTree))
+```
+
+`foldr`에서 `treeInsert`는 folding 함수(트리와 리스트의 값을 입력받아서 새로운 트리를 리턴하는..)이고 `EmptyTree`는 초기값입니다. `nums`는 folding할 리스트입니다.
 
 
 
