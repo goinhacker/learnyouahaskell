@@ -1,3 +1,8 @@
 {
-    "plugins": ["mathjax", "terminal"]
+    "plugins": ["mathjax", "terminal"],
+    "pluginsConfig": {
+        "terminal": {
+            "fade": false,
+        }
+    }
 }
