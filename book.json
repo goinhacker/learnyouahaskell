@@ -3,7 +3,7 @@
     "pluginsConfig": {
         "terminal": {
             "copyButtons": true,
-            "style": "ubuntu",
+            "style": "flat",
             "fade": false
         }
     }
