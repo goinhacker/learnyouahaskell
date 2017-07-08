@@ -4,7 +4,7 @@
         "terminal": {
             "copyButtons": true,
             "style": "ubuntu",
-            "fade": false
+            "fade": false,
         }
     }
 }
