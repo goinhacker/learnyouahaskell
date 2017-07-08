@@ -2,7 +2,6 @@
     "plugins": ["mathjax", "terminal"],
     "pluginsConfig": {
         "terminal": {
-            "copyButtons": true,
             "fade": false
         }
     }
