@@ -385,7 +385,13 @@ data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
 
 `Bounded`에 속하기 때문에 가장 작은날과 가장 높은 날을 얻을 수 있습니다.
 
-![](/assets/스크린샷 2017-03-31 오전 2.12.50.png)
+```haskell
+**[terminal]
+**[prompt ghci>]**[command minBound :: Day]
+Monday
+**[prompt ghci>]**[command maxBound :: Day]
+Sunday
+```
 
 `Enum` 타입이기 때문에 날짜에 대한 predecessor, successor와 리스트이 범위를 얻을 수 있습니다.
 
