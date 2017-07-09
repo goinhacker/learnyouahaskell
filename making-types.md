@@ -379,14 +379,14 @@ scalarMult :: (Num t) => Vector t -> Vector t -> t
 
 ```haskell
 **[terminal]
-**[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8  
-Vector 12 7 16]
-**[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8 `vplus` Vector 0 2 3  
-Vector 12 9 19]
-**[prompt ghci> ]**[command Vector 3 9 7 `vectMult` 10  
-Vector 30 90 70]
-**[prompt ghci> ]**[command Vector 4 9 5 `scalarMult` Vector 9.0 2.0 4.0  
-74.0]
+**[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8]
+Vector 12 7 16
+**[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8 `vplus` Vector 0 2 3]
+Vector 12 9 19
+**[prompt ghci> ]**[command Vector 3 9 7 `vectMult` 10]
+Vector 30 90 70
+**[prompt ghci> ]**[command Vector 4 9 5 `scalarMult` Vector 9.0 2.0 4.0]
+74.0
 **[prompt ghci> ]**[command Vector 2 9 3 `vectMult` (Vector 4 9 5 `scalarMult` Vector 9 2 4)]
 Vector 148 666 222
 ```
