@@ -389,5 +389,15 @@ data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
 
 `Enum` 타입이기 때문에 날짜에 대한 predecessor, successor와 리스트이 범위를 얻을 수 있습니다.
 
-![](/assets/스크린샷 2017-03-31 오전 2.14.16.png)
+```haskell
+**[terminal]
+**[prompt ghci>]**[command succ Monday]  
+Tuesday  
+**[prompt ghci>]**[command pred Saturday]  
+Friday  
+**[prompt ghci>]**[command [Thursday .. Sunday]]  
+[Thursday,Friday,Saturday,Sunday]  
+**[prompt ghci>]**[command [minBound .. maxBound] :: [Day]]  
+[Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday]
+```
 
