@@ -391,13 +391,13 @@ data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
 
 ```haskell
 **[terminal]
-**[prompt ghci>]**[command succ Monday]  
-Tuesday  
-**[prompt ghci>]**[command pred Saturday]  
-Friday  
-**[prompt ghci>]**[command [Thursday .. Sunday]]  
-[Thursday,Friday,Saturday,Sunday]  
-**[prompt ghci>]**[command [minBound .. maxBound] :: [Day]]  
+**[prompt ghci>]**[command succ Monday]
+Tuesday
+**[prompt ghci>]**[command pred Saturday]
+Friday
+**[prompt ghci>]**[command [Thursday .. Sunday]]
+[Thursday,Friday,Saturday,Sunday]
+**[prompt ghci>]**[command [minBound .. maxBound] :: [Day]]
 [Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday]
 ```
 
