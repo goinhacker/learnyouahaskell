@@ -418,6 +418,7 @@ data Person = Person { firstName :: String
 위 예제와같이 타입을 `Eq`로 derive했을때 두값을 `==`이나 `/=`로 `Person` 타입의 두 값을 배교해봅시다. 하스켈은 값 생성자가 매칭되면 `Person`안에 포함된 모든 값의 쌍을 `==`으로 테스트합니다. `Person` 타입이 `Eq` 타입클래스에 속하면 `Person`이 가진은 모든 필드의 타입도 `Eq` 타입클래스에 속해야 합니다. 따라서 `String`과 `Int` 모두 `Eq` 타입클래스에 속합니다.
 
 ```haskell
+**[terminal]
 **[prompt ghci> ]**[command let mikeD = Person {firstName = "Michael", lastName = "Diamond", age = 43}]
 **[prompt ghci> ]**[command let adRock = Person {firstName = "Adam", lastName = "Horovitz", age = 41}]
 **[prompt ghci> ]**[command let mca = Person {firstName = "Adam", lastName = "Yauch", age = 44}]
