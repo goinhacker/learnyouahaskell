@@ -45,7 +45,13 @@ surface (Rectangle x1 y1 x2 y2) = (abs $ x2 -x1) * (abs $ y2 - y1)
 
 이 예제에서 가장 주목할 만한 것은 타입 선언인데, Shape을 받아서 Float를 리턴하는 함수입니다. `Circle`은 `Shape`처럼 타입이 아니기 때문에 `Circle -> Float`와 같이 선언할 수 없습니다. 마찬가지로 `True -> Int`와 같이 선언할 수 없습니다. 또한 위 예제에서 생성자에 의한 패턴매칭을 한 것을 확인할 수 있습니다. 첫번째 생성자 패턴매칭은 앞의 두 매개변수는 상관하지않고 세번째 매개변수인 반지름\(radius\)만 사용하였습니다.
 
-![](/assets/스크린샷 2017-03-25 오후 9.37.05.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command surface $ Circle 10 20 10]
+314.15927
+**[prompt ghci> ]**[command surface $ Rectangle 0 0 100 100]
+10000.0
+```
 
 여기서 만약 `Circle 10 20 5`를 실행하면 하스켈은 데이터 타입을 어떻게 문자열로 출력할지 모르기 때문에 에러가 발생합니다. 하스켈에서는 값을 프롬프트에 문자열로 출력하기 위해서 먼저 `show` 함수를 실행하고 터미널로 출력합니다. `Shape` 타입이 `Show` 타입클래스에 속하려면 아래와 같이 수정해야합니다.
 
@@ -55,11 +61,21 @@ data Shape = Circle Float Float Float | Rectangle Float Float Float Float derivi
 
 위와같이 _data_ 선언의 마지막에 `deriving (Show)`를 추가하면 타입은 `Show` 타입클래스에 속하게 됩니다. 이제 아래와 같이 사용이 가능해집니다.
 
-![](/assets/스크린샷 2017-03-25 오후 9.49.00.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Circle 10 20 5]
+Circle 10.0 20.0 5.0
+**[prompt ghci> ]**[command Rectangle 50 230 60 90]
+Rectangle 50.0 230.0 60.0 90.0
+```
 
 값 생성자는 함수입니다. 따라서 다른 함수들처럼 map을 쓰거나 부분적으로 적용하는 등의 모든 것이 가능합니다. 만약 원의 중심은 같은데 반지름이 다른 원들의 리스트를 만드려면 아래와 같이 할 수 있습니다.
 
-![](/assets/스크린샷 2017-03-25 오후 10.00.31.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (Circle 10 20) [4,5,6,6]]
+[Circle 10.0 20.0 4.0,Circle 10.0 20.0 5.0,Circle 10.0 20.0 6.0,Circle 10.0 20.0 6.0]
+```
 
 2차원 공간의 점을 부분 데이터 타입으로 선언하여 재활용할 수 있습니다. 타입을 분리하면 아래와 같이 `Shape`을 더 이해하기 쉽게 정의할 수 있습니다.
 
@@ -78,7 +94,13 @@ surface (Rectangle (Point x1 y1) (Point x2 y2)) = (abs $ x2 - x1) * (abs $ y2 - 
 
 여기서는 `Circle` 패턴은 `Point` 입력을 무시하였습니다. `Rectangle` 패턴에서는 `Point`의 값을 얻기위해서 중첩된 패턴매칭을 사용하였습니다. 이렇게 `Point` 자체의 값을 받아올때 as 패턴을 사용할수도 있습니다.
 
-![](/assets/스크린샷 2017-03-26 오전 12.09.29.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command surface (Rectangle (Point 0 0) (Point 100 100))]
+10000.0
+**[prompt ghci> ]**[command surface (Circle (Point 0 0) 24)]
+1809.5574
+```
 
 도형을 조금씩 움직이는 함수를 만들어 보겠습니다. 이 함수는 도형과 x축, y축으로 얼마나 이동할지를 받아서 같은 이차원에 새로운 도형을 리턴합니다.
 
@@ -90,7 +112,11 @@ nudge (Rectangle (Point x1 y1) (Point x2 y2)) a b = Rectangle (Point (x1+a) (y1+
 
 이 예제에서는 직접적으로 도형의 위치에서 움직이는 양만큼 더해주었습니다.
 
-![](/assets/스크린샷 2017-03-26 오전 12.24.44.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command nudge (Circle (Point 34 34) 10) 5 10]
+Circle (Point 39.0 44.0) 10.0
+```
 
 만약 점을 직접적으로 다루고 싶지않다면 원점에서 특정 크기의 도형을 만드는 보조 함수를 만들 수 있습니다.
 
@@ -102,7 +128,11 @@ baseRect :: Float -> Float -> Shape
 baseRect width height = Rectangle (Point 0 0) (Point width height)
 ```
 
-![](/assets/스크린샷 2017-03-26 오전 12.30.24.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command nudge (baseRect 40 100) 60 23]
+Rectangle (Point 60.0 23.0) (Point 100.0 123.0)
+```
 
 직접 정의한 데이터 타입은 모듈에서 노출시킬 수 있습니다. 모듈을 정의할때 노출시키는 함수와 함께 타입을 적어주고 괄호와 내부에 노출시킬 값 생성자를 콤마로 구분하여 명시하면 됩니다. 모든 값 생성자들을 노출시키려면 괄호안에 `..`를 넣어주면 됩니다.
 
@@ -133,7 +163,12 @@ data Person = Person String String Int Float String String deriving (Show)
 
 위와같이 `Person` 타입을 정의하고 사람을 만들어 보겠습니다.
 
-![](/assets/스크린샷 2017-03-26 오전 1.11.59.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let guy = Person "Buddy" "Finklestein" 43 184.2 "526-2928" "Chocolate"]
+**[prompt ghci> ]**[command guy]
+Person "Buddy" "Finklestein" 43 184.2 "526-2928" "Chocolate"
+```
 
 가독성이 좋지는 않지만 사람을 만들었습니다. 만약 사람의 각 속성을 받아오는 함수를 만드려면 어떻게 할까요?
 
@@ -159,7 +194,16 @@ flavor (Person _ _ _ _ _ flavor) = flavor
 
 위와 같이 작성하는게 고통스럽긴 하지만.. 이 메서드들은 잘 동작합니다.
 
-![](/assets/스크린샷 2017-03-26 오전 1.18.52.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let guy = Person "Buddy" "Finklestein" 43 184.2 "526-2928" "Chocolate"]
+**[prompt ghci> ]**[command firstName guy]
+"Buddy"
+**[prompt ghci> ]**[command height guy]
+184.2
+**[prompt ghci> ]**[command flavor guy]
+"Chocolate"
+```
 
 하스켈를 만든사람은 이런 상황을 만들지 않기위해서 Record를 만들었습니다.
 
@@ -175,7 +219,13 @@ data Person = Person { firstName :: String
 
 각 필드의 타입 이름만 공백으로 구분하여 나열하는 대신 괄호를 사용하엿습니다. 먼저 `firstName`과 같이 필드명을 적고 `::`를 적고 타입을 명시합니다. 이 기능의 주요 이점은 데이터 타입에서 필드를 조회하는 함수를 만드는 것입니다. 하스켈에서는 자동으로 `firstName`, `lastName`, `age`, `height`, `phoneNumber`, `flavor` 함수를 만들어줍니다.
 
-![](/assets/스크린샷 2017-03-26 오전 1.28.39.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command :t flavor]
+flavor :: Person -> String  
+**[prompt ghci> ]**[command :t firstName
+firstName :: Person -> String
+```
 
 또다른 이점은 타입에 `Show`를 사용했을때, Record를 사용하면 화면에 출력될때도 필드명이 함께 출력됩니다.
 
@@ -185,7 +235,11 @@ data Person = Person { firstName :: String
 data Car = Car String String Int deriving (Show)
 ```
 
-![](/assets/스크린샷 2017-03-26 오전 1.34.23.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Car "Ford" "Mustang" 1967]
+Car "Ford" "Mustang" 1967
+```
 
 이것을 Record 문법을 사용해서 재정의하면 아래와 같습니다.
 
@@ -193,7 +247,11 @@ data Car = Car String String Int deriving (Show)
 data Car = Car {company :: String, model :: String, year :: Int} deriving (Show)
 ```
 
-![](/assets/스크린샷 2017-03-26 오전 1.35.28.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Car {company="Ford", model="Mustang", year=1967}]
+Car {company = "Ford", model = "Mustang", year = 1967}
+```
 
 이 예제에서 자동차를 하나 만들었습니다. 위와 같이 작성하면 생성할때 필드의 순서를 지켜서 작성할 필요가 없습니다. 만약 Record를 사용하지 않으면 반드시 순서대로 인자들을 입력해야 합니다.
 
@@ -213,7 +271,21 @@ data Maybe a = Nothing | Just a
 
 `Maybe`를 사용하기전에 우리는 이미 타입 매개변수를 가진 타입을 사용해왔습니다. 바로 리스트 타입입니다. 리스트 타입은 구체적인 타입을 생성하기 위해서 타입 매개변수를 사용합니다. 리스트의 값들은 `[Int]`타입, `[Char]`타입, `[[String]]`타입을 가질 수 있지만, 타입이 `[]`뿐인 값을 가질 수는 없습니다.
 
-![](/assets/스크린샷 2017-03-26 오전 2.50.05.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Just "Haha"]
+Just "Haha"
+**[prompt ghci> ]**[command Just 84]
+Just 84
+**[prompt ghci> ]**[command :t Just "Haha"]
+Just "Haha" :: Maybe [Char]
+**[prompt ghci> ]**[command :t Just 84]
+Just 84 :: (Num t) => Maybe t
+**[prompt ghci> ]**[command :t Nothing]
+Nothing :: Maybe a
+**[prompt ghci> ]**[command Just 10 :: Maybe Double]
+Just 10.0
+```
 
 타입 매개변수를 사용하면 데이터 타입에 담기를 원하는 타입에 따라서 여러가지 타입으로 만들 수 있습니다. `:t Just "Haha"`를 수행했을때, `Just a`의 `a`가 문자열이면 `Maybe a`의 `a`도 문자열이기때문에 `Maybe [Char]`로 타입 추론되었습니다.
 
@@ -245,7 +317,12 @@ tellCar :: Car -> String
 tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ " was made in " ++ show y
 ```
 
-![](/assets/스크린샷 2017-03-26 오후 11.15.13.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let stang = Car {company="Ford", model="Mustang", year=1967}]
+**[prompt ghci> ]**[command tellCar stang]
+"This Ford Mustang was made in 1967"
+```
 
 만약 `Car`의 두번째 정의인 `Car a b c`라면 어떻게 될까요?
 
@@ -256,7 +333,17 @@ tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ "
 
 이때는 `Car`의 타입을 `(Show a) => Car String String a`로 지정해야 합니다. 따라서 타입 선언이 더 복잡해졌습니다. 유일하게 얻을 수 있는 이점은 `c`의 타입으로 `Show` 타입클래스의 인스턴스인 어떤 타입이든 사용할 수 있다는 것입니다.
 
-![](/assets/스크린샷 2017-03-26 오후 11.26.34.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command tellCar (Car "Ford" "Mustang" 1967)]
+"This Ford Mustang was made in 1967"
+**[prompt ghci> ]**[command tellCar (Car "Ford" "Mustang" "nineteen sixty seven")]
+"This Ford Mustang was made in \"nineteen sixty seven\""
+**[prompt ghci> ]**[command :t Car "Ford" "Mustang" 1967]
+Car "Ford" "Mustang" 1967 :: (Num t) => Car [Char] [Char] t
+**[prompt ghci> ]**[command :t Car "Ford" "Mustang" "nineteen sixty seven"]
+Car "Ford" "Mustang" "nineteen sixty seven" :: Car [Char] [Char] [Char]
+```
 
 실제상황에서는 `Car String String Int`로 사용할 것이고, `Car`의 타입을 매개변수화 하는 것은 가치가 없어 보입니다. **데이터 타입의 다양한 값 생성자 안에 포함된 타입이 타입을 동작시키는데 중요하지 않은 경우, 일반적으로 타입 매개변수를 사용합니다.** 예를들어 리스트는 어떤 것의 리스트이고 어떤 것의 종류에 관계없이 동작할 수 있습니다. 숫자들의 리스트의 합을 구한다면, 합계를 구하는 함수에서 나중에 숫자들의 리스트라는 것을 지정할 수 있습니다. `Maybe`에서도 동일합니다. `Maybe`는 아무것도 가지고 있지않거나 어떤 것을 가지고 있는 것을 의미합니다. 어떤 것이 무슨 타입이든 상관하지 않습니다.
 
@@ -289,7 +376,19 @@ scalarMult :: (Num t) => Vector t -> Vector t -> t
 
 다시한번 **타입 생성자와 값 생성자를 구분하는 것은 매우 중요합니다.** 데이터 타입을 선언했을때, `=`전 부분이 타입 생성자이고, 나머지 부분의 생성자들이 값 생성자 입니다.\(`|`로 구분된\) `Vector t t t -> Vector t t t -> t`와 같은 함수는 잘못된 것입니다. 왜냐하면 타입 선언안에 타입들을 넣어야하고 벡터 타입 생성자는 하나의 매개변수만 사용하기 때문입니다. 반면에 값 생성자는 세개를 받습니다.
 
-![](/assets/스크린샷 2017-03-27 오전 1.17.13.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8  
+Vector 12 7 16]
+**[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8 `vplus` Vector 0 2 3  
+Vector 12 9 19]
+**[prompt ghci> ]**[command Vector 3 9 7 `vectMult` 10  
+Vector 30 90 70]
+**[prompt ghci> ]**[command Vector 4 9 5 `scalarMult` Vector 9.0 2.0 4.0  
+74.0]
+**[prompt ghci> ]**[command Vector 2 9 3 `vectMult` (Vector 4 9 5 `scalarMult` Vector 9 2 4)]
+Vector 148 666 222
+```
 
 ## 파생된 인스턴스\(Derived instances\)
 
@@ -317,11 +416,28 @@ data Person = Person { firstName :: String
 
 위 예제와같이 타입을 `Eq`로 derive했을때 두값을 `==`이나 `/=`로 `Person` 타입의 두 값을 배교해봅시다. 하스켈은 값 생성자가 매칭되면 `Person`안에 포함된 모든 값의 쌍을 `==`으로 테스트합니다. `Person` 타입이 `Eq` 타입클래스에 속하면 `Person`이 가진은 모든 필드의 타입도 `Eq` 타입클래스에 속해야 합니다. 따라서 `String`과 `Int` 모두 `Eq` 타입클래스에 속합니다.
 
-![](/assets/스크린샷 2017-03-28 오전 2.04.59.png)
+```haskell
+**[prompt ghci> ]**[command let mikeD = Person {firstName = "Michael", lastName = "Diamond", age = 43}]
+**[prompt ghci> ]**[command let adRock = Person {firstName = "Adam", lastName = "Horovitz", age = 41}]
+**[prompt ghci> ]**[command let mca = Person {firstName = "Adam", lastName = "Yauch", age = 44}]
+**[prompt ghci> ]**[command mca == adRock]
+False
+**[prompt ghci> ]**[command mikeD == adRock]
+False
+**[prompt ghci> ]**[command mikeD == mikeD]
+True
+**[prompt ghci> ]**[command mikeD == Person {firstName = "Michael", lastName = "Diamond", age = 43}]
+True
+```
 
 `Person`은 현재 `Eq`에 속하기 때문에, 타입 선언안에 `Eq a` 클래스 제약조건에서 `Person`을 `elem`과 같은 모든 함수들을 위한 `a`로 사용할 수 있습니다.
 
-![](/assets/스크린샷 2017-03-28 오전 2.10.59.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let beastieBoys = [mca, adRock, mikeD]]
+**[prompt ghci> ]**[command mikeD `elem` beastieBoys]
+True
+```
 
 `Show`와 `Read` 타입클래스는 각각 문자열로 또는 문자열로부터 변환될 수 있는 것들입니다. `Eq`와같이 타입 생성자가 필드를 가지고 있다면 타입을 인스턴스로 만들기 위해서 `Show` 또는 `Read`에 속해야 합니다. `Person` 데이터 타입을 `Show`와 `Read`에 속하도록 하려면 아래와 같이 합니다.
 
@@ -332,17 +448,32 @@ data Person = Person { firstName :: String
                      } deriving (Eq, Show, Read)
 ```
 
-![](/assets/스크린샷 2017-03-28 오전 2.20.00.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let mikeD = Person {firstName = "Michael", lastName = "Diamond", age = 43}]
+**[prompt ghci> ]**[command mikeD]
+Person {firstName = "Michael", lastName = "Diamond", age = 43}
+**[prompt ghci> ]**[command "mikeD is: " ++ show mikeD]
+"mikeD is: Person {firstName = \"Michael\", lastName = \"Diamond\", age = 43}"
+```
 
 여기서 `Person`을 `Show`에 속하는 객체로 만들지 않았다면 하스켈을 화면에 출력하는 방법을 몰라서 에러가 발생했을 것입니다. 하지만 위 예제에서는 `Show`에서 파생되었기 때문에 출력할 수 있습니다.
 
 `Read`는 `Show`와 반대입니다. `Show`는 값을 문자열로 변환하고, `Read`는 문자열을 값으로 변환합니다. `read` 함수를 사용할때는 아래와같이 변환하려는 타입을 명시해 주어야합니다.
 
-![](/assets/스크린샷 2017-03-31 오전 1.05.25.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command read "Person {firstName =\"Michael\", lastName =\"Diamond\", age = 43}" :: Person]
+Person {firstName = "Michael", lastName = "Diamond", age = 43}
+```
 
 `read`의 결과를 하스켈이 읽었을때 `Person`이라는 것을 추측할 수 있다면 아래와 같이 타입을 명시하지 않아도 됩니다.
 
-![](/assets/스크린샷 2017-03-31 오전 1.11.48.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command read "Person {firstName =\"Michael\", lastName =\"Diamond\", age = 43}" == mikeD]
+True
+```
 
 매개변수화된 타입들을 읽을수도 있지만 타입 매개변수를 넣어야만 합니다. 따라서 `read "Just 't'" :: Maybe a`와 같이 작성할 수 없고, `read "Just 't'" :: Maybe Char`은 작성할 수 잇습니다.
 
@@ -354,11 +485,29 @@ data Bool = False | True deriving (Ord)
 
 위 예제에서 `False` 값 생성자가 `True` 값 생성자보다 먼저 명시되었기 때문에 `True`는 `False`보다 큽니다.
 
-![](/assets/스크린샷 2017-03-31 오전 1.28.57.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command True `compare` False]
+GT
+**[prompt ghci> ]**[command True > False]
+True
+**[prompt ghci> ]**[command True < False]
+False
+```
 
 `Maybe a` 데이터 타입은 `Nothing` 값 생성자가 `Just` 값 생성자전에 명시되어 있으므로 값이 아무리 작아도 `Nothing`은 항상 `Just somthing`보다 작습니다. 그러나 두개의 `Just`값을 비교하면 값으로 비교됩니다.
 
-![](/assets/스크린샷 2017-03-31 오전 1.40.09.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Nothing < Just 100]
+True
+**[prompt ghci> ]**[command Nothing > Just (-49999)]
+False
+**[prompt ghci> ]**[command Just 3 `compare` Just 2]
+GT
+**[prompt ghci> ]**[command Just 100 > Just 50]
+True
+```
 
 `Just (*3) > Just (*2)`은 `(*3)`과 `(*2)`가 함수라서 `Ord`의 인스턴스가 아니기 때문에 비교할 수 없습니다.
 
@@ -377,19 +526,37 @@ data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
 
 `Show`와 `Read` 타입클래스에 속하기 때문에 문자열로 만들 수 있고,
 
-![](/assets/스크린샷 2017-03-31 오전 2.08.33.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Wednesday]
+Wednesday
+**[prompt ghci> ]**[command show Wednesday]
+"Wednesday"
+**[prompt ghci> ]**[command read "Saturday" :: Day]
+Saturday
+```
 
 `Eq`와 `Ord` 타입클래스에 속하기 때문에 비교할 수 있습니다.
 
-![](/assets/스크린샷 2017-03-31 오전 2.11.49.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Saturday == Sunday]
+False
+**[prompt ghci> ]**[command Saturday == Saturday]
+True
+**[prompt ghci> ]**[command Saturday > Friday]
+True
+**[prompt ghci> ]**[command Monday `compare` Wednesday]
+LT
+```
 
 `Bounded`에 속하기 때문에 가장 작은날과 가장 높은 날을 얻을 수 있습니다.
 
 ```haskell
 **[terminal]
-**[prompt ghci>]**[command minBound :: Day]
+**[prompt ghci> ]**[command minBound :: Day]
 Monday
-**[prompt ghci>]**[command maxBound :: Day]
+**[prompt ghci> ]**[command maxBound :: Day]
 Sunday
 ```
 
@@ -397,13 +564,13 @@ Sunday
 
 ```haskell
 **[terminal]
-**[prompt ghci>]**[command succ Monday]
+**[prompt ghci> ]**[command succ Monday]
 Tuesday
-**[prompt ghci>]**[command pred Saturday]
+**[prompt ghci> ]**[command pred Saturday]
 Friday
-**[prompt ghci>]**[command [Thursday .. Sunday]]
+**[prompt ghci> ]**[command [Thursday .. Sunday]]
 [Thursday,Friday,Saturday,Sunday]
-**[prompt ghci>]**[command [minBound .. maxBound] :: [Day]]
+**[prompt ghci> ]**[command [minBound .. maxBound] :: [Day]]
 [Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday]
 ```
 
