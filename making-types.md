@@ -29,9 +29,10 @@ data Shape = Circle Float Float Float | Rectangle Float Float Float Float
 **타입 정의에서 필드는 실제로 매개변수**이고, **값 생성자는 궁극적으로는 타입의 값을 리턴하는 함수**입니다. 위에서 정의한 타입의 타입 선언은 아래와 같습니다.
 
 ```haskell
-ghci> :t Circle  
-Circle :: Float -> Float -> Float -> Shape  
-ghci> :t Rectangle  
+**[terminal]
+**[prompt ghci> ]**[command :t Circle]
+Circle :: Float -> Float -> Float -> Shape
+**[prompt ghci> ]**[command :t Rectangle]
 Rectangle :: Float -> Float -> Float -> Float -> Shape
 ```
 
@@ -222,8 +223,8 @@ data Person = Person { firstName :: String
 ```haskell
 **[terminal]
 **[prompt ghci> ]**[command :t flavor]
-flavor :: Person -> String  
-**[prompt ghci> ]**[command :t firstName
+flavor :: Person -> String
+**[prompt ghci> ]**[command :t firstName]
 firstName :: Person -> String
 ```
 
