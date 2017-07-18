@@ -2,126 +2,284 @@
 
 리스트는 같은 타입의 구성 요소를 여러개 넣을 수 있는 자료구조 입니다.
 
-> 아래 예제에서 let은 GHCI에서 이름을 정의하기 위해서 사용되는 것으로 스크립트에서는 사용되지 않는 키워드입니다.
+> 아래 예제에서 `let`은 GHCI에서 이름을 정의하기 위해서 사용되는 것으로 스크립트에서는 사용되지 않는 키워드입니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*iefqkaxKguyYpRKwZk7kfQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let lostNumbers = [4,8,15,16,23,42]]
+**[prompt ghci> ]**[command lostNumbers]
+[4,8,15,16,23,42]
+```
 
-하스켈에서 리스트는 중괄호\(\[\]\)로 표시하고, 값들을 콤마\(,\)로 구분합니다. 만약 \[1,2,’a’,3,’b’,’c’,4\]와 같은 리스트를 만들기 위해서 시도하면 하스켈에서는 char는 숫자가 아니라는 에러를 발생 시킬 것입니다. 하스켈에서 “hello”라는 문자열은 \[‘h’,’e’,’l’,’l’,’o’\]라는 char의 리스트입니다.
+하스켈에서 리스트는 중괄호([])로 표시하고, 값들을 콤마(,)로 구분합니다. 만약 `[1,2,’a’,3,’b’,’c’,4]`와 같은 리스트를 만들기 위해서 시도하면 하스켈에서는 char는 숫자가 아니라는 에러를 발생 시킬 것입니다. 하스켈에서 `“hello”`라는 문자열은 `[‘h’,’e’,’l’,’l’,’o’]`라는 char의 리스트입니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*PVXi-_7Gs8YnvaA1561jDw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [1,2,3,4] ++ [9,10,11,12]]
+[1,2,3,4,9,10,11,12]
+**[prompt ghci> ]**[command "hello" ++ " " ++ "world"]
+"hello world"
+**[prompt ghci> ]**[command ['w','o'] ++ ['o','t']]
+"woot"
+```
 
-하스켈에서는 두 리스트를 합칠 때, ++ 연산자를 사용합니다. 하스켈 내부적으로는 ++ 연산을 사용하면 ++ 왼쪽의 리스트 전체를 방문하는데, 거대한 리스트를 다루는게 아니라면 문제가 없습니다. 하지만 5000만개의 데이터를 가진 리스트의 끝에 추가하려면 시간이 필요할 것 입니다.
+하스켈에서는 두 리스트를 합칠 때, `++` 연산자를 사용합니다. 하스켈 내부적으로는 `++` 연산을 사용하면 `++` 왼쪽의 리스트 전체를 방문하는데, 거대한 리스트를 다루는게 아니라면 문제가 없습니다. 하지만 5000만개의 데이터를 가진 리스트의 끝에 추가하려면 시간이 필요할 것 입니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*3q6YlW-rxNUgFCeNgFiA-g.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command 'A':" SMALL CAT"]
+"A SMALL CAT"
+**[prompt ghci> ]**[command 5:[1,2,3,4,5]]
+[5,1,2,3,4,5]
+```
 
-리스트의 앞에 넣을때는 : 연산자를 사용합니다. 이 연산자는 숫자나 숫자/문자의 리스트 또는 문자들의 리스트도 인자로 사용될 수 있습니다. 반면에 ++ 연산자는 두개의 리스트만 인자로 사용됩니다.
+리스트의 앞에 넣을때는 `:` 연산자를 사용합니다. 이 연산자는 숫자나 숫자/문자의 리스트 또는 문자들의 리스트도 인자로 사용될 수 있습니다. 반면에 `++` 연산자는 두개의 리스트만 인자로 사용됩니다.
 
-\[1,2,3\]이라는 리스트는 사실은 1:2:3:\[\]와 같습니다. 여기서 \[\]은 비어있는 리스트입니다. 아래와 같은 표기는 모두 다른 리스트를 의미합니다.
+`[1,2,3]`이라는 리스트는 사실은 `1:2:3:[]`와 같습니다. 여기서 `[]`은 비어있는 리스트입니다. 아래와 같은 표기는 모두 다른 리스트를 의미합니다.
 
-* \[\] : 빈 리스트
-* \[\[\]\] : 빈 리스트 한개를 포함하는 리스트
-* \[\[\],\[\],\[\]\] : 3개의 빈 리스트를 포함하는 리스트
+* [] : 빈 리스트
+* [[]] : 빈 리스트 한개를 포함하는 리스트
+* [[],[],[]] : 3개의 빈 리스트를 포함하는 리스트
 
-![](https://cdn-images-1.medium.com/max/1600/1*bqviXdxlhH2s8-WKA73FnA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command "Steve Buscemi" !! 6]
+'B'
+**[prompt ghci> ]**[command [9.4,33.2,96.2,11.2,23.25] !! 1]
+33.2
+```
 
-리스트에서 특정 인덱스의 값을 얻어올때는 !! 연산자를 사용합니다.
+리스트에서 특정 인덱스의 값을 얻어올때는 `!!` 연산자를 사용합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*-w_lU87UnaMQuhnfnidNmA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let b = [[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3]]]
+**[prompt ghci> ]**[command b]
+[[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3]]
+**[prompt ghci> ]**[command b ++ [[1,1,1,1]]]
+[[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3],[1,1,1,1]]
+**[prompt ghci> ]**[command [6,6,6]:b]
+[[6,6,6],[1,2,3,4],[5,3,3,3],[1,2,2,3,4],[1,2,3]]
+**[prompt ghci> ]**[command b !! 2]
+[1,2,2,3,4]
+```
 
 리스트는 리스트를 포함할 수 있습니다. 리스트안의 리스트는 다른 길이를 가질 수 있지만 다른 타입의 값을 가지고 있는 리스트들이 공존할 수는 없습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*98zLVja3-PSp-rVwpnKMag.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [3,2,1] > [2,1,0]]
+True
+**[prompt ghci> ]**[command [3,2,1] > [2,10,100]]
+True
+**[prompt ghci> ]**[command [3,4,2] > [3,4]]
+True
+**[prompt ghci> ]**[command [3,4,2] > [2,4]]
+True
+**[prompt ghci> ]**[command [3,4,2] == [3,4,2]]
+True
+```
 
-리스트는 리스트에 포함된 값으로 비교가 가능합니다. &lt;, &lt;=, &gt;, &gt;= 비교 연산자를 사용해서 두 리스트의 크기를 비교할 수 있습니다. 비교할때는 사전적인 순서로 비교가되고, 앞에서부터 비교가 됩니다.
+리스트는 리스트에 포함된 값으로 비교가 가능합니다. `<`,`<=`,`>`,`>=` 비교 연산자를 사용해서 두 리스트의 크기를 비교할 수 있습니다. 비교할때는 사전적인 순서로 비교가되고, 앞에서부터 비교가 됩니다.
 
 하스켈에서는 리스트를 가지고 놀 수 있는 아래와 같은 기본 함수들을 제공합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*0HHS6fIS9hr9h9-H-UOQFA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command head [5,4,3,2,1]]
+5
+**[prompt ghci> ]**[command tail [5,4,3,2,1]]
+[4,3,2,1]
+**[prompt ghci> ]**[command last [5,4,3,2,1]]
+1
+**[prompt ghci> ]**[command init [5,4,3,2,1]]
+[5,4,3,2]
+```
 
-* head : 리스트의 첫번째 값을 가져옵니다.
-* tail : 리스트의 첫번째 값을 제외한 나머지 값들의 리스트를 가져옵니다.
-* last : 리스트의 마지막 값을 가져옵니다.
-* init : 리스트의 마지막 값을 제외한 나머지 값들의 리스트를 가져옵니다.
+* `head` : 리스트의 첫번째 값을 가져옵니다.
+* `tail` : 리스트의 첫번째 값을 제외한 나머지 값들의 리스트를 가져옵니다.
+* `last` : 리스트의 마지막 값을 가져옵니다.
+* `init` : 리스트의 마지막 값을 제외한 나머지 값들의 리스트를 가져옵니다.
 
 리스트를 몬스터에 비유하면 아래 그림처럼 표현될 수 있습니다.
 
 ![](https://cdn-images-1.medium.com/max/1600/1*--KhDurZEmWtsvEch6Ma5A.png)
 
-![](https://cdn-images-1.medium.com/max/1600/1*nal5s18S07POVzWlfc8AQQ.png)
 
-빈 리스트에는 head, tail, last, init을 사용할 수 없습니다. 이 에러는 컴파일 타임에 잡을 수 없기때문에 위와같은 에러를 대비하는 것이 좋습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*_lW6gaOPeVy8FtZyHaWSZw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command head []]
+*** Exception: Prelude.head: empty list
+```
 
-length로 리스트의 길이를 얻을 수 있습니다.
+빈 리스트에는 `head`, `tail`, `last`, `init`을 사용할 수 없습니다. 이 에러는 컴파일 타임에 잡을 수 없기때문에 위와같은 에러를 대비하는 것이 좋습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*3_uiotUTm1JXHusCs7Jxeg.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command length [5,4,3,2,1]]
+5
+```
 
-null을 사용하여 리스트가 비어있는지 체크할 수 있습니다. null 대신 xs == \[\] \(xs가 리스트 이름이라면..\)를 사용해서 체크해도 됩니다.
+`length`로 리스트의 길이를 얻을 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*yrMQKO92j24GPHdTmB0qwA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command null [1,2,3]]
+False
+**[prompt ghci> ]**[command null []]
+True
+```
 
-reverse로 리스트를 뒤집을 수 있습니다.
+`null`을 사용하여 리스트가 비어있는지 체크할 수 있습니다. `null` 대신 `xs == []` (`xs`가 리스트 이름이라면..)를 사용해서 체크해도 됩니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*-qt6ydZQRN_smSgCMUiLlQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command reverse [5,4,3,2,1]]
+[1,2,3,4,5]
+```
 
-take로 리스트에서 주어진 개수 만큼만 리스트를 가져올 수 있습니다. 리스트의 크기보다 큰 개수를 요구하면 리스트 전체를 읽어오고, 0을 요구하면 빈 리스트를 반환하는 것을 확인할 수 있습니다.
+`reverse`로 리스트를 뒤집을 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*F6NIOg2LLqmBD3UiBEHbpA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command take 3 [5,4,3,2,1]]
+[5,4,3]
+**[prompt ghci> ]**[command take 1 [3,9,3]]
+[3]
+**[prompt ghci> ]**[command take 5 [1,2]]
+[1,2]
+**[prompt ghci> ]**[command take 0 [6,6,6]]
+[]
+```
 
-drop으로 리스트의 앞에서부터 주어진 개수만큼 값을 버릴 수 있습니다.
+`take`로 리스트에서 주어진 개수 만큼만 리스트를 가져올 수 있습니다. 리스트의 크기보다 큰 개수를 요구하면 리스트 전체를 읽어오고, 0을 요구하면 빈 리스트를 반환하는 것을 확인할 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*avxxhFNCqnSJN7zrd6cpag.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command drop 3 [8,4,2,1,5,6]]
+[1,5,6]
+**[prompt ghci> ]**[command drop 0 [1,2,3,4]]
+[1,2,3,4]
+**[prompt ghci> ]**[command drop 100 [1,2,3,4]]
+[]
+```
 
-minimum, maximum을 사용하여 리스트에서 최소값, 최대값을 가져올 수 있습니다.
+`drop`으로 리스트의 앞에서부터 주어진 개수만큼 값을 버릴 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*t6vHQMRKKCSJlU4eUJnHDA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command minimum [8,4,2,1,5,6]]
+1
+**[prompt ghci> ]**[command maximum [1,9,2,3,4]]
+9
+```
 
-sum으로 모든 리스트내 값의 합을 구할 수 있고, product로 모든 값을 곱을 구할 수 있습니다.
+`minimum`, `maximum`을 사용하여 리스트에서 최소값, 최대값을 가져올 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*sInd5mXzGhI_k7M0OR8ZmQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command sum [5,2,1,6,3,2,5,7]]
+31
+**[prompt ghci> ]**[command product [6,2,1,2]]
+24
+**[prompt ghci> ]**[command product [1,2,5,6,7,9,2,0]]
+0
+```
 
-elem은 주어진 값이 리스트에 존재하는 값인지를 체크할 수 있습니다. elem은 일반적으로 가독성을 위해 infix 함수\(인자를 양옆에 받는 방식\)로 사용됩니다.
+`sum`으로 모든 리스트내 값의 합을 구할 수 있고, `product`로 모든 값을 곱을 구할 수 있습니다.
+
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command 4 `elem` [3,4,5,6]]
+True
+**[prompt ghci> ]**[command 10 `elem` [3,4,5,6]]
+False
+```
+
+`elem`은 주어진 값이 리스트에 존재하는 값인지를 체크할 수 있습니다. `elem`은 일반적으로 가독성을 위해 infix 함수(인자를 양옆에 받는 방식)로 사용됩니다.
 
 여기까지 리스트의 기초적인 함수들을 살펴보았습니다. 더 많은 함수는 이후에 다루게 됩니다.
 
 # 리스트의 범위 설정
 
-하스켈은 리스트를 만들때 모든 값을 입력하지 않고, 특정 범위의 값을 자동으로 만들어 주는 방법들을 학습합니다. 범위 지정자\(range\)를 사용하면 숫자\(1-10\)나 문자\(a-z\)같은 열거될 수 있는 타입에 대해서는 하스켈이 내부적으로 리스트의 다음에 나올 값을 예측하여 넣어줍니다.
+하스켈은 리스트를 만들때 모든 값을 입력하지 않고, 특정 범위의 값을 자동으로 만들어 주는 방법들을 학습합니다. 범위 지정자(range)를 사용하면 숫자(1-10)나 문자(a-z)같은 열거될 수 있는 타입에 대해서는 하스켈이 내부적으로 리스트의 다음에 나올 값을 예측하여 넣어줍니다.
 
-하스켈에서는 아래 예제와 같이 범위\(Range\)를 지정하여 리스트를 생성할 수 있습니다.
+하스켈에서는 아래 예제와 같이 범위(Range)를 지정하여 리스트를 생성할 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Cc7_5rKNrb6XZJbsC3qU8g.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [1..20]]
+[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+**[prompt ghci> ]**[command ['a'..'z']]
+"abcdefghijklmnopqrstuvwxyz"
+**[prompt ghci> ]**[command ['K'..'Z']]
+"KLMNOPQRSTUVWXYZ"
+```
 
-예제와 같은 범위 지정은 열거형 타입\(Number, Character\)만 가능합니다.
+예제와 같은 범위 지정은 열거형 타입(Number, Character)만 가능합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*tZEWQ2EpjV4DKVTYeNlP2Q.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [2,4..20]]
+[2,4,6,8,10,12,14,16,18,20]
+**[prompt ghci> ]**[command [3,6..20]]
+[3,6,9,12,15,18]
+```
 
-Range는 위 예제와 같이 증분 단위를 설정할 수 있습니다. 하지만 \[1,2,4,8,16..100\]과 같이 2²로 리스트를 만드는 등의 규칙을 만들어서 생성할 수는 없습니다. 또한 20부터 1까지의 리스트를 생성할 때는 \[20..1\]로 쓰면 안되고, \[20,19..1\]로 사용해야 합니다.
+Range는 위 예제와 같이 증분 단위를 설정할 수 있습니다. 하지만 `[1,2,4,8,16..100]`과 같이 2²로 리스트를 만드는 등의 규칙을 만들어서 생성할 수는 없습니다. 또한 20부터 1까지의 리스트를 생성할 때는 `[20..1]`로 쓰면 안되고, `[20,19..1]`로 사용해야 합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*MX82jhXzlfTTDjRVw9V9Mg.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [0.1, 0.3 .. 1]]
+[0.1,0.3,0.5,0.7,0.8999999999999999,1.0999999999999999]
+```
 
 위와같이 Range에 실수를 사용했을때도 이상한 결과가 나오는 것을 확인하실 수 있습니다. Ragne에는 실수를 사용하지 않는 것이 좋겠습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*gPwZQZCM3w-oUT1Ca9DEpA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [1..]]
+[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85
+```
 
-위와 같이 Range의 최대값을 지정해주지 않으면 무한대를 의미합니다. \(지면관계상 생략함\) 만약 13의 배수, 24개까지 포함한 리스트를 생성한다면 아래와 같이 두가지 방법을 사용하실 수 있습니다.
+위와 같이 Range의 최대값을 지정해주지 않으면 무한대를 의미합니다. (지면관계상 생략함) 만약 13의 배수, 24개까지 포함한 리스트를 생성한다면 아래와 같이 두가지 방법을 사용하실 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*xhFucj7xB3ikIUK5VRYI2Q.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [13,26..24*13]]
+[13,26,39,52,65,78,91,104,117,130,143,156,169,182,195,208,221,234,247,260,273,286,299,312]
+**[prompt ghci> ]**[command take 24 [13,26..]]
+[13,26,39,52,65,78,91,104,117,130,143,156,169,182,195,208,221,234,247,260,273,286,299,312]
+```
 
-하지만 take를 사용하는 방법이 더 좋습니다. 왜냐하면 하스켈은 게으르기 때문입니다. 24개의 결과를 take를 사용하여 무한대로부터 가져와도 하스켈은 미리 계산하지 않습니다. 따라서 13을 곱하면서 리스트를 만드는 것보다 두번째 방법이 더 효율적입니다
+하지만 `take`를 사용하는 방법이 더 좋습니다. 왜냐하면 하스켈은 게으르기 때문입니다. 24개의 결과를 `take`를 사용하여 무한대로부터 가져와도 하스켈은 미리 계산하지 않습니다. 따라서 13을 곱하면서 리스트를 만드는 것보다 두번째 방법이 더 효율적입니다
 
-![](https://cdn-images-1.medium.com/max/1600/1*5hDxxK7YCQWU0zCwJ3l2zQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command take 10 (cycle [1,2,3])]
+[1,2,3,1,2,3,1,2,3,1]
+**[prompt ghci> ]**[command take 12 (cycle "LOL ")]
+"LOL LOL LOL "
+```
 
-* cycle : 입력받은 리스트를 무한히 반복하는 함수 입니다. 따라서 take 함수같은 것을 사용하여 필요한 만큼만 얻어올 수 있습니다.
+* `cycle` : 입력받은 리스트를 무한히 반복하는 함수 입니다. 따라서 `take` 함수같은 것을 사용하여 필요한 만큼만 얻어올 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*d11qfoD6qkGWPEs_XkZbBw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command take 10 (repeat 5)]
+[5,5,5,5,5,5,5,5,5,5]
+```
 
-* repeat : 입력받은 Element 한개를 무한히 반복하는 함수입니다.
+* `repeat` : 입력받은 Element 한개를 무한히 반복하는 함수입니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*71RIBEYPIdlpRCZJD5B-ow.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command replicate 3 10]
+[10,10,10]
+```
 
-* replicate : 첫번째 인자는 반복 횟수이고, 두번째는 반복할 Element 입니다. take 3 repeat 10이랑 같은 결과입니다.
+* `replicate` : 첫번째 인자는 반복 횟수이고, 두번째는 반복할 Element 입니다. `take 3 repeat 10`이랑 같은 결과입니다.
 
 # 리스트 정의
 
