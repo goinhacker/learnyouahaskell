@@ -3,6 +3,7 @@
 하스켈도 스크립트 언어처럼 실행해볼 수 있는 REPL을 지원합니다. 터미널이나 [하스켈 공식 웹 사이트](https://www.haskell.org/)를 통해서 간단히 설치가 가능합니다.
 
 ```haskell
+**[terminal]
 GHCi, version 6.8.2: http://www.haskell.org/ghc/  :? for help  
 Loading package base ... linking ... done.  
 Prelude>
