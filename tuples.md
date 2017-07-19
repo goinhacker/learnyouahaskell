@@ -9,69 +9,144 @@
 
  하스켈에서 2차원 벡터를 표현하는 예제로 차이점을 확인해 보겠습니다. 아래는 평면위에 다수의 점으로 모양을 표현하기 위한 리스트 입니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Zt2IQ-ulesAWCknCZ9GxlQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [[1,2],[8,11],[4,5]]]
+[[1,2],[8,11],[4,5]]
+**[prompt ghci> ]**[command [[1,2],[8,11,5],[4,5]]]
+[[1,2],[8,11,5],[4,5]]
+```
 
  리스트에서는 값의 개수에 관계없이 리스트 타입이기때문에 값의 개수가 다른 리스트들이 같이 들어가도 문제가 없습니다. 하지만 숫자 3개로 평면위의 점을 표현하는 것은 이상합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*ztF-ksHuuvgXKYsrEn1zqw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [(1,2),(8,11,5),(4,5)]]
 
- 하스켈에서 튜플은 \[\] 대신 \(\)로 표현합니다. 튜플에서는 숫자가 2개인 튜플이 3개인 튜플과 다른 타입이기 때문에 에러가 발생하는 것을 보실 수 있습니다. 이처럼 튜플에서는 2개의 숫자로 구성된 점을 하나의 타입으로 생각할 수 있습니다.
+<interactive>:32:8: error:
+    • Couldn't match expected type ‘(t, t1)’
+                  with actual type ‘(Integer, Integer, Integer)’
+    • In the expression: (8, 11, 5)
+      In the expression: [(1, 2), (8, 11, 5), (4, 5)]
+      In an equation for ‘it’: it = [(1, 2), (8, 11, 5), (4, 5)]
+    • Relevant bindings include
+        it :: [(t, t1)] (bound at <interactive>:32:1)
+```
 
-![](https://cdn-images-1.medium.com/max/1600/1*L-AEObF-WDLZkqBKjSNaFg.png)
+ 하스켈에서 튜플은 `[]` 대신 `()`로 표현합니다. 튜플에서는 숫자가 2개인 튜플이 3개인 튜플과 다른 타입이기 때문에 에러가 발생하는 것을 보실 수 있습니다. 이처럼 튜플에서는 2개의 숫자로 구성된 점을 하나의 타입으로 생각할 수 있습니다.
 
- 마찬가지로 튜플은 구성 값들의 타입에 따라서 튜플의 타입이 달라지기 때문에 에러가 발생하는 것을 보실 수 있습니다. 이런 특성으로 튜플은 다양한 데이터를 표현할 수 있게 됩니다. 예를들어 누군가의 이름과 나이를 표현할때 튜플을 사용할 수 있습니다 \(“Christopher”, “Walken”, 55\). 또한 튜플은 리스트를 포함하는 것도 가능합니다.
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [(1,2),("One",2)]]
+
+<interactive>:35:3: error:
+    • Could not deduce (Num [Char]) arising from the literal ‘1’
+      from the context: Num t
+        bound by the inferred type of it :: Num t => [([Char], t)]
+        at <interactive>:35:1-17
+    • In the expression: 1
+      In the expression: (1, 2)
+      In the expression: [(1, 2), ("One", 2)]
+```
+
+ 마찬가지로 튜플은 구성 값들의 타입에 따라서 튜플의 타입이 달라지기 때문에 에러가 발생하는 것을 보실 수 있습니다. 이런 특성으로 튜플은 다양한 데이터를 표현할 수 있게 됩니다. 예를들어 누군가의 이름과 나이를 표현할때 튜플을 사용할 수 있습니다 `(“Christopher”, “Walken”, 55)` 또한 튜플은 리스트를 포함하는 것도 가능합니다.
 
  **어떤 데이터가 포함하는 구성값들의 개수와 타입을 알고 있다면 튜플을 사용합니다. **튜플을 이렇게 구성요소의 개수나 타입에 따라서 엄격하기 때문에 일반적인 함수를 사용해서 값을 추가할 수 없습니다. 값의 크기에 따라서 튜플에 추가하기 위한 함수를 직접 작성해주어야 합니다.
 
-싱글톤 리스트들은 있지만 싱글톤 튜플같은 것은 없습니다. 싱글톤 튜플은 포함하고 있는 값 그 자체이기 때문에 튜플을 그냥 쓰는 것에 비해서 어떤 이점도 없습니다. \(?정확히 이해 못함 ㅜㅜ\)
+싱글톤 리스트들은 있지만 싱글톤 튜플같은 것은 없습니다. 싱글톤 튜플은 포함하고 있는 값 그 자체이기 때문에 튜플을 그냥 쓰는 것에 비해서 어떤 이점도 없습니다. (?정확히 이해 못함 ㅜㅜ)
 
 튜플로 리스트처럼 튜플간에 비교가 가능합니다. 하지만 **두 개의 튜플의 크기가 동일할 때만 비교가 가능합니다.**
 
-![](https://cdn-images-1.medium.com/max/1600/1*uxlfpeqenjd-IWP-a7xVVQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command fst (8,11)]
+8
+**[prompt ghci> ]**[command fst ("Wow", False)]
+"Wow"
+```
 
-* fst : 두개의 값\(pair\)을 가져와서 첫번째 값을 리턴합니다.
+* `fst` : 두개의 값(pair)을 가져와서 첫번째 값을 리턴합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Fu_ZQptLmXAg70vGUGPUNA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command snd (8,11)]
+11
+**[prompt ghci> ]**[command snd ("Wow", False)]
+False
+```
 
-* snd : 두개의 값\(pair\)을 가져와서 두번째 값을 리턴합니다.
+* `snd` : 두개의 값(pair)을 가져와서 두번째 값을 리턴합니다.
 
-여기서 fst 함수와 snd 함수는 튜플에 두개의 값\(pair\)이 있는 경우에만 동작합니다.
+여기서 fst 함수와 snd 함수는 튜플에 두개의 값(pair)이 있는 경우에만 동작합니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*jht2fuPg49JeABDOXs04fw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command zip [1,2,3,4,5] [5,5,5,5,5]]
+[(1,5),(2,5),(3,5),(4,5),(5,5)]
+```
 
-* zip : 두개의 리스트를 가져와서 각 리스트의 값을 1개씩 꺼내고 합쳐서 튜플을 만듭니다. 첫번째 값을 첫번째끼리 묶고, 두번째 값을 두번째 값끼리 묶습니다. 이렇게 만들어진 튜플들의 리스트를 만들어서 리턴합니다.
+* `zip` : 두개의 리스트를 가져와서 각 리스트의 값을 1개씩 꺼내고 합쳐서 튜플을 만듭니다. 첫번째 값을 첫번째끼리 묶고, 두번째 값을 두번째 값끼리 묶습니다. 이렇게 만들어진 튜플들의 리스트를 만들어서 리턴합니다.
 
-zip은 간단한 함수지만, 쓰임새가 많습니다. 특히 두개의 리스트를 하나로 합치거나, 두개의 리스트를 동시에 순회할때 사용됩니다. zip 예제를 좀 더 살펴 보겠습니다.
+`zip`은 간단한 함수지만, 쓰임새가 많습니다. 특히 두개의 리스트를 하나로 합치거나, 두개의 리스트를 동시에 순회할때 사용됩니다. `zip` 예제를 좀 더 살펴 보겠습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Zp0FXzk-tTiHHeJNgGj28w.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command zip [1 .. 5] ["one", "two", "three", "four", "five"]]
+[(1,"one"),(2,"two"),(3,"three"),(4,"four"),(5,"five")]
+```
 
-zip은 서로 다른 타입의 값을 포함한 두 개의 리스트를 합칠 수도 있습니다.
+`zip`은 서로 다른 타입의 값을 포함한 두 개의 리스트를 합칠 수도 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Zakvrm2BhDM1BDJ9HlaNyA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command zip [5,3,2,6,2,7,2,5,4,6,6] ["im","a","turtle"]]
+[(5,"im"),(3,"a"),(2,"turtle")]
+```
 
 위와 같이 길이가 다른 리스트 두개를 합치는 것도 가능합니다. 앞에서 부터 매칭이 가능한 값들이 새로운 리스트에 합쳐지고, 길이가 긴 리스트의 나머지 값들을 짤립니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*mAmTRsKd8J-VtnGtu_TliA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command zip [1..] ["apple", "orange", "cherry", "mango"]]
+[(1,"apple"),(2,"orange"),(3,"cherry"),(4,"mango")]
+```
 
-무한대의 리스트를 가지고 zip을 해도 동일하게 짧은 리스트를 기준으로 병합됩니다.
+무한대의 리스트를 가지고 `zip`을 해도 동일하게 짧은 리스트를 기준으로 병합됩니다.
 
 ![](https://cdn-images-1.medium.com/max/1600/1*eG9b-0DGcLi_sLosriIstw.png)
 
-지금까지 배운 튜플들의 조합과 리스트의 정의\(comprehension\)로 문제를 하나 풀어보겠습니다. 모든 변의 길이가 10이하의 정수인 직각 삼각형이 있습니다. 삼각형의 둘레는 24입니다. 먼저 모든 변의 길이가 10이하의 정수인 직각 삼각형을 만들면 아래와 같습니다.
+지금까지 배운 튜플들의 조합과 리스트의 정의(comprehension)로 문제를 하나 풀어보겠습니다. 모든 변의 길이가 10이하의 정수인 직각 삼각형이 있습니다. 삼각형의 둘레는 24입니다. 먼저 모든 변의 길이가 10이하의 정수인 직각 삼각형을 만들면 아래와 같습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*QbvmoamF7L8POjJymU2TYQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let triangles = [ (a,b,c) | c <- [1..10], b <- [1..10], a <- [1..10] ]]
+```
 
 세개의 리스트로 10이하의 정수인 변을 정의하고, 세개의 변을 조합하여 함수를 만들었습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*DCPqmmo1ai-EssZPhW1ruA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command triangles]
+[(1,1,1),(2,1,1),(3,1,1),(4,1,1),(5,1,1),(6,1,1),(7,1,1),(8,1,1),(9,1,1),(10,1,1),(1,2,1),(2,2,1),(3,2,1),(4,2,1),(5,2,1),(6,2,1),(7,2,1),(8,2,1),(9,2,1),(10,2,1),(1,3,1),(2,3,1),(3,3,1),(4,3,1),(5,3,1),(6,3,1),(7,3,1),(8,3,1),(9,3,1),(10,3,1),(1,4,1),(2,4,1),(3,4,1),(4,4,1),(5,4,1),(6,4,1),(7,4,1),(8,4,1),(9,4,1),(10,4,1),(1,5,1),(2,5,1),(3,5,1),(4,5,1),(5,5,1),(6,5,1),(7,5,1),(8,5,1),(9,5,1),(10,5,1),(1,6,1),(2,6,1),(3,6,1),(4,6,1),(5,6,1),(6,6,1),(7,6,1),(8,6,1),(9,6,1),(10,6,1),(1,7,
+```
 
-triangles 함수를 실행해보면 위와 같이 세변의 모두 길이가 10보다 작은 모든 삼각형들의 리스트가 리턴됩니다.\(지면 관계상 출력의 일부만 캡쳐함.\) 이제 여기에 직각 삼각형만 출력되도록 조건을 추가하겠습니다. 또한, 변 b는 빗변 c보다 작고, 변 a는 변 b보다 길이가 짧습니다. \(그림 그대로..\)
+triangles 함수를 실행해보면 위와 같이 세변의 모두 길이가 10보다 작은 모든 삼각형들의 리스트가 리턴됩니다.(지면 관계상 출력의 일부만 캡쳐함.) 이제 여기에 직각 삼각형만 출력되도록 조건을 추가하겠습니다. 또한, 변 b는 빗변 c보다 작고, 변 a는 변 b보다 길이가 짧습니다. (그림 그대로..)
 
-![](https://cdn-images-1.medium.com/max/1600/1*w0oFQVQNcG73T6L5VWGHaQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let rightTriangles = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2]]
+**[prompt ghci> ]**[command rightTriangles]
+[(3,4,5),(6,8,10)]
+```
 
 이제 마지막으로 직각 삼각형의 둘레가 24인 것만 출력하도록 하겠습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*-wJpFxkhXZCVvdOAjlsiHw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let rightTriangles' = [ (a,b,c) | c <- [1..10], b <- [1..c], a <- [1..b], a^2 + b^2 == c^2, a+b+c == 24]]
+**[prompt ghci> ]**[command rightTriangles']
+[(6,8,10)]
+```
 
 이제 답을 얻었습니다. 여기서 풀어본 방식이 함수형 프로그래밍의 기본 패턴입니다. **먼저 답을 구하기 위한 초기 셋을 얻은 후에 답에 가깝게 변환하고, 필터링하면서 최종 정답을 찾아갑니다.**
 
