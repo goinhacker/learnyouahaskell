@@ -283,59 +283,125 @@ Range는 위 예제와 같이 증분 단위를 설정할 수 있습니다. 하�
 
 # 리스트 정의
 
-수학에서 Set을 정의\(set comprehensions\)할 때 “S = {2 • x \| x ∈ 𝐍, x ≤ 10}”와 같이 자연수에서 첫번째부터 10개의 짝수의 집합을 표현하는 것을 배운적이 있을 것입니다. 이것을 함수라고 한다면 x는 변수, N은 입력 셋, x ≤ 10은 조건이라고 할 수 있습니다. 하스켈의 리스트는 수학의 set comprehensions과 매우 유사한 방식으로 집합을 표현하는 것이 가능합니다.
+수학에서 Set을 정의(set comprehensions)할 때 “S = {2 • x \| x ∈ 𝐍, x ≤ 10}”와 같이 자연수에서 첫번째부터 10개의 짝수의 집합을 표현하는 것을 배운적이 있을 것입니다. 이것을 함수라고 한다면 x는 변수, N은 입력 셋, x ≤ 10은 조건이라고 할 수 있습니다. 하스켈의 리스트는 수학의 set comprehensions과 매우 유사한 방식으로 집합을 표현하는 것이 가능합니다.
 
 지금까지 배운대로라면 자연수에서 10개의 짝수의 집합을 구하려면 아래와 같은 방법으로 얻을 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*VrJyKBMTtNFt2rm3WaPWsw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command take 10 [2,4..]]
+[2,4,6,8,10,12,14,16,18,20]
+```
 
 하지만 만약 더 복잡한 함수에 다른 집합을 적용하려면 어떻게 할 수 있을까? 이때 list comprehension을 사용하실 수 있습니다. 하스켈의 list comprehension은 수학의 set comprehension과 매우 유사한데, 아래와 같은 문법으로 사용될 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*wM2zK7M77ZKP6uypOis15Q.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [x*2 | x <- [1..10]]]
+[2,4,6,8,10,12,14,16,18,20]
+```
 
-\[1..10\]은 x의 범위를 나타냅니다. &lt;- 이 표시는 대략 from으로 생각하면 될 것 같습니다. 하스켈에서는 위와 같이 수학과 비슷한 표현식으로 리스트를 정의할 수 있습니다. 이제부터 x의 범위를 결정하는 조건을 추가해보도록 하겠습니다.
+[1..10]은 x의 범위를 나타냅니다. <- 이 표시는 대략 from으로 생각하면 될 것 같습니다. 하스켈에서는 위와 같이 수학과 비슷한 표현식으로 리스트를 정의할 수 있습니다. 이제부터 x의 범위를 결정하는 조건을 추가해보도록 하겠습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*CdwVRkyc60HPiimg89NsTg.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [x*2 | x <- [1..10], x*2 >= 12]]
+[12,14,16,18,20]
+```
 
-**조건식을 추가할 때는 콤마\(,\)로 구분**하여 추가할 수 있습니다. 이 예제에서는 x 곱하기 2가 12보다 크거나 같은 경우에 대한 조건을 추가하였습니다. 그 결과 x 곱하기 2가 12보다 크거나 같은 x만 가지고 x \* 2를 수행한 것을 확인하실 수 있습니다.
+**조건식을 추가할 때는 콤마(,)로 구분**하여 추가할 수 있습니다. 이 예제에서는 x 곱하기 2가 12보다 크거나 같은 경우에 대한 조건을 추가하였습니다. 그 결과 x 곱하기 2가 12보다 크거나 같은 x만 가지고 x * 2를 수행한 것을 확인하실 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Eb7ADkpRxGKjWlB8LOUN8Q.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [ x | x <- [50..100], x `mod` 7 == 3]]
+[52,59,66,73,80,87,94]
+```
 
 이 예제는 50부터 100 사이의 숫자 중에 7로 나누어서 나머지가 3인 수만 리스트로 생성한 것입니다. 아직 배우지는 않았지만 추가된 조건에 대해서 내부적으로는 filter를 사용하고 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*3AN-qvFJj_-B0G_AsQUrkQ.png)
+```haskell
+boomBangs xs = [ if x < 10 then "BOOM!" else "BANG!" | x <- xs, odd x]
+```
+
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command boomBangs [7..13]]
+["BOOM!","BOOM!","BANG!","BANG!"]
+```
 
 입력받은 리스트의 홀수 숫자에 대해서 10보다 작으면 “BOOM!”, 10보다 크거나 같으면 “BANG”으로 변경하는 예제입니다. 여기서는 재사용을 위해서 boomBangs라는 함수에 넣어주고 실행하였습니다.
 
-뒤에서 부터 “odd x” 조건은 odd라는 함수를 사용하여 홀수이면 true 아니면 false를 리턴하는 조건 식입니다. 따라서 홀수로 filtering합니다. “x &lt;- xs”에서 xs는 boomBangs 함수의 입력 파라메터이므로 x의 범위는 입력으로 받은 리스트로 한정됩니다. 따라서 위 예제에서 x의 범위는 \[7, 9, 11, 13\]이 됩니다. “if x &lt; 10 then “BOOM!” else “BANG!””에서는 결과를 만들어 주는 부분입니다. \[7,9,11,13\]에서 하나씩 꺼내와서 조건문에 수행합니다. 최종적으로 \[“BOOM!”, “BOOM!”, “BANG!”, “BANG!”\]이 출력된 것을 보실수 있습니다.
+뒤에서 부터 `odd x` 조건은 `odd`라는 함수를 사용하여 홀수이면 `true` 아니면 `false`를 리턴하는 조건 식입니다. 따라서 홀수로 filtering합니다. `x <- xs`에서 `xs`는 boomBangs 함수의 입력 파라메터이므로 x의 범위는 입력으로 받은 리스트로 한정됩니다. 따라서 위 예제에서 x의 범위는 [7, 9, 11, 13]이 됩니다. `if x &lt; 10 then “BOOM!” else “BANG!”`에서는 결과를 만들어 주는 부분입니다. [7,9,11,13]에서 하나씩 꺼내와서 조건문에 수행합니다. 최종적으로 [“BOOM!”, “BOOM!”, “BANG!”, “BANG!”]이 출력된 것을 보실수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*vx9IVM7BNKDIZaHzyUTL_A.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [ x | x <- [10..20], x /= 13, x /= 15, x /= 19]]
+[10,11,12,14,16,17,18,20]
+```
 
 이 예제와 같이 **여러개의 조건을 추가할 수 있습니다.**
 
-하스켈의 list comprehensions에서는 **여러개의 리스트들로 부터 조건식을 적용하여 filtering된 리스트들 간의 조합\(combinations\)으로 입력 범위를 만들 수도 있습니다. **아래 예제를 통해서 쉽게 이해할 수 있을 것입니다.
+하스켈의 list comprehensions에서는 **여러개의 리스트들로 부터 조건식을 적용하여 filtering된 리스트들 간의 조합(combinations)으로 입력 범위를 만들 수도 있습니다. **아래 예제를 통해서 쉽게 이해할 수 있을 것입니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*Vw_t4JjWnZzEWxhNAPvZsw.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [ x*y | x <- [2,5,10], y <- [8,10,11]]]
+[16,20,22,40,50,55,80,100,110]
+```
 
-\[2,5,10\], \[8,10,11\] 두개의 리스트의 조합\(combinations\)으로 x\*y가 수행되어 9개의 결과를 가진 리스트가 출력된 것을 확인하실 수 있습니다.
+[2,5,10], [8,10,11] 두개의 리스트의 조합(combinations)으로 `x*y`가 수행되어 9개의 결과를 가진 리스트가 출력된 것을 확인하실 수 있습니다.
 
-![](https://cdn-images-1.medium.com/max/1600/1*3onZF5QUAcNI985cLMMtvQ.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command [ x*y | x <- [2,5,10], y <- [8,10,11], x*y > 50]]
+[55,80,100,110]
+```
 
 리스트에 50 이상의 결과만 출력하고 싶다면 위와 같이 조건을 추가하면 됩니다
 
-![](https://cdn-images-1.medium.com/max/1600/1*IwaQLzkrhL8BDWHDOb7VXA.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let nouns = ["hobo","frog","pope"]]
+**[prompt ghci> ]**[command let adjectives = ["lazy","grouchy","scheming"]]
+**[prompt ghci> ]**[command [adjective ++ " " ++ noun | adjective <- adjectives, noun <- nouns]]
+["lazy hobo","lazy frog","lazy pope","grouchy hobo","grouchy frog",  
+"grouchy pope","scheming hobo","scheming frog","scheming pope"]
+```
 
-형용사 리스트와 명사 리스트를 조합한 스트링 리스트를 만들고 싶다면 위와 같이 할 수 있습니다. \(cf: 궁금해서 찾아봤는데.. 아쉽게도 하스켈에서는 String interpolation을 지원하지 않네요.\)
+형용사 리스트와 명사 리스트를 조합한 스트링 리스트를 만들고 싶다면 위와 같이 할 수 있습니다. (cf: 궁금해서 찾아봤는데.. 아쉽게도 하스켈에서는 String interpolation을 지원하지 않네요.)
 
-![](https://cdn-images-1.medium.com/max/1600/1*px6BsDsAmd0R42X6XlfCbw.png)
+```haskell
+length' xs = sum [1 | _ <- xs]
+```
 
-length 함수를 직접 새로운 버전으로 구현한 예제입니다. 여기서 처음으로 “\_”가 나왔습니다. **“\_”의 의미는 리스트로부터 어떤것을 나오든 상관하지 않고, 사용할 일이 없는 변수명 대신 \_를 사용하는 것입니다. **위 예제에서는 \_를 사용하여 리스트의 모든 구성요소에 대해서 값에 상관없이 1로 전환하여 합계를 구하여 리스트의 길이를 구하였습니다.
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command length' [1,2,3,4,5]]
+5
+```
 
-![](https://cdn-images-1.medium.com/max/1600/1*3agweBcfprSvs_ysiarmnQ.png)
+`length` 함수를 직접 새로운 버전으로 구현한 예제입니다. 여기서 처음으로 `_`가 나왔습니다. **`_`의 의미는 리스트로부터 어떤것을 나오든 상관하지 않고, 사용할 일이 없는 변수명 대신 _를 사용하는 것입니다. **위 예제에서는 `_`를 사용하여 리스트의 모든 구성요소에 대해서 값에 상관없이 1로 전환하여 합계를 구하여 리스트의 길이를 구하였습니다.
 
-**하스켈에서는 문자열도 리스트이기 때문에 문자열에 대해서도 list comprehensions을 사용할 수 있습니다. **이 예제는 입력받은 문자열에서 소문자를 전부 지우는 함수를 만들어 실행해보았습니다. 여기서는 elem 함수를 사용하여 A부터 Z에 해당하는 문자만 남기는 방식으로 구현하였습니다.
+```haskell
+removeNonUppercase st = [ c | c <- st, c `elem` ['A'..'Z']]
+```
 
-![](https://cdn-images-1.medium.com/max/1600/1*ouvbPYXaykrGa27aNC3o4Q.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command removeNonUppercase "Hahaha! Ahahaha!"]
+"HA"
+**[prompt ghci> ]**[command removeNonUppercase "IdontLIKEROGS"]
+"ILIKEFROGS"
+```
+
+**하스켈에서는 문자열도 리스트이기 때문에 문자열에 대해서도 list comprehensions을 사용할 수 있습니다. **이 예제는 입력받은 문자열에서 소문자를 전부 지우는 함수를 만들어 실행해보았습니다. 여기서는 `elem` 함수를 사용하여 A부터 Z에 해당하는 문자만 남기는 방식으로 구현하였습니다.
+
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let xxs = [[1,3,5,2,3,1,2,4,5],[1,2,3,4,5,6,7,8,9],[1,2,4,2,1,6,3,1,3,2,3,6]]]
+**[prompt ghci> ]**[command [ [ x | x <- xs, even x ] | xs <- xxs]]
+[[2,2,4],[2,4,6,8],[2,4,2,6,2,6]]
+```
 
 이 예제와 같이 **중첩된 리스트를 사용할때는 list comprehension을 중첩하여 사용할 수도 있습니다. **xxs에 할당된 리스트안의 리스트들에 모든 홀수값이 제거된 것을 확인할 수 있습니다. list comprehension은 ghci 환경이 아니라면 여러개의 라인으로 하용할 수 있습니다
 
