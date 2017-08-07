@@ -8,7 +8,13 @@
 
 #### max 함수
 
-![](/assets/스크린샷 2017-02-14 오전 2.12.18.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command max 4 5]
+5
+**[prompt ghci> ]**[command (max 4) 5]
+5
+```
 
 max 함수를 보면 마치 두 개의 인자를 받아서 큰 값을 반환하는 것 처럼 보입니다. 하지만 실제로는 `max 4 5`를 실행하면 먼저 한 개의 인자를 받고 새로운 인자를 받아 두 인자중 더 큰 값을 반환하는 함수가 만들어 집니다. 즉, 인자를 한개만 받는 함수의 체인으로 커링됩니다.
 
@@ -39,7 +45,16 @@ multiThree :: (Num a) => a -> (a -> (a ->a))
 
 이 경우, 함수는 a를 입력 받아서 타입이 `(Num a) => a -> (a -> a)`인 함수를 리턴하는 것입니다. 이 함수는 다시 a를 입력받아서 타입이 `(Num a) => a -> a`인 함수를 리턴하고, 마지막으로 이 함수는 a를 입력받아서 a를 리턴하게 됩니다.
 
-![](/assets/스크린샷 2017-02-15 오전 1.53.31.png)  
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let multTwoWithNine = multThree 9]
+**[prompt ghci> ]**[command multTwoWithNine 2 3]
+54
+**[prompt ghci> ]**[command let multWithEighteen = multTwoWithNine 2]
+**[prompt ghci> ]**[command multWithEighteen 10]
+180
+```
+
 위 예제와 같이 인자가 적은 함수를 호출하여 새로운 함수를 만들고 재사용할 수 있습니다.
 
 #### compareWithHundred 함수
@@ -91,7 +106,19 @@ applyTwice f x = f (f x)
 
 함수의 구현부에서는 인자 f를 함수에 x를 인자로 넣어 사용한 후, 그 결과를 다시 f 함수의 입력 인자로 사용하였습니다.  이 함수를 사용해보면 아래와 같은 결과를 얻을 수 있습니다.
 
-![](/assets/스크린샷 2017-02-16 오전 1.30.30.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command applyTwice (+3) 10]
+16
+**[prompt ghci> ]**[command applyTwice (++ " HAHA") "HEY"]
+"HEY HAHA HAHA"
+**[prompt ghci> ]**[command applyTwice ("HAHA " ++) "HEY"]
+"HAHA HAHA HEY"
+**[prompt ghci> ]**[command applyTwice (multThree 2 2) 9]
+144
+**[prompt ghci> ]**[command applyTwice (3:) [1]  
+[3,3,1]
+```
 
 여기서 partial application이 얼마나 유용한지 확인할 수 있습니다. 만약 인자가 한개인 함수가 필요하다면, 해당 별도의 인자를 입력하지 않고, 함수만 인자로 넣어주기만 하면 됩니다.
 
@@ -118,7 +145,19 @@ zipWith 함수의 구현은 일반적인 zip 함수와 비슷한데, 종료조�
 
 충분히 일반적인 고계 함수는 zipWith 함수의 예와 같이 여러가지 다른 작업들을 할 수 있습니다. zipWith 함수를 실행해 보면 아래와 같이 동작합니다.
 
-![](/assets/스크린샷 2017-02-16 오전 2.18.53.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command zipWith' (+) [4,2,5,6] [2,6,2,3]]
+[6,8,7,9]
+**[prompt ghci> ]**[command zipWith' max [6,3,2,1] [7,3,1,5]]
+[7,3,2,5]
+**[prompt ghci> ]**[command zipWith' (++) ["foo ", "bar ", "baz "] ["fighters", "hoppers", "aldrin"]]
+["foo fighters","bar hoppers","baz aldrin"]
+**[prompt ghci> ]**[command zipWith' (*) (replicate 5 2) [1..]]
+[2,4,6,8,10]
+**[prompt ghci> ]**[command zipWith' (zipWith' (*)) [[1,2,3],[3,5,6],[2,3,4]] [[3,2,2],[3,4,5],[5,4,3]]]
+[[3,4,6],[9,20,30],[10,12,12]]
+```
 
 위 사용 예와 같이 고계 함수는 매우 융통성있게 사용될 수 있습니다. 명령형 언어에서는 보통 for, while, 변수에 값을 세팅하거나 상태를 체크하는 등의 방법을 사용하여 어떤 동작을 완성하고 인터페이스로 만듭니다. 함수형 프로그래밍에서는 두개의 리스트의 쌍을 검사하고 이 쌍에 어떤 것을 하거나 어떤 솔루션의 집합을 얻어서 필요 없는 것을 제거하는 것과 같은** 일반적인 패턴을 추상화하기 위해서 고계 함수를 사용**합니다.
 
@@ -149,7 +188,13 @@ flip' f y x = f x y
 
 여기서 모든 함수가 curried라는 사실을 이용합니다. y, x 인자 없이 `flip' f`가 호출됐을 때,  이 두개의 인자가 교체된 함수 f를 리턴할 것 입니다. 인자가 교체된 함수는 일반적으로 다른 함수로 전달되지만, 미리 모든 호출이 끝났을때의 최종 결과를 무엇인지 먼저 생각하고 작성하면 고계함수를 만들때 커링을 장점을 이용할 수 있습니다.
 
-![](/assets/스크린샷 2017-02-16 오전 3.19.17.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command flip' zip [1,2,3,4,5] "hello"]
+[('h',1),('e',2),('l',3),('l',4),('o',5)]
+**[prompt ghci> ]**[command zipWith (flip' div) [2,2..] [10,8,6,4,2]]
+[5,4,3,2,1]
+```
 
 #### map 함수
 
@@ -163,7 +208,19 @@ map 함수는 함수와 리스트를 입력 받아 리스트내 모든 요소에
 
 타입 선언을 통해서 a를 받아서 b를 리턴하는 함수와 a의 리스트를 입력으로 받아서 b의 리스트를 리턴하는 것을 알 수 있습니다. 함수 타입만 보아도 함수가 어떤 일을 하는지 대략적으로 알 수 있습니다. map 함수는 다양하고 유용하게 활용될 수 있는 고계 함수의 예 입니다.
 
-![](/assets/스크린샷 2017-02-16 오후 11.48.45.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (+3) [1,5,3,1,6]]
+[4,8,6,4,9]
+**[prompt ghci> ]**[command map (++ "!") ["BIFF", "BANG", "POW"]]
+["BIFF!","BANG!","POW!"]
+**[prompt ghci> ]**[command map (replicate 3) [3..6]]
+[[3,3,3],[4,4,4],[5,5,5],[6,6,6]]
+**[prompt ghci> ]**[command map (map (^2)) [[1,2],[3,4,5,6],[7,8]]]
+[[1,4],[9,16,25,36],[49,64]]
+**[prompt ghci> ]**[command map fst [(1,2),(3,5),(6,3),(2,6),(2,5)]]
+[1,3,6,2,2]
+```
 
 map 함수는 리스트 정의(list comprehension)으로도 동일한 기능의 함수를 표현할 수 있습니다. 예를들어 `map (+3) [1,5,3,1,6]`을 리스트 정의로 표현하면 `[x + 3 | x <- [1,5,3,1,6]]`이 됩니다. 하지만 단순히 리스트의 요소들에 함수를 적용하는 경우라면 map 함수를 사용하는 것이 더 가독성이 좋습니다.
 
@@ -181,7 +238,21 @@ filter 함수는 predicate(boolean을 리턴하는 함수)와 리스트를 입�
 
 만약 `p x`가 `True`로 평가되면 해당 x를 새로운 리스트에 추가하고, 아니면 추가하지 않습니다.
 
-![](/assets/스크린샷 2017-02-17 오전 12.12.19.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command filter (>3) [1,5,3,2,1,6,4,3,2,1]]
+[5,6,4]
+**[prompt ghci> ]**[command filter (==3) [1,2,3,4,5]]
+[3]
+**[prompt ghci> ]**[command filter even [1..10]]
+[2,4,6,8,10]
+**[prompt ghci> ]**[command let notNull x = not (null x) in filter notNull [[1,2,3],[],[3,4,5],[2,2],[],[],[]]]
+[[1,2,3],[3,4,5],[2,2]]
+**[prompt ghci> ]**[command filter (`elem` ['a'..'z']) "u LaUgH aT mE BeCaUsE I aM diFfeRent"]
+"uagameasadifeent"
+**[prompt ghci> ]**[command filter (`elem` ['A'..'Z']) "i lauGh At You BecAuse u r aLL the Same"]
+"GAYBALLS"
+```
 
 filter 함수도 리스트 정의로 만들 수 있습니다. filter는 리스트 정의안에 있는 여러가지 predicate들과 같습니다. 리스트 정의에서는 여러개의 filter를 적용하거나 `&&` 등을 사용하여 조합할 수도있습니다. 상황에 따라서 filter를 쓰는 것과 리스트 정의 중 가독성이 좋은 것을 선택합니다.
 
@@ -216,11 +287,19 @@ takeWhile 함수는 predicate와 리스트를 입력 받아서 리스트의 시�
 
 10,000보다 작은 홀수 제곱 수의 합을 구하려면 어떻게 해야할까요?
 
-![](/assets/스크린샷 2017-02-17 오전 1.37.28.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command sum (takeWhile (<10000) (filter odd (map (^2) [1..])))]
+166650
+```
 
 위와 같이 `[1..]`을 `(^2)`로 맵핑하고, odd 함수로 필터링한 리스트에서 `takeWhile (<10000)`을 사용하여 모든 홀수 제곱수를 구한 후, sum 함수로 합계를 구할 수 있습니다. 이것을 리스트 정의를 사용하여 구현하면 아래와 같습니다.
 
-![](/assets/스크린샷 2017-02-17 오전 1.42.33.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command sum (takeWhile (<10000) [n^2 | n <- [1..], odd (n^2)])]
+166650
+```
 
 이렇게 무한 리스트를 맵핑하고 필터링하는 것이 가능한 이유는 하스켈의 게으른 특성 때문입니다. map이나 filter가 즉시 적용되지 않고 실제로 값이 필요할때만 평가됩니다.
 
@@ -238,7 +317,15 @@ chain 함수는 자연수 한개를 받아서 짝수면 2로 나누고, 홀수�
      | odd n = n:chain (n*3 + 1)
 ```
 
-![](/assets/스크린샷 2017-02-17 오전 2.04.36.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command chain 10]
+[10,5,16,8,4,2,1]
+**[prompt ghci> ]**[command chain 1]
+[1]
+**[prompt ghci> ]**[command chain 30]
+[30,15,46,23,70,35,106,53,160,80,40,20,10,5,16,8,4,2,1]
+```
 
 #### numLongChains 함수
 
@@ -254,7 +341,12 @@ numLongChains함수는 1과 100 사이의 모든 숫자를 chain 함수에 돌�
 
 #### listOfFuns 함수
 
-![](/assets/스크린샷 2017-02-18 오전 12.41.45.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let listOfFuns = map (*) [0..]]
+**[prompt ghci> ]**[command (listOfFuns !! 4) 5]
+20
+```
 
 listOfFuns 함수의 예를 보면 map 함수를 통해서 `map (*2) [0..]`를 호출한 것과 같이 어떤 값의 리스트를 받는 것 뿐만 아니라, `map (*) [0..]`를 호출하여 `[(0*),(1*),(2*),(3*)..]`와 같은 함수들의 리스트를 받을 수도 있습니다. 이렇게 정의된 listOfFuns 함수는 한개의 인자를 받는 함수들의 리스트를 리턴하게됩니다. 이때 타입은 `(Num a) => [a -> a]`입니다.
 
@@ -275,11 +367,19 @@ numLongChains = length (filter (\xs -> length xs > 15)(map chain [1..100]))
 
 커링이나 partial application의 동작을 제대로 이해하지 못한 사람들은 종종 람다함수를 필요없는 곳에 사용합니다. 예를들어, `map (+3) [1,6,3,2]`와 `map (/x -> x + 3) [1,6,3,2]`는 `(+3)`과 `(\x -> x + 3)`이 동일한 함수이기 때문에 람다를 사용할 필요가 없습니다. 이 경우, partial application을 사용하는 것이 훨씬 가독성이 좋습니다.
 
-![](/assets/스크린샷 2017-02-18 오전 1.36.45.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command zipWith (\a b -> (a * 30 + 3) / b) [5,4,3,2,1] [1,2,3,4,5]]
+[153.0,61.5,31.0,15.75,6.6]
+```
 
 zipWith의 예와 같이 일반 함수와 동일하게 람다함수도 여러개의 인자를 받을 수 있습니다.
 
-![](/assets/스크린샷 2017-02-18 오전 2.34.22.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (\(a,b) -> a + b) [(1,2),(3,5),(6,3),(2,6),(2,5)]]
+[3,8,9,8,7]
+```
 
 일반함수와 마찬가지로 람다에서도 패턴매칭을 할 수 있습니다. 유일한 차이점은 한개의 인자에 여러개의 패턴을 정의할 수 없다는 점 입니다. 예를들어 한개의 인자에 `[]`와 `[x:xs]`, 두개의 패턴을 만들어 값을 가질 수 없습니다. 만약 람다함수안에서 매칭이 실패하면 런터임 에러가 발생하므로 주의해서 사용해야 합니다.
 
@@ -317,7 +417,11 @@ foldl 함수는 리스트를 왼쪽에서부터 줄이기때문에 left fold라�
   sum' xs = foldl (\acc x -> acc + x) 0 xs
 ```
 
-![](/assets/스크린샷 2017-02-19 오전 12.45.16.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command sum' [3,5,2,1]]
+11
+```
 
 `\acc x -> acc + x`는 이진함수 입니다. `0`은 초기값이고, `xs`는 줄일 대상 리스트입니다. `0`은 이진함수 안에서 `acc` 인자로 사용됩니다. `sum' [3,5,2,1]`로 호출했을때 `x`는 3이 됩니다. 이후 로직은 아래와 같이 진행됩니다.
 
@@ -411,7 +515,17 @@ left fold에서 이진함수를 g, accumulator를 z라고 하면 `g (g (g (g z 3
 
 scanl, scanr 함수는 foldl과 foldr과 같이 수행되면서, 중간 중간에 accumulator값을 리스트 형태로 보여줍니다. foldl1과 foldr1과 유사한 scanl1과 scanr1 함수 역시 있습니다.
 
-![](/assets/스크린샷 2017-02-20 오전 12.53.14.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command scanl (+) 0 [3,5,2,1]]
+[0,3,8,10,11]
+**[prompt ghci> ]**[command scanr (+) 0 [3,5,2,1]]
+[11,8,3,1,0]
+**[prompt ghci> ]**[command scanl1 (\acc x -> if x > acc then x else acc) [3,4,5,3,7,9,2,1]]
+[3,4,5,5,7,9,9,9]
+**[prompt ghci> ]**[command scanl (flip (:)) [] [3,2,1]]
+[[],[3],[2,3],[1,2,3]]
+```
 
 scanl을 사용할때는 최종결과값이 리스트의 마지막에 있고, scanr을 사용할때는 리스트의 처음에 있습니다.  
 Scan은 fold 함수로 구현될 수있는 함수의 진행과정을 모니터링하기위해서 사용됩니다. 모든 자연수의 제곱근의 합이 1000을 넘으려면 몇개의 자연수가 필요할까요? 일단 모든 자연수의 제곱을 구하려면 `map sqrt [1..]`를 하면 됩니다. 여기서 합계를 구하려면 fold를 사용해야 합니다. 하지만 여기서는 합계가 아니라 합계가 구해지는 과정에 관심이 있기 때문에 scan을 사용해야 합니다. scan이 완료되면 1000이하에서 얼마나 많은 자연수의 합이 필요했는지 볼 수 있습니다. scan 리스트에 첫번째 합계는 1이고, 두번째는 1 + 2의 제곱근 입니다. 세번째는 + 3의 제곱근이 됩니다. 만약 합계가 1000이하가 나올때 숫자가 X라면 1000을 초과할때는 X + 1개의 자연수가 필요합니다.
@@ -421,7 +535,15 @@ sqrtSums :: Int
 sqrtSums = length (takeWhile (<1000) (scanl1 (+) (map sqrt [1..]))) + 1
 ```
 
-![](/assets/스크린샷 2017-02-20 오전 1.16.30.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command sqrtSums]
+131
+**[prompt ghci> ]**[command sum (map sqrt [1..131])]
+1005.0942035344083
+**[prompt ghci> ]**[command sum (map sqrt [1..130])]
+993.6486803921487
+```
 
 여기서는 filter가 무한 리스트에서는 동작할 수 없기때문에 takeWhile을 사용하였습니다. 리스트가 오름차순이라는 것을 알고 있어도 filter는 사용할 수 없습니다. 그래서 1000보다 큰 합계가 처음 발생한 시점에 takeWhile을 사용하여 끊었습니다.
 
@@ -442,7 +564,11 @@ f $ x = f x
 
 `$`는 오른쪽으로 연관짓기 때문에 `f (g (z x))`가 `f $ g $ z x`와 같습니다. 따라서 `sum (filter (> 10) (map (*2) [2..10]))`는 `sum $ filter (> 10) $ map (*2) [2..10]`로 재작성할 수 있습니다. 
 
-![](/assets/스크린샷 2017-02-23 오전 1.19.34.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map ($ 3) [(4+), (10*), (^2), sqrt]]
+[7.0,30.0,9.0,1.7320508075688772]
+```
 
 이 예제와 같이 `$`는 괄호를 제거하는 것 외에도 마치 다른 함수처럼 취급될 수도 있습니다. 여기서는 함수의 리스트에 map 함수로 사용된 것을 확인할 수 있습니다.
 
@@ -462,19 +588,35 @@ Function Composition은 다른 함수에 바로 넘기기위한 함수를 만드
 
 어떤 숫자들의 리스트를 가지고 있고, 리스트내 모든 숫자를 음수로 바꾸는 함수는 어떻게 만들 수 있을까요?
 
-![](/assets/스크린샷 2017-02-20 오후 7.09.10.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (\x -> negate (abs x)) [5,-3,-6,7,-3,2,-19,24]]
+[-5,-3,-6,-7,-3,-2,-19,-24]
+```
 
 한가지 방법은 위와 같이 각 숫자의 절대값을 음수로 만드는 것입니다. 이 예제에서는 람다함수를 사용하였습니다.
 
-![](/assets/스크린샷 2017-02-20 오후 7.12.19.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (negate . abs) [5,-3,-6,7,-3,2,-19,24]]
+[-5,-3,-6,-7,-3,-2,-19,-24]
+```
 
 만약 Function Composition을 사용하면 위와같이 재작성 될 수 있습니다. 따라서 여러개의 함수를 위와 같이 연결하여 구성할 수 있습니다. `f (g (z x))`는 `(f . g . z) x`와 동일합니다. 예를들어
 
-![](/assets/스크린샷 2017-02-20 오후 7.15.32.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (\xs -> negate (sum (tail xs))) [[1..5],[3..6],[1..7]]]
+[-14,-15,-27]
+```
 
 를
 
-![](/assets/스크린샷 2017-02-20 오후 8.26.37.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command map (negate . sum . tail) [[1..5],[3..6],[1..7]]]
+[-14,-15,-27]
+```
 
 로 바꿀 수 있습니다.
 
