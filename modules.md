@@ -962,13 +962,27 @@ Map.fromList :: (Ord k) => [(k, v)] -> Map.Map k v
 
 비어있는 맵을 나타내는 것으로서 입력이 없고 단지 비어있는 맵을 리턴합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 12.47.30.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.empty]
+fromList []
+```
 
 #### insert
 
 key, value, map을 입력받아서 맵에 해당 key, value를 포함한 새로운 맵을 리턴합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 12.50.20.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.empty]
+fromList []
+**[prompt ghci> ]**[command Map.insert 3 100 Map.empty]
+fromList [(3,100)]
+**[prompt ghci> ]**[command Map.insert 5 600 (Map.insert 4 200 ( Map.insert 3 100  Map.empty))]
+fromList [(3,100),(4,200),(5,600)]
+**[prompt ghci> ]**[command Map.insert 5 600 . Map.insert 4 200 . Map.insert 3 100 $ Map.empty]
+fromList [(3,100),(4,200),(5,600)]
+```
 
 비어있는 맵과 `insert`를 사용하면 `fromList`를 직접 구현할 수 있습니다.
 
@@ -983,17 +997,37 @@ foldr를 사용하여 비어있는 맵에서 오른쪽부터 접으면서 key-va
 
 맵이 비어있는지 검사합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 12.56.18.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.null Map.empty]
+True
+**[prompt ghci> ]**[command Map.null $ Map.fromList [(2,3),(5,5)]]
+False
+```
 
 #### size
 
 맵의 크기를 알려줍니다.
 
-![](/assets/스크린샷 2017-03-14 오전 12.57.20.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.size Map.empty]
+0
+**[prompt ghci> ]**[command Map.size $ Map.fromList [(2,4),(3,3),(4,2),(5,4),(6,4)]]
+5
+```
 
 #### singleton
 
 key, value를 받아서 입력받은 key-value쌍 한개만 가진 맵을 리턴합니다.
+
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.singleton 3 9]
+fromList [(3,9)]
+**[prompt ghci> ]**[command Map.insert 5 9 $ Map.singleton 3 9]
+fromList [(3,9),(5,9)]
+```
 
 #### lookup
 
@@ -1003,19 +1037,35 @@ key, value를 받아서 입력받은 key-value쌍 한개만 가진 맵을 리턴
 
 key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.02.12.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.member 3 $ Map.fromList [(3,6),(4,3),(6,9)]]
+True
+**[prompt ghci> ]**[command Map.member 3 $ Map.fromList [(2,5),(4,5)]]
+False
+```
 
 #### map && filter
 
 리스트의 `map`,`filter`와 동일한 기능을 합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.03.01.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.map (*100) $ Map.fromList [(1,1),(2,4),(3,9)]]
+fromList [(1,100),(2,400),(3,900)]
+**[prompt ghci> ]**[command Map.filter isUpper $ Map.fromList [(1,'a'),(2,'A'),(3,'b'),(4,'B')]]
+fromList [(2,'A'),(4,'B')]
+```
 
 #### toList
 
 `fromList`와 반대의 기능을 합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.03.39.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.toList . Map.insert 9 2 $ Map.singleton 4 3]
+[(4,3),(9,2)]
+```
 
 #### keys && elems
 
@@ -1026,14 +1076,35 @@ key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 
 `fromList`와 유사하지만 중복된 키들을 버리지 않고, 함수에 적용하여 결정하는 함수입니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.10.03.png)
+```haskell
+phoneBook =   
+    [("betty","555-2938")  
+    ,("betty","342-2492")  
+    ,("bonnie","452-2928")  
+    ,("patsy","493-2928")  
+    ,("patsy","943-2929")  
+    ,("patsy","827-9162")  
+    ,("lucille","205-2928")  
+    ,("wendy","939-8282")  
+    ,("penny","853-2492")  
+    ,("penny","555-2111")  
+    ]
+```
 
 ```haskell
 phoneBookToMap :: (Ord k) => [(k, String)] -> Map.Map k String  
 phoneBookToMap xs = Map.fromListWith (\number1 number2 -> number1 ++ ", " ++ number2) xs
 ```
 
-![](/assets/스크린샷 2017-03-14 오전 1.13.39.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.lookup "patsy" $ phoneBookToMap phoneBook]
+"827-9162, 943-2929, 493-2928"
+**[prompt ghci> ]**[command Map.lookup "wendy" $ phoneBookToMap phoneBook]
+"939-8282"
+**[prompt ghci> ]**[command Map.lookup "betty" $ phoneBookToMap phoneBook]
+"342-2492, 555-2938"
+```
 
 여기서 만약 `fromList`를 사용한다면, 키가 중복된 몇몇 값들을 사라질 것입니다. 위와 같이 `fromListWith`를 사용하여  customize할 수 있습니다.
 
@@ -1042,15 +1113,27 @@ phoneBookToMap :: (Ord k) => [(k, a)] -> Map.Map k [a]
 phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 ```
 
-![](/assets/스크린샷 2017-03-14 오전 1.17.15.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.lookup "patsy" $ phoneBookToMap phoneBook]
+["827-9162","943-2929","493-2928"]
+```
 
 만약 중복된 키가 있으면 해당하는 키의 값들을 묶어서 찾은 키에 해당하는 모든 값들을 하나의 리스트에 리턴합니다. 번호들을 묶기 위해서 `++`를 사용할 수 있습니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.19.39.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.fromListWith max [(2,3),(2,5),(2,100),(3,29),(3,22),(3,11),(4,22),(4,15)]]
+fromList [(2,100),(3,29),(4,22)]
+```
 
 또다른 예로 중복된 키가 발견되면 값들중 가장 큰 것만 남기는 함수를 만들 수 있습니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.23.14.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.fromListWith (+) [(2,3),(2,5),(2,100),(3,29),(3,22),(3,11),(4,22),(4,15)]]
+fromList [(2,108),(3,62),(4,37)]
+```
 
 또는 중복된 키의 값들을 모두 더할 수도 있습니다.
 
@@ -1058,7 +1141,11 @@ phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 
 `fromList`에 `fromListWith`가 있는 것처럼 `insert`에는 `insertWith`가 잇습니다. 맵에 key-value쌍을 넣지만, 만약 맵에 키가 이미 존재한다면 무엇을 해야할지를 결정하는 함수를 제공합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.26.57.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Map.insertWith (+) 3 100 $ Map.fromList [(3,4),(5,103),(6,339)]]
+fromList [(3,104),(5,103),(6,339)]
+```
 
 여기서는 `Data.Map`에 있는 몇개의 함수만 알아보았습니다.
 
@@ -1083,7 +1170,15 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 
 리스트를 받아서 Set으로 바꾸는 함수입니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.45.07.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let set1 = Set.fromList text1]
+**[prompt ghci> ]**[command let set2 = Set.fromList text2]
+**[prompt ghci> ]**[command set1]
+fromList " .?AIRadefhijlmnorstuy"
+**[prompt ghci> ]**[command set2]
+fromList " !Tabcdefghilmnorstuvwy"
+```
 
 위 예제에서 볼 수 있듯이 Set안의 모든 아이템은 유일하고, 순서가 있습니다.
 
@@ -1091,39 +1186,92 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 
 두개의 Set을 받아서 양쪽에서 동일하게 가지고 있는 구성요소들의 리스트를 리턴합니다. 즉, 교집합을 구합니다. 
 
-![](/assets/스크린샷 2017-03-14 오전 1.48.00.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Set.intersection set1 set2]
+fromList " adefhilmnorstuy"
+```
 
 #### difference
 
 두개의 Set을 받아서 첫번째 Set에는 있는데 두번째 Set에는 없는 구성요소들의 리스트를 리턴합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 1.52.29.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Set.difference set1 set2]
+fromList ".?AIRj"
+**[prompt ghci> ]**[command Set.difference set2 set1]
+fromList "!Tbcgvw"
+```
 
 #### union
 
 두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다. 
 
-![](/assets/스크린샷 2017-03-14 오전 1.54.59.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Set.union set1 set2 ]
+fromList " !.?AIRTabcdefghijlmnorstuvwy"
+```
 
 #### null, size, member, empty, singleton, insert, delete
 
-![](/assets/스크린샷 2017-03-14 오전 1.56.06.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Set.null Set.empty]
+True
+**[prompt ghci> ]**[command Set.null $ Set.fromList [3,4,5,5,4,3]]
+False
+**[prompt ghci> ]**[command Set.size $ Set.fromList [3,4,5,3,4,5]]
+3
+**[prompt ghci> ]**[command Set.singleton 9]
+fromList [9]
+**[prompt ghci> ]**[command Set.insert 4 $ Set.fromList [9,3,8,1]]
+fromList [1,3,4,8,9]
+**[prompt ghci> ]**[command Set.insert 8 $ Set.fromList [5..10]]
+fromList [5,6,7,8,9,10]
+**[prompt ghci> ]**[command Set.delete 4 $ Set.fromList [3,4,5,4,3,4,5]]
+fromList [3,5]
+```
 
 #### isSubsetOf
 
 두개의 Set을 받아서 첫번째 Set이 두번째 Set의 subset인지 확인합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 2.01.40.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Set.fromList [2,3,4] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]]
+True
+**[prompt ghci> ]**[command Set.fromList [1,2,3,4,5] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]]
+True
+**[prompt ghci> ]**[command Set.fromList [1,2,3,4,5] `Set.isProperSubsetOf` Set.fromList [1,2,3,4,5]]
+False
+**[prompt ghci> ]**[command Set.fromList [2,3,4,8] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]]
+False
+```
 
 #### map && filter
 
-![](/assets/스크린샷 2017-03-14 오전 2.02.03.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command Set.filter odd $ Set.fromList [3,4,5,6,7,2,3,4]]
+fromList [3,5,7]
+**[prompt ghci> ]**[command Set.map (+1) $ Set.fromList [3,4,5,6,7,2,3,4]]
+fromList [3,4,5,6,7,8]
+```
 
 #### toList
 
 Set은 가끔 리스트에서 중복된 값을 제거하기 위해서 사용됩니다. `fromList`로 리스트를  Set으로 바꾸고 `toList`로 다시 리스트로 만들면 중복 데이터가 제거됩니다.`Data.List`에는 이미 중복 제거를 위한 `nub` 함수이 있지만 거대한 리스트에서 중복을 제거할때는 'nub'을 사용하는 것보다 빠릅니다. 그러나 `nub`은 구성요소의 타입이 `Eq`이면 사용이 가능하지만, Set을 사용하는 방법은 `Ord`이어야 합니다.
 
-![](/assets/스크린샷 2017-03-14 오전 2.11.05.png)
+```haskell
+**[terminal]
+**[prompt ghci> ]**[command let setNub xs = Set.toList $ Set.fromList xs]
+**[prompt ghci> ]**[command setNub "HEY WHATS CRACKALACKIN"]
+" ACEHIKLNRSTWY"
+**[prompt ghci> ]**[command nub "HEY WHATS CRACKALACKIN"]
+"HEY WATSCRKLIN"
+```
 
 크기가 큰 리스트에서는 `setNub`은 일반적으로 `nub`보다 빠릅니다. 하지만 위 예제에서 볼 수 있듯이 `nub`은 `setNub`과 다르게 리스트의 구성요소의 순서를 보존합니다.
 
