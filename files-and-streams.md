@@ -119,7 +119,7 @@ short
 **[prompt $ ]**[command ghc -make shortlinesonly]
 [1 of 1] Compiling Main             ( shortlinesonly.hs, shortlinesonly.o )  
 Linking shortlinesonly ... 
-**[prompt $ ]**[command  cat shortlines.txt | ./shortlinesonly]
+**[prompt $ ]**[command cat shortlines.txt | ./shortlinesonly]
 i'm short  
 so am i  
 short
@@ -190,18 +190,83 @@ cookie
 not a palindrome
 ```
 
+interact 함수를 사용해서 하나의 큰 문자열을 다른 입력 문자열로 변환하는 프로그램을 라인 단위의 프로그램으로 만들었습니다. 하스켈은 게으르게 실행되기 때문에 입력 문자열의 첫번째 라인이 들어왔을때 바로 출력하지 않습니다. 실제로 출력이 필요한 시점에 첫번째 라인을 출력하고, EOF를 만나면 프로그램이 종료됩니다. 
 
+이 프로그램을 어떤 파일의 내용을 파이핑하여 동작하도록 할 수 있습니다. 
 
+```
+dogaroo  
+radar  
+rotor  
+madam
+``` 
 
+위와같은 내용을 담은 파일 `words.txt`가 있다고 했을때, 
 
+``` haskell
+**[terminal]
+**[prompt $ ]**[command cat words.txt | runhaskell palindromes.hs]
+not a palindrome
+palindrome
+palindrome
+palindrome
+```
 
+직접 타이핑하지 않고, 파이프를 통해서 프로그램에 입력되는 것을 확인할 수 있다. 이처럼 Lazy I/O에서는 꼭 필요하기 전까지는 입력을 소비하지 않습니다. 
 
+지금까지는 콘솔에 출력하거나 콘솔에서 읽어들이는 I/O 작업에 대해서 알아보았다. 여기서는 파일에 쓰고 읽는 방법을 알아보자. 콘솔에 읽고 쓰는 작업은 `stdout`, `stdin`이라는 두개의 파일에 읽고 쓰는 작업과 같다. 즉, 파일에 읽고 쓰는 작업은 콘솔에 읽고 쓰는 작업과 매우 유사하다. 
 
+### openFile
 
+`girlfriend.txt` 파일을 열어서 콘솔에 그대로 출력하는 간단한 프로그램을 작성해보자. 
 
+```
+Hey! Hey! You! You!   
+I don't like your girlfriend!   
+No way! No way!   
+I think you need a new one!
+```
 
+먼저 `girlfriend.txt` 파일을 만들고 내용을 입력하였습니다.
 
+```haskell
+import System.IO  
+  
+main = do  
+    handle <- openFile "girlfriend.txt" ReadMode  
+    contents <- hGetContents handle  
+    putStr contents  
+    hClose handle
+```
 
+프로그램을 만들고, 실행해보면 아래와 같이 파일의 내용이 콘솔에 그대로 출력되는 것을 확인할 수 있습니다.
+
+```haskell
+**[terminal]
+**[prompt $ ]**[command runhaskell girlfriend.hs]
+Hey! Hey! You! You!  
+I don't like your girlfriend!  
+No way! No way!  
+I think you need a new one!
+```
+
+프로그램을 살펴보면 첫번째 라인에서 `openFile` 함수를 사용하였다. 이 함수의 타입 선언은 `openFile :: FilePath -> IOMode -> IO Handle` 이다. `openFile` 함수는 파일의 경로와 `IOMode`를 받아서 파일을 열어서 파일과 연결된 핸들을 받아오는 I/O 작업을 반환하는 함수입니다.
+
+`FilePath`는 아래와 같이 선언된 `String`의 [타입동의어](https://jaeyongcho.gitbooks.io/learnyouahaskell/d0c0-c785-b3d9-c758-c5b4.html)입니다.
+
+```haskell
+type FilePath = String
+```
+
+`IOMode`는 아래와 같이 정의된 [타입](https://jaeyongcho.gitbooks.io/learnyouahaskell/making-types.html)입니다. 
+
+```haskell
+data IOMode = ReadMode | WriteMode | AppendMode | ReadWriteMode
+```
+
+`IOMode`는 단순한 열거형으로 파일의 모드를 의미합니다. `IO Mode`는 `Mode`라는 타입의 I/O 작업을 의미하니 혼돈하지 않아야 합니다.
+
+마지막으로 `openFile` 함수는 지정된 모드로 열리는 파일의 I/O 작업을 반환합니다. 이 I/O 작업을 바인딩하면 `Handle`을 얻을 수 있습니다. `Handle` 타입의 값은 파일의 위치를 나타냅니다. `Handle`을 사용해서 어디에서 어떤 파일을 읽어야 하는지 알 수 있습니다. 위 예제 프로그램에서는 `openFile` 함수의 반환값 `Handle`을 `handle`에 바인딩 하였습니다.  
 
 
 
