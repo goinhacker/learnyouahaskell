@@ -116,8 +116,8 @@ short
 
 ```haskell
 **[terminal]
-**[prompt $ ]**[command ghc --make shortlinesonly]
-1 of 1 Compiling Main             ( shortlinesonly.hs, shortlinesonly.o )  
+**[prompt $ ]**[command ghc -make shortlinesonly]
+[1 of 1] Compiling Main             ( shortlinesonly.hs, shortlinesonly.o )  
 Linking shortlinesonly ... 
 **[prompt $ ]**[command  cat shortlines.txt | ./shortlinesonly]
 i'm short  
