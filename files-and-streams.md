@@ -37,7 +37,7 @@ I'm a lil' teapot
 What's with that airplane food, huh?  
 It's so small, tasteless
 **[prompt $ ]**[command cat haiku.txt | ./capslocker]
-[I'M A LIL' TEAPOT  
+I'M A LIL' TEAPOT  
 WHAT'S WITH THAT AIRPLANE FOOD, HUH?  
 IT'S SO SMALL, TASTELESS
 capslocker <stdin>: hGetLine: end of file
