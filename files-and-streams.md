@@ -216,7 +216,7 @@ palindrome
 
 지금까지는 콘솔에 출력하거나 콘솔에서 읽어들이는 I/O 작업에 대해서 알아보았다. 여기서는 파일에 쓰고 읽는 방법을 알아보자. 콘솔에 읽고 쓰는 작업은 `stdout`, `stdin`이라는 두개의 파일에 읽고 쓰는 작업과 같다. 즉, 파일에 읽고 쓰는 작업은 콘솔에 읽고 쓰는 작업과 매우 유사하다. 
 
-### openFile
+### openFile, hGetContents, hClose
 
 `girlfriend.txt` 파일을 열어서 콘솔에 그대로 출력하는 간단한 프로그램을 작성해보자. 
 
@@ -268,42 +268,173 @@ data IOMode = ReadMode | WriteMode | AppendMode | ReadWriteMode
 
 마지막으로 `openFile` 함수는 지정된 모드로 열리는 파일의 I/O 작업을 반환합니다. 이 I/O 작업을 바인딩하면 `Handle`을 얻을 수 있습니다. `Handle` 타입의 값은 파일의 위치를 나타냅니다. `Handle`을 사용해서 어디에서 어떤 파일을 읽어야 하는지 알 수 있습니다. 위 예제 프로그램에서는 `openFile` 함수의 반환값 `Handle`을 `handle`에 바인딩 하였습니다.  
 
+예제의 다음 라인에서 **`hGetContents`** 함수를 호출하였습니다. 이 함수는 `Handle`을 받아서 파일의 내용을 가져와서 `IO String`을 반환합니다. `hGetContents` 함수는 `getContents` 함수와 상당히 유사한데, 유일한 차이점은 `getContents` 함수는 표준 입력에서 자동으로 컨텐츠를 읽어오는 반면에, `hGetContents` 함수는 파일의 핸들로부터 읽어온다는 점 입니다. 따라서 두 함수 모두 메모리를 활용하여 꼭 필요한 시점에 데이터를 읽어옵니다. `hGetContents` 함수를 통해 파일의 전체 내용을 `contents`로 바인딩해서 사용하는데 실제로 메모리에 로딩되지는 않습니다. 그래서 매우 큰 파일이 들어와도 필요할때 필요한 것만 읽어서 메모리에 무리를 주지 않을 수 있습니다.  
 
+파일을 식별하기 위해서 사용하는 핸들과 파일의 컨텐츠 사이의 차이점에 유의해야 합니다. 핸들은 단지 어떤 파일인지 알기위한 것 입니다. 파일 시스템을 하나의 거대한 책으로 간주한다면, 각 챕터가 파일이고, 핸들은 현재 당신이 읽거나 쓰고있는 챕터를 보여주는 북마크 입니다. 반면에 컨텐츠는 실제 해당 챕터의 내용입니다.
 
+다음으로 `putStr contents`로 표준 출력에 컨텐츠를 출력하고, 핸들을 받아서 닫을 파일의 I/O 작업을 반환하는 **`hClose`**를 사용하였습니다. `openFile`을 사용해서 열었던 파일은 사용 후, 반드시 닫아야 합니다. 
 
+### withFile
 
+다른 방법으로 `withFile` 함수를 사용할 수 있습니다. 이 함수의 타입은 `withFile :: FilePath -> IOMode -> (Handle -> IO a) -> IO a` 입니다. 파일의 경로와 `IOMode`, 핸들을 받아서 어떤 I/O 작업을 반환하는 함수를 입력을 받습니다. 그리고 파일을 열고 파일에서 원하는 작업을 수행한 다음에 닫는 I/O 작업을 반환합니다. 최종적으로 I/O 작업으로 캡슐화된 결과는 입력으로 주어진 함수가 반환하는 I/O 작업의 결과와 동일합니다. 조금 복잡하게 느껴지지만, 아래 이전에 내왔던 예제를 `withFile` 함수를 사용하는 것으로 재작성해보겠습니다. 
 
+```haskell
+import System.IO     
+    
+main = do     
+    withFile "girlfriend.txt" ReadMode (\handle -> do  
+        contents <- hGetContents handle     
+        putStr contents)
+``` 
 
+람다로 정의된 `\handle -> ...` 부분은 이전에 작성한 코드의 일부분과 유사합니다. 여기서는 입력받은 핸들로 파일을 열어서 주어진 동작을 수행하고, 파일은 닫습니다. 이전에 작성한 프로그램에서는 직접 파일을 열고 닫았지만,`withFile` 함수는 자동으로 이 작업을 수행합니다. `withFile` 함수를 직접 작성하면 아래와 같습니다. 
 
+```haskell
+withFile' :: FilePath -> IOMode -> (Handle -> IO a) -> IO a  
+withFile' path mode f = do  
+    handle <- openFile path mode   
+    result <- f handle  
+    hClose handle  
+    return result
+```
 
+입력받은 파일의 경로, IOMode로 `openFile`을 호출하여 핸들을 만들고, 만들어진 핸들을 입력받은 람다 함수의 입력으로 넘깁니다. 람다함수의 수행 결과를 `result`에 바인딩하고 `hClose`를 호출하여 핸들을 닫은 후에 `result`를 반환하였습니다. 따라서 위에서 입력받은 함수 `f`의 결과가 `withFile` 함수의 결과은 동일한 I/O 작업으로 캡슐화된 결과입니다.  
 
+`hGetContents`가 `getContents`와 동작은 동일하지만 파일과의 I/O로 특정되었던 것처럼, `hGetLine`, `hPutStr`, `hPutStrLn`, `hGetChar` 함수 등도 동일합니다. 표준입출력 대신 핸들을 입력받아서 파일 I/O를 다루는 함수명에는 _h_가 붙어있습니다. 
 
+### readFile 
 
+`readFile` 함수의 타입은 `readFile :: FilePath -> IO String` 입니다. 여기서 `FilePath`는 `String`의 다른 이름일 뿐입니다. `readFile`은 파일의 경로를 받아서 파일을 (게으르게) 읽고 그 내용을 문자열로 바인딩 합니다. 대게는 `openFile`을 사용하여 핸들에 바인딩하고 `hGetContents` 함수를 사용하는 것보다 편리합니다. 이전에 작성한 예제를 `readFile`을 사용하여 다시 작성하면 아래와 같습니다. 
 
+```haskell
+import System.IO  
+  
+main = do  
+    contents <- readFile "girlfriend.txt"  
+    putStr contents
+```
+  
+파일을 식별하기 위한 핸들을 사용하지 않기 때문에 수동으로 파일을 Close할 수 없습니다. 따라서 `readFile`을 사용할때는 하스켈이 자동으로 파일을 닫아줍니다. 
 
+### writeFile
 
- 
+`writeFile` 함수의 타입은 `writeFile :: FilePath -> String -> IO ()` 입니다. 파일의 경로와 파일에 쓸 문자열을 입력받아서 쓰는 I/O 작업을 반환합니다. 만약 파일이 이미 존재한다면 쓰기전에 길이가 0으로 내려갑니다. CAPSLOCKED에 girlfriend.txt를 적용해서 girlfriendcaps.txt 파일을 작성하는 프로그램을 만들어서 실행해보면 아래와 같습니다. 
 
+```haskell
+import System.IO     
+import Data.Char  
+    
+main = do     
+    contents <- readFile "girlfriend.txt"     
+    writeFile "girlfriendcaps.txt" (map toUpper contents)
+```
 
+```haskell
+**[terminal]
+**[prompt $ ]**[command runhaskell girlfriendtocaps.hs]
+**[prompt $ ]**[command cat girlfriendcaps.txt]
+HEY! HEY! YOU! YOU!  
+I DON'T LIKE YOUR GIRLFRIEND!  
+NO WAY! NO WAY!  
+I THINK YOU NEED A NEW ONE!
+```
 
+### appendFile
 
+`appendFile` 함수의 타입은 `appendFile :: FilePath -> String -> IO ()`으로 `writeFile`의 타입과 같다. 단지 `appendFile`은 파일이 이미 존재하지만 그 파일에 컨텐츠를 추가하는 경우, 길이를 0으로 자르지 않습니다. 해당할 일들의 목록을 라인당 하나씩 가지고 있는 todo.txt 파일에 표준 입력으로 todo 리스트를 추가하는 프로그램을 작성해서 실행해 보면 아래와 같습니다. 
 
+```haskell
+import System.IO     
+    
+main = do     
+    todoItem <- getLine  
+    appendFile "todo.txt" (todoItem ++ "\n")
+```
 
+```haskell
+**[terminal]
+**[prompt $ ]**[command runhaskell appendtodo.hs]
+Iron the dishes
+**[prompt $ ]**[command runhaskell appendtodo.hs]
+Dust the dog
+**[prompt $ ]**[command runhaskell appendtodo.hs]
+Take salad out of the oven  
+**[prompt $ ]**[command cat todo.txt]
+Iron the dishes  
+Dust the dog  
+Take salad out of the oven
+```
 
+`getLine` 함수는 끝에 뉴라인 문자가 없기때문에 `"\n"`을 추가하였습니다. 
 
+이전에 `contents <- hGetContents handle`은 게으르게 동작하기 때문에 파일의 내용 전체를 한번에 메모리에 올리지 않는다고 했었습니다. 
 
+```haskell
+main = do   
+    withFile "something.txt" ReadMode (\handle -> do  
+        contents <- hGetContents handle  
+        putStr contents)
+```
 
+이 프로그램은 사실 파일의 출력을 파이프로 연결한 것과 같습니다. 리스트를 스트림으로 생각할 수 있는 것 처럼 파일을 스트림으로 생각할 수 있습니다. 이 프로그램은 한번에 한라인만 읽어서 콘솔에 출력합니다. 따라서 한번에 파일로부터 읽어들이는 가장 작은 단위는 한 라인입니다. 파일을 읽을때는 한라인에 대한 버퍼만 할당해서 메모리에 로딩합니다. 바이너리 파일을 읽을때는 보통 block-buffering을 기본으로 하는데, 이것은 파일의 청크 단위로 읽는다는 의미입니다. 청크의 크기는 운영체제에서 관리합니다. 
 
+이런 버퍼링은 `hSetBuffering` 함수를 사용하여 컨트롤할 수 있습니다. 이 함수는 `BufferMode`를 받아서 버퍼를 셋팅하는 I/O 작업을 반환합니다. `BufferMode`는 `NoBuffering`, `LineBuffering`, `BlockBuffering (Maybe Int)`를 포함하는 열거형 데이터 타입입니다. `Maybe Int`는 청크의 크기를 의미합니다. 만약 `Nothing`으로 설정하면 청크의 크기는 운영체제에서 결정합니다. `NoBuffering`은 한번에 한개의 문자를 읽는 설정입니다. `NoBuffering`은 디스크 접근이 매우 많기때문에 거의 사용되지 않습니다.
 
+아래와 같이 작성하면 라인 단위로 읽지 않고, 2048 바이트 단위로 파일을 읽어드립니다. 
 
+```haskell
+main = do   
+    withFile "something.txt" ReadMode (\handle -> do  
+        hSetBuffering handle $ BlockBuffering (Just 2048)  
+        contents <- hGetContents handle  
+        putStr contents)
+```
 
+청크의 크기를 더 크게할수록 파일을 읽을때 디스크 접근을 줄일 수 있고, 파일이 느린 네크워크 리소스일때 유용하게 사용됩니다.
 
+### hFlush
 
+`hFlush`는 핸들에 연관된 파일의 버퍼를 초기화해주는 함수로 핸들을 받아서 I/O 작업을 반환합니다. 라인 버퍼링을 할때는 모든 라인을 읽은 후에 버퍼가 flush 됩니다. 블럭 버퍼링을 할때는 청크를 읽은 뒤에 flush됩니다. 이런 flush도 직접 컨트롤할 수 있습니다. `hFlush`를 사용하여 지금까지 읽은 데이터를 강제로 flush할 수 있습니다. 데이터가 flushing된 후에는 런타임에 다른 프로그램에서 해당 데이터에 접근할 수 있습니다.
 
+### openTempFile
 
+위에서 작성한 TODO 리스트를 추가하는 프로그램에 아이템을 삭제하는 기능을 추가해 보겠습니다. 이 예제에서는 `System.Directory`와 `System.IO`에 존재하는 새로운 함수들을 사용할 것입니다.
 
+```haskell
+import System.IO  
+import System.Directory  
+import Data.List  
+  
+main = do        
+    handle <- openFile "todo.txt" ReadMode  
+    (tempName, tempHandle) <- openTempFile "." "temp"  
+    contents <- hGetContents handle  
+    let todoTasks = lines contents     
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line) [0..] todoTasks     
+    putStrLn "These are your TO-DO items:"  
+    putStr $ unlines numberedTasks  
+    putStrLn "Which one do you want to delete?"     
+    numberString <- getLine     
+    let number = read numberString     
+        newTodoItems = delete (todoTasks !! number) todoTasks     
+    hPutStr tempHandle $ unlines newTodoItems  
+    hClose handle  
+    hClose tempHandle  
+    removeFile "todo.txt"  
+    renameFile tempName "todo.txt"
+```
 
+가장 먼저 todo.txt 파일을 열어서 `handle`에 바인딩 하였습니다. 
 
+그 다음 `System.IO`에 있는 `openTempFile` 함수를 사용하였습니다. 함수명에서 알 수 있듯이 임시 디렉토리 경로와 파일의 템플릿 명을 받아서 임시 파일을 열어주는 함수 입니다. 예제에서는 `.`로 현재 디렉토리를 입력으로 주었고, `temp`라는 임시 파일의 파일명을 입력으로 주었습니다. 실제로 임시파일이 생성될 때는 `temp`라는 이름뒤에 랜덤 문자들이 붙어서 만들어 집니다. 이 함수는 임시파일을 만들고, I/O 작업안에 임시파일명과 그 파일의 핸들을 페어로 담아서 반환합니다. `openTempFile` 함수를 사용하면 todo2.txt와 같은 파일을 만들어서 덮어쓰지 않고도 임시파일을 생성할 수 있습니다. 
+
+현재 디렉토리 경로를 얻기위해서 `.`을 대신해서 `getCurrentDirectory` 함수를 사용할 수도 있습니다. 
+
+todo.txt 파일의 내용을 `contents`에 바인딩 하였습니다. 그리고나서 라인단위의 문자열 리스트로 분리하였습니다. 그래서 `todoTasks`는 `["Iron the dishes", "Dust the dog", "Take salad out of the oven"]`와 같이 됩니다. 여기에 zip 함수를 사용하여 각 라인에 번호를 붙여주었습니다. 따라서 `numberedTasks`는 `["0 - Iron the dishes", "1 - Dust the dog" ...`와 같이 변환해줍니다. (이 작업은 `mapM putStrLn numberedTasks`와 같이 작성할 수도 있습니다.) 
+
+`unlines` 함수를 사용해서 `numberedTasks`의 문자열들을 뉴라인(`\n`)을 구분자로한 하나의 문자열로 합쳤습니다. 그리고 이렇게 합쳐진 문자열을 콘솔에 출력합니다. 
+
+삭제하기 원하는 TODO 리스트의 번호를 입력받습니다. 만약 1을 입력받았다면 `numberString`은 `"`"`이 됩니다.  
 
 
 
