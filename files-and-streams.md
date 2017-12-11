@@ -434,10 +434,38 @@ todo.txt 파일의 내용을 `contents`에 바인딩 하였습니다. 그리고�
 
 `unlines` 함수를 사용해서 `numberedTasks`의 문자열들을 뉴라인(`\n`)을 구분자로한 하나의 문자열로 합쳤습니다. 그리고 이렇게 합쳐진 문자열을 콘솔에 출력합니다. 
 
-삭제하기 원하는 TODO 리스트의 번호를 입력받습니다. 만약 1을 입력받았다면 `numberString`은 `"`"`이 됩니다.  
+삭제하기 원하는 TODO 리스트의 번호를 입력받습니다. 만약 1을 입력받았다면 `numberString`은 `"`"`이 됩니다. 이것을 `read`를 사용하여 숫자 `1`로 `number`에 바인딩 합니다. 그리고 `delete (todoTasks !! number) todoTasks`로 리스트에서 해당 TODO 아이템을 삭제하였습니다. 여기서 `!!`는 리스트의 인덱스를 의미합니다. `delete` 함수는 리스트에서 해당 아이템을 삭제하고, 새로운 리스트를 반환합니다. `(todoTasks !! number)`는 `Dust the dog`를 반환합니다. 그리고 `Dust the dog`가 없는 `todoTasks`를 `newTodoItems`에 바인딩합니다. 
 
+임시파일에 쓰기전에 `unlines` 함수로 `newTodoItems`를 하나의 문자열로 합칩니다. 이렇게해서 기존 파일은 수정하지 않고, 하나의 아이템만 삭제된 새로운 임시파일을 만들었습니다.
 
+마지막으로 사용된 핸들들을 `hClose` 함수로 닫고, `removeFile` 함수를 사용하여 기존의 파일을 삭제하고, `renameFile` 함수를 사용하여 임시파일의 파일명을 todo.txt로 변경하였습니다. `removeFile`과 `renameFile` 함수는 입력을 파일경로를 받습니다. 
 
+더 적은 라인으로 프로그램을 작성할 수도 있지만, 기존 파일을 덮어쓰지 않도록 임시 파일을 생성하여 프로그램을 만들었습니다. 이제 실행해보겠습니다!!
+
+```haskell
+**[terminal]
+**[prompt $ ]**[command runhaskell deletetodo.hs]
+These are your TO-DO items:  
+0 - Iron the dishes  
+1 - Dust the dog  
+2 - Take salad out of the oven  
+Which one do you want to delete?  
+1
+
+**[prompt $ ]**[command cat todo.txt]
+Iron the dishes  
+Take salad out of the oven
+
+**[prompt $ ]**[command runhaskell deletetodo.hs]
+These are your TO-DO items:  
+0 - Iron the dishes  
+1 - Take salad out of the oven  
+Which one do you want to delete?  
+0  
+ 
+**[prompt $ ]**[command cat todo.txt]
+Take salad out of the oven 
+```
 
 
 
