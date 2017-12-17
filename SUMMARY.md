@@ -17,7 +17,7 @@
 * [입출력 Hello World](c785-cd9c-b825.md)
 * [I/O 다루는 함수들](io-b2e4-b8e8-b294-d568-c218-b4e4.md)
 * [Files and Streams](files-and-streams.md)
-* Command Line 프로그램
+* [Command Line 프로그램](command-line-d504-b85c-adf8-b7a8.md)
 * 랜덤 데이터
 * Bytestrings
 * 예외
