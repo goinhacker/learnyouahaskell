@@ -89,7 +89,7 @@ copyFile source dest = do
 
 ```haskell
 **[terminal]
-**[prompt $ ]**[command runhaskell bytestringcopy.hs something.txt
+**[prompt $ ]**[command runhaskell bytestringcopy.hs something.txt]
 ```
 
 언뜻보면 bytestring를 사용하지않는 프로그램처럼 보일 수 있습니다. 하지만 실제로는 `B.readFile`, `B.writeFile`을 사용하였습니다. 대부분은 간단히 qualified import로 모듈만 변경하는 것으로 `String`을 사용하는 프로그램을 `ByteString`을 사용하는 프로그램으로 바꿀 수 있습니다. 문자열에 많은 양의 데이터를 읽는 프로그램의 성능을 향상시킬때, bytestrings을 적용해보는 것으로도 성능을 향상시킬 수 있습니다.
