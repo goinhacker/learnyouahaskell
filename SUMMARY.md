@@ -20,5 +20,5 @@
 * [커맨드라인 매개변수](command-line-d504-b85c-adf8-b7a8.md)
 * [랜덤 데이터](b79c-b364-b370-c774-d130.md)
 * [Bytestrings](bytestrings.md)
-* 예외
+* [예외](c608-c678.md)
 
