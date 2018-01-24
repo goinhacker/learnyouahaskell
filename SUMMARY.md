@@ -21,4 +21,9 @@
 * [랜덤 데이터](b79c-b364-b370-c774-d130.md)
 * [Bytestrings](bytestrings.md)
 * [예외](c608-c678.md)
+* [함수적으로 문제 해결하기](d568-c218-c801-c73c-b85c-bb38-c81c-d480-c5b4-bcf4-ae30.md)
+* [Functor](functor.md)
+* [Applicative functor](applicative-functor.md)
+* [newtype 키워드](newtype-d0a4-c6cc-b4dc.md)
+* [모노이드](baa8-b178-c774-b4dc.md)
 
