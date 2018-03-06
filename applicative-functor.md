@@ -453,6 +453,7 @@ Nothing
 `sequenceA`는 함수의 리스트를 가지고, 어떤 동일한 입력값을 모든 함수에 넣고 결과의 리스트를 보고싶을때 유용합니다. 예를들어 어떤 숫자를 가지고 리스트의 모든 조건들을 만족하는지 확인할때 사용될 수 있습니다. 유사한 동작을 아래와 같이할 수도 있습니다. 
 
 ```haskell
+**[terminal]
 **[prompt ghci> ]**[command map (\f -> f 7) [(>4),(<10),odd]]
 [True,True,True]
 **[prompt ghci> ]**[command and $ map (\f -> f 7) [(>4),(<10),odd]]
@@ -462,6 +463,7 @@ True
 여기서 `and`는 boolean의 리스트를 받아서 모두 `True`면 `True`를 반환하는 함수입니다. 그리고 동일한 동작을 위해 `sequenceA`를 사용하면 아래와 같습니다. 
 
 ```haskell
+**[terminal]
 **[prompt ghci> ]**[command sequenceA [(>4),(<10),odd] 7]
 [True,True,True]
 **[prompt ghci> ]**[command and $ sequenceA [(>4),(<10),odd] 7]
@@ -475,6 +477,7 @@ True
 `[]`를 사용했을때, `sequenceA`는 리스트의 리스트를 받아서 리스트의 리스트를 반환합니다. 실제로는 리스트의 구성요소의 모든 가능한 조합들의 목록을 만듭니다. `sequenceA`로 한 작업을 그대로 리스트 정의(list comprehension)를 사용해서 실행해보면 아래와 같습니다. 
 
 ```haskell
+**[terminal]
 **[prompt ghci> ]**[command sequenceA [[1,2,3],[4,5,6]]]
 [[1,4],[1,5],[1,6],[2,4],[2,5],[2,6],[3,4],[3,5],[3,6]]
 **[prompt ghci> ]**[command [[x,y] | x <- [1,2,3], y <- [4,5,6]]]
