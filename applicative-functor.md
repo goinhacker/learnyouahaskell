@@ -301,7 +301,7 @@ instance Applicative ((->) r) where
 **[terminal]
 **[prompt ghci> ]**[command :t (+) <$> (+3) <*> (*100)]
 (+) <$> (+3) <*> (*100) :: (Num a) => a -> a
-**[prompt ghci> ]**[command (+) <$> (+3) <*> (*100) $ 5
+**[prompt ghci> ]**[command (+) <$> (+3) <*> (*100) $ 5]
 508
 ```
 
