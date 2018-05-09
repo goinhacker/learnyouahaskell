@@ -24,6 +24,6 @@
 * [함수적으로 문제 해결하기](undefined-16.md)
 * [Functor](functor.md)
 * [Applicative functor](applicative-functor.md)
-* [newtype 키워드](newtype.md)
+* newtype 키워드
 * [모노이드](undefined-17.md)
 
