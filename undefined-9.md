@@ -29,7 +29,6 @@ data Shape = Circle Float Float Float | Rectangle Float Float Float Float
 **타입 정의에서 필드는 실제로 매개변수**이고, **값 생성자는 궁극적으로는 타입의 값을 리턴하는 함수**입니다. 위에서 정의한 타입의 타입 선언은 아래와 같습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command :t Circle]
 Circle :: Float -> Float -> Float -> Shape
 **[prompt ghci> ]**[command :t Rectangle]
@@ -47,7 +46,6 @@ surface (Rectangle x1 y1 x2 y2) = (abs $ x2 -x1) * (abs $ y2 - y1)
 이 예제에서 가장 주목할 만한 것은 타입 선언인데, Shape을 받아서 Float를 리턴하는 함수입니다. `Circle`은 `Shape`처럼 타입이 아니기 때문에 `Circle -> Float`와 같이 선언할 수 없습니다. 마찬가지로 `True -> Int`와 같이 선언할 수 없습니다. 또한 위 예제에서 생성자에 의한 패턴매칭을 한 것을 확인할 수 있습니다. 첫번째 생성자 패턴매칭은 앞의 두 매개변수는 상관하지않고 세번째 매개변수인 반지름\(radius\)만 사용하였습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command surface $ Circle 10 20 10]
 314.15927
 **[prompt ghci> ]**[command surface $ Rectangle 0 0 100 100]
@@ -63,7 +61,6 @@ data Shape = Circle Float Float Float | Rectangle Float Float Float Float derivi
 위와같이 _data_ 선언의 마지막에 `deriving (Show)`를 추가하면 타입은 `Show` 타입클래스에 속하게 됩니다. 이제 아래와 같이 사용이 가능해집니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Circle 10 20 5]
 Circle 10.0 20.0 5.0
 **[prompt ghci> ]**[command Rectangle 50 230 60 90]
@@ -73,7 +70,6 @@ Rectangle 50.0 230.0 60.0 90.0
 값 생성자는 함수입니다. 따라서 다른 함수들처럼 map을 쓰거나 부분적으로 적용하는 등의 모든 것이 가능합니다. 만약 원의 중심은 같은데 반지름이 다른 원들의 리스트를 만드려면 아래와 같이 할 수 있습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command map (Circle 10 20) [4,5,6,6]]
 [Circle 10.0 20.0 4.0,Circle 10.0 20.0 5.0,Circle 10.0 20.0 6.0,Circle 10.0 20.0 6.0]
 ```
@@ -96,7 +92,6 @@ surface (Rectangle (Point x1 y1) (Point x2 y2)) = (abs $ x2 - x1) * (abs $ y2 - 
 여기서는 `Circle` 패턴은 `Point` 입력을 무시하였습니다. `Rectangle` 패턴에서는 `Point`의 값을 얻기위해서 중첩된 패턴매칭을 사용하였습니다. 이렇게 `Point` 자체의 값을 받아올때 as 패턴을 사용할수도 있습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command surface (Rectangle (Point 0 0) (Point 100 100))]
 10000.0
 **[prompt ghci> ]**[command surface (Circle (Point 0 0) 24)]
@@ -114,7 +109,6 @@ nudge (Rectangle (Point x1 y1) (Point x2 y2)) a b = Rectangle (Point (x1+a) (y1+
 이 예제에서는 직접적으로 도형의 위치에서 움직이는 양만큼 더해주었습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command nudge (Circle (Point 34 34) 10) 5 10]
 Circle (Point 39.0 44.0) 10.0
 ```
@@ -130,7 +124,6 @@ baseRect width height = Rectangle (Point 0 0) (Point width height)
 ```
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command nudge (baseRect 40 100) 60 23]
 Rectangle (Point 60.0 23.0) (Point 100.0 123.0)
 ```
@@ -165,7 +158,6 @@ data Person = Person String String Int Float String String deriving (Show)
 위와같이 `Person` 타입을 정의하고 사람을 만들어 보겠습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command let guy = Person "Buddy" "Finklestein" 43 184.2 "526-2928" "Chocolate"]
 **[prompt ghci> ]**[command guy]
 Person "Buddy" "Finklestein" 43 184.2 "526-2928" "Chocolate"
@@ -196,7 +188,6 @@ flavor (Person _ _ _ _ _ flavor) = flavor
 위와 같이 작성하는게 고통스럽긴 하지만.. 이 메서드들은 잘 동작합니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command let guy = Person "Buddy" "Finklestein" 43 184.2 "526-2928" "Chocolate"]
 **[prompt ghci> ]**[command firstName guy]
 "Buddy"
@@ -221,7 +212,6 @@ data Person = Person { firstName :: String
 각 필드의 타입 이름만 공백으로 구분하여 나열하는 대신 괄호를 사용하엿습니다. 먼저 `firstName`과 같이 필드명을 적고 `::`를 적고 타입을 명시합니다. 이 기능의 주요 이점은 데이터 타입에서 필드를 조회하는 함수를 만드는 것입니다. 하스켈에서는 자동으로 `firstName`, `lastName`, `age`, `height`, `phoneNumber`, `flavor` 함수를 만들어줍니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command :t flavor]
 flavor :: Person -> String
 **[prompt ghci> ]**[command :t firstName]
@@ -237,7 +227,6 @@ data Car = Car String String Int deriving (Show)
 ```
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Car "Ford" "Mustang" 1967]
 Car "Ford" "Mustang" 1967
 ```
@@ -249,7 +238,6 @@ data Car = Car {company :: String, model :: String, year :: Int} deriving (Show)
 ```
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Car {company="Ford", model="Mustang", year=1967}]
 Car {company = "Ford", model = "Mustang", year = 1967}
 ```
@@ -273,7 +261,6 @@ data Maybe a = Nothing | Just a
 `Maybe`를 사용하기전에 우리는 이미 타입 매개변수를 가진 타입을 사용해왔습니다. 바로 리스트 타입입니다. 리스트 타입은 구체적인 타입을 생성하기 위해서 타입 매개변수를 사용합니다. 리스트의 값들은 `[Int]`타입, `[Char]`타입, `[[String]]`타입을 가질 수 있지만, 타입이 `[]`뿐인 값을 가질 수는 없습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Just "Haha"]
 Just "Haha"
 **[prompt ghci> ]**[command Just 84]
@@ -319,7 +306,6 @@ tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ "
 ```
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command let stang = Car {company="Ford", model="Mustang", year=1967}]
 **[prompt ghci> ]**[command tellCar stang]
 "This Ford Mustang was made in 1967"
@@ -335,7 +321,6 @@ tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ "
 이때는 `Car`의 타입을 `(Show a) => Car String String a`로 지정해야 합니다. 따라서 타입 선언이 더 복잡해졌습니다. 유일하게 얻을 수 있는 이점은 `c`의 타입으로 `Show` 타입클래스의 인스턴스인 어떤 타입이든 사용할 수 있다는 것입니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command tellCar (Car "Ford" "Mustang" 1967)]
 "This Ford Mustang was made in 1967"
 **[prompt ghci> ]**[command tellCar (Car "Ford" "Mustang" "nineteen sixty seven")]
@@ -378,7 +363,6 @@ scalarMult :: (Num t) => Vector t -> Vector t -> t
 다시한번 **타입 생성자와 값 생성자를 구분하는 것은 매우 중요합니다.** 데이터 타입을 선언했을때, `=`전 부분이 타입 생성자이고, 나머지 부분의 생성자들이 값 생성자 입니다.\(`|`로 구분된\) `Vector t t t -> Vector t t t -> t`와 같은 함수는 잘못된 것입니다. 왜냐하면 타입 선언안에 타입들을 넣어야하고 벡터 타입 생성자는 하나의 매개변수만 사용하기 때문입니다. 반면에 값 생성자는 세개를 받습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8]
 Vector 12 7 16
 **[prompt ghci> ]**[command Vector 3 5 8 `vplus` Vector 9 2 8 `vplus` Vector 0 2 3]
@@ -418,7 +402,6 @@ data Person = Person { firstName :: String
 위 예제와같이 타입을 `Eq`로 derive했을때 두값을 `==`이나 `/=`로 `Person` 타입의 두 값을 배교해봅시다. 하스켈은 값 생성자가 매칭되면 `Person`안에 포함된 모든 값의 쌍을 `==`으로 테스트합니다. `Person` 타입이 `Eq` 타입클래스에 속하면 `Person`이 가진은 모든 필드의 타입도 `Eq` 타입클래스에 속해야 합니다. 따라서 `String`과 `Int` 모두 `Eq` 타입클래스에 속합니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command let mikeD = Person {firstName = "Michael", lastName = "Diamond", age = 43}]
 **[prompt ghci> ]**[command let adRock = Person {firstName = "Adam", lastName = "Horovitz", age = 41}]
 **[prompt ghci> ]**[command let mca = Person {firstName = "Adam", lastName = "Yauch", age = 44}]
@@ -435,7 +418,6 @@ True
 `Person`은 현재 `Eq`에 속하기 때문에, 타입 선언안에 `Eq a` 클래스 제약조건에서 `Person`을 `elem`과 같은 모든 함수들을 위한 `a`로 사용할 수 있습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command let beastieBoys = [mca, adRock, mikeD]]
 **[prompt ghci> ]**[command mikeD `elem` beastieBoys]
 True
@@ -451,7 +433,6 @@ data Person = Person { firstName :: String
 ```
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command let mikeD = Person {firstName = "Michael", lastName = "Diamond", age = 43}]
 **[prompt ghci> ]**[command mikeD]
 Person {firstName = "Michael", lastName = "Diamond", age = 43}
@@ -464,7 +445,6 @@ Person {firstName = "Michael", lastName = "Diamond", age = 43}
 `Read`는 `Show`와 반대입니다. `Show`는 값을 문자열로 변환하고, `Read`는 문자열을 값으로 변환합니다. `read` 함수를 사용할때는 아래와같이 변환하려는 타입을 명시해 주어야합니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command read "Person {firstName =\"Michael\", lastName =\"Diamond\", age = 43}" :: Person]
 Person {firstName = "Michael", lastName = "Diamond", age = 43}
 ```
@@ -472,7 +452,6 @@ Person {firstName = "Michael", lastName = "Diamond", age = 43}
 `read`의 결과를 하스켈이 읽었을때 `Person`이라는 것을 추측할 수 있다면 아래와 같이 타입을 명시하지 않아도 됩니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command read "Person {firstName =\"Michael\", lastName =\"Diamond\", age = 43}" == mikeD]
 True
 ```
@@ -488,7 +467,6 @@ data Bool = False | True deriving (Ord)
 위 예제에서 `False` 값 생성자가 `True` 값 생성자보다 먼저 명시되었기 때문에 `True`는 `False`보다 큽니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command True `compare` False]
 GT
 **[prompt ghci> ]**[command True > False]
@@ -500,7 +478,6 @@ False
 `Maybe a` 데이터 타입은 `Nothing` 값 생성자가 `Just` 값 생성자전에 명시되어 있으므로 값이 아무리 작아도 `Nothing`은 항상 `Just somthing`보다 작습니다. 그러나 두개의 `Just`값을 비교하면 값으로 비교됩니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Nothing < Just 100]
 True
 **[prompt ghci> ]**[command Nothing > Just (-49999)]
@@ -529,7 +506,6 @@ data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
 `Show`와 `Read` 타입클래스에 속하기 때문에 문자열로 만들 수 있고,
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Wednesday]
 Wednesday
 **[prompt ghci> ]**[command show Wednesday]
@@ -541,7 +517,6 @@ Saturday
 `Eq`와 `Ord` 타입클래스에 속하기 때문에 비교할 수 있습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command Saturday == Sunday]
 False
 **[prompt ghci> ]**[command Saturday == Saturday]
@@ -555,7 +530,6 @@ LT
 `Bounded`에 속하기 때문에 가장 작은날과 가장 높은 날을 얻을 수 있습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command minBound :: Day]
 Monday
 **[prompt ghci> ]**[command maxBound :: Day]
@@ -565,7 +539,6 @@ Sunday
 `Enum` 타입이기 때문에 날짜에 대한 predecessor, successor와 리스트이 범위를 얻을 수 있습니다.
 
 ```haskell
-**[terminal]
 **[prompt ghci> ]**[command succ Monday]
 Tuesday
 **[prompt ghci> ]**[command pred Saturday]
