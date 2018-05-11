@@ -11,30 +11,28 @@
 지금부터 GHCI에서 `:t` 명령어를 사용해서 몇가지 올바른 표현식\(expression\)에 타입을 검사해보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t 'a']
+ghci> :t 'a'
 'a' :: Char
-**[prompt ghci> ]**[command :t True]
+ghci> :t True
 True :: Bool
-**[prompt ghci> ]**[command :t "HELLO!"]
+ghci> :t "HELLO!"
 "HELLO!" :: [Char]
-**[prompt ghci> ]**[command :t (True, 'a')]
+ghci> :t (True, 'a')
 (True, 'a') :: (Bool, Char)
-**[prompt ghci> ]**[command :t 4 == 5]
+ghci> :t 4 == 5
 4 == 5 :: Bool
 ```
 
 `:t` 명령어를 사용하면 해당 표현식에 `::`\(has type of\)를 붙여서 타입을 알려주는 것을 알 수 있습니다. 타입은 항상 첫글자가 대문자 입니다. 이 예제에서 눈여서 살펴볼 것은 **“Hello”가 \[Char\]와 같이 문자의 리스트 타입을 되어있다는 것입니다. 리스트와는 다르게 튜플은 각 길이에 따라서 다른 타입을 가지는 것을 볼 수 있는데**, 아래 예제를 보면 좀 더 쉽게 이해할 수 있을 것입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t [1,2]]
+ghci> :t [1,2]
 [1,2] :: Num t => [t]
-**[prompt ghci> ]**[command :t [1,2,3]]
+ghci> :t [1,2,3]
 [1,2,3] :: Num t => [t]
-**[prompt ghci> ]**[command :t (1,2)]
+ghci> :t (1,2)
 (1,2) :: (Num t1, Num t) => (t, t1)
-**[prompt ghci> ]**[command :t (1,2,3)]
+ghci> :t (1,2,3)
 (1,2,3) :: (Num t2, Num t1, Num t) => (t, t1, t2)
 ```
 
@@ -67,8 +65,7 @@ factorial n = product [1..n]
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command factorial 50]
+ghci> factorial 50
 30414093201713378043612608166064768844377641568960512000000000000
 ```
 
@@ -80,8 +77,7 @@ circumference r = 2 * pi * r
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command circumference 4.0]
+ghci> circumference 4.0
 25.132742
 ```
 
@@ -93,8 +89,7 @@ circumference' r = 2 * pi * r
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command circumference' 4.0]
+ghci> circumference' 4.0
 25.132741228718345
 ```
 
@@ -107,8 +102,7 @@ circumference' r = 2 * pi * r
 먼저 `head` 함수의 타입에 대해서 살펴봅시다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t head]
+ghci> :t head
 head :: [a] -> a
 ```
 
@@ -117,8 +111,7 @@ head :: [a] -> a
 타입 변수는 하나의 이상의 문자열로 이름을 정할 수 있지만 일반적으로 a,b,c,d.. 같은 것을 사용합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t fst]
+ghci> :t fst
 fst :: (a, b) -> a
 ```
 
@@ -131,8 +124,7 @@ fst :: (a, b) -> a
 `==` 함수의 타입을 보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t (==)]
+ghci> :t (==)
 (==) :: (Eq a) => a -> a -> Bool
 ```
 
@@ -147,38 +139,35 @@ fst :: (a, b) -> a
 몇가지 기본적인 타입클래스를 살펴보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 5 == 5]
+ghci> 5 == 5
 True
-**[prompt ghci> ]**[command 5 /= 5]
+ghci> 5 /= 5
 False
-**[prompt ghci> ]**[command 'a' == 'a']
+ghci> 'a' == 'a'
 True
-**[prompt ghci> ]**[command "Ho Ho" == "Ho Ho"]
+ghci> "Ho Ho" == "Ho Ho"
 True
-**[prompt ghci> ]**[command 3.432 == 3.432]
+ghci> 3.432 == 3.432
 True
 ```
 
 `Eq`는 같은 값인지 테스트하는 것을 지원하는 타입들에 사용됩니다. 멤버 함수로는 `==`과 `/=` 함수가 있습니다. 따라서 어떤 함수내 타입 변수\(type variable\)에 `Eq` 클래스 제약이 있다면, 내부적으로 어디선가 `==` 또는 `/=`을 사용합니다. 따라서 이런 `Eq`계열의 타입들은 같은 값인지 비교가 가능합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t (>)]
+ghci> :t (>)
 (>) :: (Ord a) => a -> a -> Bool
 ```
 
 `Ord`는 순서를 가지는 타입들을 위한 것입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command "Abrakadabra" < "Zebra"]
+ghci> "Abrakadabra" < "Zebra"
 True
-**[prompt ghci> ]**[command "Abrakadabra" `compare` "Zebra"]
+ghci> "Abrakadabra" `compare` "Zebra"
 LT
-**[prompt ghci> ]**[command 5 >= 2]
+ghci> 5 >= 2
 True
-**[prompt ghci> ]**[command 5 `compare` 3]
+ghci> 5 `compare` 3
 GT
 ```
 
@@ -187,34 +176,31 @@ GT
 여기서 `Ord` 계열이 되기 위해서는 먼저 `Eq` 계열이어야 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command show 3]
+ghci> show 3
 "3"
-**[prompt ghci> ]**[command show 5.334]
+ghci> show 5.334
 "5.334"
-**[prompt ghci> ]**[command show True]
+ghci> show True
 "True"
 ```
 
 `Show`는 문자열로 표현 가능한 타입입니다. 대부분의 함수에서는 `Show` 타입클래스를 `show`로 취급하는데, `show`는 `Show` 계열의 어떤 값을 얻어서 문자열로 표시해줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command read "True" || False]
+ghci> read "True" || False
 True
-**[prompt ghci> ]**[command read "8.2" + 3.8]
+ghci> read "8.2" + 3.8
 12.0
-**[prompt ghci> ]**[command read "5" - 2]
+ghci> read "5" - 2
 3
-**[prompt ghci> ]**[command read "[1,2,3,4]" ++ [3]]
+ghci> read "[1,2,3,4]" ++ [3]
 [1,2,3,4,3]
 ```
 
 `Read`는 `Show`와 반대인 타입클래스라고 할 수 있습니다. `read` 함수는 문자열을 받아서 `Read` 계열의 타입으로 반환해줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command read "4"]
+ghci> read "4"
 <interactive>:1:0:  
     Ambiguous type variable `a' in the constraint:  
       `Read a' arising from a use of `read' at <interactive>:1:0-7  
@@ -224,108 +210,98 @@ True
 위와 같이 사용하면 예외가 발생하는 것을 볼 수 있는데, 이것은 무엇을 반환해야 되는지를 GHCI가 추론할 수 없기 때문에 발생한 예외 입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t read]
+ghci> :t read
 read :: (Read a) => String -> a
 ```
 
 read의 타입을 보면 `Read` 계열의 `a`를 리턴하는 것을 볼 수 있습니다. 따라서 `a`**의 타입을 컴파일러가 추론하지 못하면 예외가 발생**하게 됩니다. 이럴때 우리는 명시적으로 타입을 기술**\(type annotations\)**할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command read "5" :: Int]
+ghci> read "5" :: Int
 5
-**[prompt ghci> ]**[command read "5" :: Float]
+ghci> read "5" :: Float
 5.0
-**[prompt ghci> ]**[command (read "5" :: Float) * 4]
+ghci> (read "5" :: Float) * 4
 20.0
-**[prompt ghci> ]**[command read "[1,2,3,4]" :: [Int]]
+ghci> read "[1,2,3,4]" :: [Int]
 [1,2,3,4]
-**[prompt ghci> ]**[command read "(3, 'a')" :: (Int, Char)]
+ghci> read "(3, 'a')" :: (Int, Char)
 (3, 'a')
 ```
 
 타입 주석\(type annotation\)은 표현식의 타입 무엇인지를 명시적으로 알려주기위한 방법입니다. 위와 같이 표현식에 끝에 `::`를 사용하고 타입을 명시하면 됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command ['a'..'e']]
+ghci> ['a'..'e']
 "abcde"
-**[prompt ghci> ]**[command [LT .. GT]]
+ghci> [LT .. GT]
 [LT,EQ,GT]
-**[prompt ghci> ]**[command [3 .. 5]]
+ghci> [3 .. 5]
 [3,4,5]
-**[prompt ghci> ]**[command succ 'B']
+ghci> succ 'B'
 'C'
 ```
 
 `Enum` 계열은 순차적인 타입입니다. 따라서 차례대로 열거할 수 있습니다. `Enum` 계열인 경우는 리스트의 범위\(Range\)를 사용할 수 있습니다. 또한 `succ`, `pred` 함수의 파라메터로 넘길 수 있습니다. `()`, `Bool`, `Char`, `Ordering`, `Int`, `Integer`, `Float`, `Double`가 `Enum` 계열에 해당합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command minBound :: Int]
+ghci> minBound :: Int
 -2147483648
-**[prompt ghci> ]**[command maxBound :: Char]
+ghci> maxBound :: Char
 '\1114111'
-**[prompt ghci> ]**[command maxBound :: Bool]
+ghci> maxBound :: Bool
 True
-**[prompt ghci> ]**[command minBound :: Bool]
+ghci> minBound :: Bool
 False
 ```
 
 `Bounded`는 최대값과 최소값을 가지는 타입입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t minBound]
+ghci> :t minBound
 minBound :: Bounded a => a
-**[prompt ghci> ]**[command :t maxBound]
+ghci> :t maxBound
 maxBound :: Bounded a => a
 ```
 
 `minBound`와 `maxBound`의 타입을 보면 다형성 상수라는 것을 확인하실 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command maxBound :: (Bool, Int, Char)]
+ghci> maxBound :: (Bool, Int, Char)
 (True,2147483647,'\1114111')
 ```
 
 만약 튜플내의 컴포넌트들이 `Bounded` 계열이라면 튜플도 Bounded 계열이 됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t 20]
+ghci> :t 20
 20 :: (Num t) => t
 ```
 
 `Num`은 숫자 타입클래스 입니다. 여기서 `Num` 계열은 다형성 상수인 것을 확인하실 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 20 :: Int]
+ghci> 20 :: Int
 20
-**[prompt ghci> ]**[command 20 :: Integer]
+ghci> 20 :: Integer
 20
-**[prompt ghci> ]**[command 20 :: Float]
+ghci> 20 :: Float
 20.0
-**[prompt ghci> ]**[command 20 :: Double]
+ghci> 20 :: Double
 20.0
 ```
 
 위 예제에서 나온 타입은 모두 `Num` 계열입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t (*)]
+ghci> :t (*)
 (*) :: (Num a) => a -> a -> a
 ```
 
 `*` 의 타입을 보면 `*`가 모든 숫자들을 허용한다는 것을 확인하실 수 있습니다. `*`는 두개의 동일한 타입의 숫자를 받아서 동일한 타입의 숫자를 반환합니다. 따라서 아래 예제와 같이 사용하면 두개의 타입이 다르기 때문에 에러가 나는 것을 확인할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (5 :: Int) * (6 :: Integer)]
+ghci> (5 :: Int) * (6 :: Integer)
 
 <interactive>:58:15: error:
     • Couldn't match expected type ‘Int’ with actual type ‘Integer’
@@ -341,16 +317,14 @@ maxBound :: Bounded a => a
 `Floating`은 `Float`, `Double`와 같은 부동 소수점을 포함합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t fromIntegral]
+ghci> :t fromIntegral
 fromIntegral :: (Num b, Integral a) => a -> b
 ```
 
 `fromIntegral` 함수는 숫자를 다루기위해서 매우 유용한 함수 입니다. 이 함수는 `Integral`을 받아서 좀 더 일반적인 `Num`을 반환해줍니다.\(여기서 여러개의 클래스 제약을 포함하는데, 이럴때는 괄호안에 `,`로 구분하여 표시한다.\)이 기능은 정수와 부동소수점 타입이 함께 동작하게 할때 유용하게 사용됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command length [1,2,3,4] + 3.2]
+ghci> length [1,2,3,4] + 3.2
 
 <interactive>:63:20: error:
     • No instance for (Fractional Int) arising from the literal ‘3.2’
@@ -362,8 +336,7 @@ fromIntegral :: (Num b, Integral a) => a -> b
 만약에 우리가 리스트의 길이를 얻어온 다음에 3.2를 리스트에 추가한다면 위와같이 타입이 다르기 때문에 에러가 발생할 것입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fromIntegral (length [1,2,3,4]) + 3.2]
+ghci> fromIntegral (length [1,2,3,4]) + 3.2
 7.2
 ```
 
