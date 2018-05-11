@@ -18,15 +18,13 @@ numUniques = length . nub
 `import Data.List`를 했을때 `Data.List`가 노출한 모든 함수들은 스크립트내 어디서든지 사용이 가능해집니다. `nub`은 리스트에 중복을 제거하는 함수로 `Data.List`에 정의되어 있습니다. `length . nub` 합성함수는 `\xs -> length (nub xs)`와 동일합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :m + Data.List]
+ghci> :m + Data.List
 ```
 
 GHCI를 사용할때는 위와 같은 방법으로 `Data.List` 모듈내 모든 함수들을 가져올 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :m + Data.List Data.Map Data.Set]
+ghci> :m + Data.List Data.Map Data.Set
 ```
 
 GHCI에서 여러개의 모듈을 한번에 로딩할때는 위와 같이 작성하면 됩니다. 하지만 만약에 이미 모듈을 가지고있는 스크립트를 로딩했다면 다시 `:m +`를 사용할 필요가 없습니다.
@@ -70,10 +68,9 @@ import qualified Data.Map as M
 리스트의 구성요소 하나와 리스트를 입력받아서, 리스트의 구성요소 사이사이에 입력받은 구성요소를 넣은 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command intersperse '.' "MONKEY"]
+ghci> intersperse '.' "MONKEY"
 "M.O.N.K.E.Y"
-**[prompt ghci> ]**[command intersperse 0 [1,2,3,4,5,6]]
+ghci> intersperse 0 [1,2,3,4,5,6]
 [1,0,2,0,3,0,4,0,5,0,6]
 ```
 
@@ -94,18 +91,16 @@ import qualified Data.Map as M
 중첩 리스트를 재배열합니다. 중첩 리스트를 행렬로 본다면 열을 행으로 행을 열로 바꾼 리스트를 반환합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command transpose [[1,2,3],[4,5,6],[7,8,9]]]
+ghci> transpose [[1,2,3],[4,5,6],[7,8,9]]
 [[1,4,7],[2,5,8],[3,6,9]]
-**[prompt ghci> ]**[command transpose ["hey","there","guys"]]
+ghci> transpose ["hey","there","guys"]
 ["htg","ehu","yey","rs","e"]
 ```
 
 다항식 , , 를 더할때, 리스트로 `[0,3,5,9]`, `[10,0,0,9]`, `[8,5,1,-1]`와 같이 표현한다면 아래와 같이 계산할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command map sum $ transpose [[0,3,5,9],[10,0,0,9],[8,5,1,-1]]]
+ghci> map sum $ transpose [[0,3,5,9],[10,0,0,9],[8,5,1,-1]]
 [18,8,6,17]
 ```
 
@@ -120,10 +115,9 @@ import qualified Data.Map as M
 중첩 리스트를 하나의 리스트로 이어주는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command concat ["foo","bar","car"]]
+ghci> concat ["foo","bar","car"]
 "foobarcar"
-**[prompt ghci> ]**[command concat [[3,4,5],[2,3,4],[2,1,1]]]
+ghci> concat [[3,4,5],[2,3,4],[2,1,1]]
 [3,4,5,2,3,4,2,1,1]
 ```
 
@@ -134,8 +128,7 @@ import qualified Data.Map as M
 맵핑 함수와 리스트를 받아서 입력 리스트를 맵핑하여 한개의 리스트로 합쳐주는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command concatMap (replicate 4) [1..3]]
+ghci> concatMap (replicate 4) [1..3]
 [1,1,1,1,2,2,2,2,3,3,3,3]
 ```
 
@@ -144,10 +137,9 @@ import qualified Data.Map as M
 boolean의 리스트의 모든 값이 참이면 `True`를 리턴하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command and $ map (>4) [5,6,7,8]]
+ghci> and $ map (>4) [5,6,7,8]
 True
-**[prompt ghci> ]**[command and $ map (==4) [4,4,4,3,4]]
+ghci> and $ map (==4) [4,4,4,3,4]
 False
 ```
 
@@ -156,10 +148,9 @@ False
 boolean의 리스트의 값중 하나라도 참이 있으면 `True`를 리턴하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command or $ map (==4) [2,3,4,5,6,1]]
+ghci> or $ map (==4) [2,3,4,5,6,1]
 True
-**[prompt ghci> ]**[command or $ map (>4) [1,2,3]]
+ghci> or $ map (>4) [1,2,3]
 False
 ```
 
@@ -170,14 +161,13 @@ False
 `any`와 `all`은 리스트의 모든 구성요소를 조건문에 확인해야할때 `and`나 `or` 대신에 사용됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command any (==4) [2,3,5,6,1,4]]
+ghci> any (==4) [2,3,5,6,1,4]
 True
-**[prompt ghci> ]**[command all (>4) [6,9,10]]
+ghci> all (>4) [6,9,10]
 True
-**[prompt ghci> ]**[command all (`elem` ['A'..'Z']) "HEYGUYSwhatsup"]
+ghci> all (`elem` ['A'..'Z']) "HEYGUYSwhatsup"
 False
-**[prompt ghci> ]**[command any (`elem` ['A'..'Z']) "HEYGUYSwhatsup"]
+ghci> any (`elem` ['A'..'Z']) "HEYGUYSwhatsup"
 True
 ```
 
@@ -186,10 +176,9 @@ True
 함수와 초기값을 받아서 초기값을 함수에 적용한 결과값을 다시 함수에 적용하는 것을 계속해서 반복하여 무한 리스트를 리턴하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command take 10 $ iterate (*2) 1 ]
+ghci> take 10 $ iterate (*2) 1 
 [1,2,4,8,16,32,64,128,256,512]
-**[prompt ghci> ]**[command take 3 $ iterate (++ "haha") "haha"]
+ghci> take 3 $ iterate (++ "haha") "haha"
 ["haha","hahahaha","hahahahahaha"]
 ```
 
@@ -198,14 +187,13 @@ True
 숫자와 리스트를 받아서 리스트를 입력받은 숫자 위치를 기준으로 분리한 후, 튜플을 리턴하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command splitAt 3 "heyman"]
+ghci> splitAt 3 "heyman"
 ("hey","man")
-**[prompt ghci> ]**[command splitAt 100 "heyman"]
+ghci> splitAt 100 "heyman"
 ("heyman","")
-**[prompt ghci> ]**[command splitAt (-3) "heyman"]
+*ghci> splitAt (-3) "heyman"
 ("","heyman")
-**[prompt ghci> ]**[command let (a,b) = splitAt 3 "foobar" in b ++ a]
+ghci> let (a,b) = splitAt 3 "foobar" in b ++ a
 "barfoo"
 ```
 
@@ -214,10 +202,9 @@ True
 조건문\(predicate\)과 리스트를 입력받아서 주어진 조건문이 참일때까지만 가져온 리스트를 리턴하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command takeWhile (>3) [6,5,4,3,2,1,2,3,4,5,4,3,2,1]]
+ghci> takeWhile (>3) [6,5,4,3,2,1,2,3,4,5,4,3,2,1]
 [6,5,4]
-**[prompt ghci> ]**[command takeWhile (/=' ') "This is a sentence"]
+ghci> takeWhile (/=' ') "This is a sentence"
 "This"
 ```
 
@@ -225,8 +212,7 @@ True
 `[1..]`에 `^3`를 하고 filter를 쓰고 더하려고하면 무한 리스트이기 때문에 영원히 끝나지 않을 것입니다. 이 문제를 takeWhile을 사용하면 아래와 같이 구할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command sum $ takeWhile (<10000) $ map (^3) [1..]]
+ghci> sum $ takeWhile (<10000) $ map (^3) [1..]
 53361
 ```
 
@@ -237,19 +223,17 @@ True
 `takeWhile`와 유사하게 조건문이 거짓일때까지의 값들을 제외한 리스트를 리턴하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command dropWhile (/=' ') "This is a sentence"]
+ghci> dropWhile (/=' ') "This is a sentence"
 " is a sentence"
-**[prompt ghci> ]**[command dropWhile (<3) [1,2,2,2,3,4,5,4,3,2,1]]
+ghci> dropWhile (<3) [1,2,2,2,3,4,5,4,3,2,1]
 [3,4,5,4,3,2,1]
 ```
 
 `(Stock, year, month, date)`로 구성된 튜플의 리스트를 받았을때, stock이 천달러를 초과하는 시점은 아래와 같이 구할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let stock = [(994.4,2008,9,1),(995.2,2008,9,2),(999.2,2008,9,3),(1001.4,2008,9,4),(998.3,2008,9,5)]]
-**[prompt ghci> ]**[command head (dropWhile (\(val,y,m,d) -> val < 1000) stock)]
+ghci> let stock = [(994.4,2008,9,1),(995.2,2008,9,2),(999.2,2008,9,3),(1001.4,2008,9,4),(998.3,2008,9,5)]
+ghci> head (dropWhile (\(val,y,m,d) -> val < 1000) stock)
 (1001.4,2008,9,4)
 ```
 
@@ -258,8 +242,7 @@ True
 `takeWhile`과 유사하지만 리스트 쌍을 리턴하는 함수입니다. 동일한 조건\(predicate\)에 동일한 리스트를 입력으로 `takeWhile`을 호출한 결과가 첫번째 리스트가 되고 `takeWhile`에 의해서 제외된 값들이 두번째 리스트가 됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let (fw, rest) = span (/=' ') "This is a sentence" in "First word:" ++ fw ++ ", the rest:" ++ rest]
+ghci> let (fw, rest) = span (/=' ') "This is a sentence" in "First word:" ++ fw ++ ", the rest:" ++ rest
 "First word: This, the rest: is a sentence"
 ```
 
@@ -268,10 +251,9 @@ True
 `span` 함수와 유사하지만 `break` 함수는 조건문이 첫번째 참일때 중단합니다. `break p`는 `span (not . p)`와 동일한 기능을 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command break (==4) [1,2,3,4,5,6,7]]
+ghci> break (==4) [1,2,3,4,5,6,7]
 ([1,2,3],[4,5,6,7])
-**[prompt ghci> ]**[command span (/=4) [1,2,3,4,5,6,7]]
+ghci> span (/=4) [1,2,3,4,5,6,7]
 ([1,2,3],[4,5,6,7])
 ```
 
@@ -282,10 +264,9 @@ True
 리스트를 정렬하는 함수입니다. 리스트내 값들의 타입클래스를 `Ord`에 포함되어야 합니다. 순서를 판단할 수 없는 값은 정렬을 할수없습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command sort [8,5,3,2,1,6,4,2]]
+ghci> sort [8,5,3,2,1,6,4,2]
 [1,2,2,3,4,5,6,8]
-**[prompt ghci> ]**[command sort "This will be sorted soon"]
+ghci> sort "This will be sorted soon"
 "    Tbdeehiillnooorssstw"
 ```
 
@@ -294,16 +275,14 @@ True
 리스트를 받아서 동일한 값이 인접해 있으면 하위 리스트로 묶어주는 함수 입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command group [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]]
+ghci> group [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]
 [[1,1,1,1],[2,2,2,2],[3,3],[2,2,2],[5],[6],[7]]
 ```
 
 만약 리스트를 그룹핑하기 전에 정렬하면 리스트에서 각 값들이 몇번 나왔는지 알 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command map (\l@(x:xs) -> (x,length l)) . group . sort $ [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]]
+ghci> map (\l@(x:xs) -> (x,length l)) . group . sort $ [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]
 [(1,4),(2,7),(3,2),(5,1),(6,1),(7,1)]
 ```
 
@@ -312,12 +291,11 @@ True
 `init`과 `tail`를 재귀적으로 아무것도 없을때 까지 호출한 결과들의 리스트를 리턴합니다. 아래 화면을 보면 쉽게 이해할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command inits "w00t"]
+ghci> inits "w00t"
 ["","w","w0","w00","w00t"]
-**[prompt ghci> ]**[command tails "w00t"]
+ghci> tails "w00t"
 ["w00t","00t","0t","t",""]
-**[prompt ghci> ]**[command let w = "w00t" in zip (inits w) (tails w)]
+ghci> let w = "w00t" in zip (inits w) (tails w)
 [("","w00t"),("w","00t"),("w0","0t"),("w00","t"),("w00t","")]
 ```
 
@@ -337,12 +315,11 @@ search needle haystack =
 입력받은 첫번째 하위 리스트가 두번째 대상 리스트에 포함되는지 검색하는 함수입니다. 만약 대상 리스트내의 어디에든 하위 리스트가 포함되면 `True`를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command "cat" `isInfixOf` "im a cat burglar"]
+ghci> "cat" `isInfixOf` "im a cat burglar"
 True
-**[prompt ghci> ]**[command "Cat" `isInfixOf` "im a cat burglar"]
+ghci> "Cat" `isInfixOf` "im a cat burglar"
 False
-**[prompt ghci> ]**[command "cats" `isInfixOf` "im a cat burglar"]
+ghci> "cats" `isInfixOf` "im a cat burglar"
 False
 ```
 
@@ -352,14 +329,13 @@ False
 `isSuffixOf`는 하위 리스트가 대상 리스트에 마지막인지 확인하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command "hey" `isPrefixOf` "hey there!"]
+ghci> "hey" `isPrefixOf` "hey there!"
 True
-**[prompt ghci> ]**[command "hey" `isPrefixOf` "oh hey there!"]
+ghci> "hey" `isPrefixOf` "oh hey there!"
 False
-**[prompt ghci> ]**[command "there!" `isSuffixOf` "oh hey there!"]
+ghci> "there!" `isSuffixOf` "oh hey there!"
 True
-**[prompt ghci> ]**[command "there!" `isSuffixOf` "oh hey there"]
+ghci> "there!" `isSuffixOf` "oh hey there"
 False
 ```
 
@@ -372,18 +348,16 @@ False
 조건문\(predicate\)과 리스트를 입력받아서 리스트의 쌍을 리턴합니다. 첫번째 리스트는 조건문에 만족하는 구성요소들의 리스트이고, 두번째 리스트는 나머지 구성요소들의 리스트입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command partition (`elem` ['A'..'Z']) "BOBsidneyMORGANeddy"]
+ghci> partition (`elem` ['A'..'Z']) "BOBsidneyMORGANeddy"
 ("BOBMORGAN","sidneyeddy")
-**[prompt ghci> ]**[command partition (>3) [1,3,5,6,3,2,1,0,3,7]]
+ghci> partition (>3) [1,3,5,6,3,2,1,0,3,7]
 ([5,6,7],[1,3,3,2,1,0,3])
 ```
 
 `span`과 `break`와 어떻게 다른지 이해하는 것이 중요합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command span (`elem` ['A'..'Z']) "BOBsidneyMORGANeddy"]
+ghci> span (`elem` ['A'..'Z']) "BOBsidneyMORGANeddy"
 ("BOB","sidneyMORGANeddy")
 ```
 
@@ -394,12 +368,11 @@ False
 조건문\(predicate\)과 리스트를 입력받아서 조건을 만족하는 첫번째 구성요소가 `Maybe`값으로 랩핑된 구성요소로 리턴됩니다. 다음 챕터에서 대수적인 데이터 타입에 대해서 더 자세히 다룰 것입니다. 여기서는 알아야 할 것은 `Maybe`**값은 어떤 값을 가지거나 아무것도 없을 수 있다는 점입니다.** 마치 리스트가 비어있거나 어떤 구성요소를 가질 수 있는 것처럼 `Maybe`값은 아무 것도 없거나 하나의 구성요소를 가질 수 있습니다. Integer의 리스트의 타입이 `[Int]`인 것처럼 Interger를 가질수도 있는 타입을 `Maybe Int` 라고 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command find (>4) [1,2,3,4,5,6]]
+ghci> find (>4) [1,2,3,4,5,6]
 Just 5
-**[prompt ghci> ]**[command find (>9) [1,2,3,4,5,6]]
+ghci> find (>9) [1,2,3,4,5,6]
 Nothing
-**[prompt ghci> ]**[command :t find]
+ghci> :t find
 find :: (a -> Bool) -> [a] -> Maybe a
 ```
 
@@ -424,12 +397,11 @@ find (\(val,y,m,d) -> val > 1000) stock
 `elem`과 동일한 기능을 하지만 boolean값을 리턴하지않습니다. 찾고있는 구성요소의 index를 리턴합니다. 만약 찾는 구성요소가 리스트에 없으면 `Nothing`을 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t elemIndex]
+ghci> :t elemIndex
 elemIndex :: (Eq a) => a -> [a] -> Maybe Int
-**[prompt ghci> ]**[command 4 `elemIndex` [1,2,3,4,5,6]]
+ghci> 4 `elemIndex` [1,2,3,4,5,6]
 Just 3
-**[prompt ghci> ]**[command 10 `elemIndex` [1,2,3,4,5,6]]
+ghci> 10 `elemIndex` [1,2,3,4,5,6]
 Nothing
 ```
 
@@ -438,8 +410,7 @@ Nothing
 `elemIndex`와 동일한 기능을 하지만 찾고있는 구성요소가 여러개인 경우 index들의 리스트를 리턴합니다. 구성요소가 한개도 없는 경우는 `Nothing`과 유사하게 빈리스트를 반환합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command ' ' `elemIndices` "Where are the spaces?"]
+ghci> ' ' `elemIndices` "Where are the spaces?"
 [5,9,13]
 ```
 
@@ -449,12 +420,11 @@ Nothing
 `findIndices`는 조건에 만족하는 모든 구성요소의 index 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command findIndex (==4) [5,3,2,1,6,4]]
+ghci> findIndex (==4) [5,3,2,1,6,4]
 Just 5
-**[prompt ghci> ]**[command findIndex (==7) [5,3,2,1,6,4]]
+ghci> findIndex (==7) [5,3,2,1,6,4]
 Nothing
-**[prompt ghci> ]**[command findIndices (`elem` ['A'..'Z']) "Where Are The Caps?"]
+ghci> findIndices (`elem` ['A'..'Z']) "Where Are The Caps?"
 [0,6,10,14]
 ```
 
@@ -467,10 +437,9 @@ Nothing
 이런 `zip`과 `zipWith`의 변종 함수는 7개까지 있습니다. 또한 무한개의 리스트를 묶을때도 매우 좋은 방법이 있지만, 여기서는 다루지 않겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command zipWith3 (\x y z -> x + y + z) [1,2,3] [4,5,2,2] [2,2,3]]
+ghci> zipWith3 (\x y z -> x + y + z) [1,2,3] [4,5,2,2] [2,2,3]
 [7,9,8]
-**[prompt ghci> ]**[command zip4 [2,3,3] [2,2,2] [5,5,3] [2,2,2]]
+ghci> zip4 [2,3,3] [2,2,2] [5,5,3] [2,2,2]
 [(2,2,5,2),(3,2,5,2),(3,2,3,2)]
 ```
 
@@ -481,8 +450,7 @@ Nothing
 문자열을 입력받아서 라인단위로 분리된 리스트를 리턴합니다. `lines`는 파일이나 외부입력을 다룰때 매우 유용한 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command lines "first line\nsecond line\nthird line"]
+ghci> lines "first line\nsecond line\nthird line"
 ["first line","second line","third line"]
 ```
 
@@ -493,8 +461,7 @@ Nothing
 `lines`와 반대로 여러개의 문자열의 리스트를 `'\n'`를 사용하여 하나의 문자열로 합칩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command unlines ["first line", "second line", "third line"]]
+ghci> unlines ["first line", "second line", "third line"]
 "first line\nsecond line\nthird line\n"
 ```
 
@@ -504,12 +471,11 @@ Nothing
 `unwords`는 단어들의 리스트를 하나의 문자열로 합칩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command words "hey these are the words in this sentence"]
+ghci> words "hey these are the words in this sentence"
 ["hey","these","are","the","words","in","this","sentence"]
-**[prompt ghci> ]**[command words "hey these           are    the words in this\nsentence"]
+ghci> words "hey these           are    the words in this\nsentence"
 ["hey","these","are","the","words","in","this","sentence"]
-**[prompt ghci> ]**[command unwords ["hey","there","mate"]]
+ghci> unwords ["hey","there","mate"]
 "hey there mate"
 ```
 
@@ -518,10 +484,9 @@ Nothing
 리스트를 받아서 중복된 값들을 제거하고 유일한 값들의 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command nub [1,2,3,4,3,2,1,2,3,4,3,2,1]]
+ghci> nub [1,2,3,4,3,2,1,2,3,4,3,2,1]
 [1,2,3,4]
-**[prompt ghci> ]**[command nub "Lots of words and stuff"]
+ghci> nub "Lots of words and stuff"
 "Lots fwrdanu"
 ```
 
@@ -530,12 +495,11 @@ Nothing
 한 개의 구성요소와 리스트를 받아서 리스트내에서 입력받은 구성요소와 처음으로 일치하는 구성요소만 삭제된 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command delete 'h' "hey there ghang!"]
+ghci> delete 'h' "hey there ghang!"
 "ey there ghang!"
-**[prompt ghci> ]**[command delete 'h' . delete 'h' $ "hey there ghang!"]
+ghci> delete 'h' . delete 'h' $ "hey there ghang!"
 "ey tere ghang!"
-**[prompt ghci> ]**[command delete 'h' . delete 'h' . delete 'h' $ "hey there ghang!"]
+ghci> delete 'h' . delete 'h' . delete 'h' $ "hey there ghang!"
 "ey tere gang!"
 ```
 
@@ -544,10 +508,9 @@ Nothing
 두개의 리스트를 입력받아서 왼쪽 리스트에서 오른쪽 리스트와 매칭되는 값만 삭제한 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command [1..10] \\ [2,5,9]]
+ghci> [1..10] \\ [2,5,9]
 [1,3,4,6,7,8,10]
-**[prompt ghci> ]**[command "Im a big baby" \\ "big"]
+ghci> "Im a big baby" \\ "big"
 "Im a  baby"
 ```
 
@@ -558,10 +521,9 @@ Nothing
 두개의 리스트를 받아서 두번째 리스트에서 첫번째 리스트와 중복되는 구성요소를 제거하고 첫번째 리스트와 합친 리스트를 리턴합니다. 즉, 두 리스트의 합집합을 구합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command "hey man" `union` "man what's up"]
+ghci> "hey man" `union` "man what's up"
 "hey manwt'sup"
-**[prompt ghci> ]**[command [1..7] `union` [5..10]]
+ghci> [1..7] `union` [5..10]
 [1,2,3,4,5,6,7,8,9,10]
 ```
 
@@ -570,8 +532,7 @@ Nothing
 두개의 리스트를 입력받아서 양쪽에 모두 존재하는 구성요소들의 리스트를 리턴합니다. 즉, 교집합을 구합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command [1..7] `intersect` [5..10]]
+ghci> [1..7] `intersect` [5..10]
 [5,6,7]
 ```
 
@@ -580,22 +541,20 @@ Nothing
 리스트에 삽입할 값과 정렬이 가능한 리스트를 받아서 대상 리스트에 넣을 값보다 작거나 같은 구성요소 다음에 삽입하는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command insert 4 [3,5,1,2,8,2]]
+ghci> insert 4 [3,5,1,2,8,2]
 [3,4,5,1,2,8,2]
-**[prompt ghci> ]**[command insert 4 [1,3,4,4,1]]
+ghci> insert 4 [1,3,4,4,1]
 [1,3,4,4,4,1]
 ```
 
 이 예제에서 `4`는 `3`과 `5` 사이의 숫자로 해당 위치에 넣은 것을 확인할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command insert 4 [1,2,3,5,6,7]]
+ghci> insert 4 [1,2,3,5,6,7]
 [1,2,3,4,5,6,7]
-**[prompt ghci> ]**[command insert 'g' $ ['a'..'f'] ++ ['h'..'z']]
+ghci> insert 'g' $ ['a'..'f'] ++ ['h'..'z']
 "abcdefghijklmnopqrstuvwxyz"
-**[prompt ghci> ]**[command insert 3 [1,2,4,3,2,1]]
+ghci> insert 3 [1,2,4,3,2,1]
 [1,2,3,4,3,2,1]
 ```
 
@@ -610,9 +569,8 @@ Nothing
 `nub`, `delete`, `union`, `intersect`, `group`은 각각 좀 더 일반적인 함수로 `nubBy`, `deleteBy`, `unionBy`, `intersectBy`, `groupBy` 함수를 가지고 있습니다. `genericXXX` 함수들은 동등성 체크를 `==`으로 하는반면에 `xxxBy` 함수들은 동등 함수를 받아서 비교한다는 점\(예를들어 `group`은 `groupBy (==)`과 동일\)에서 함수명 규칙을 다르게 적용하였습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let values = [-4.3, -2.4, -1.2, 0.4, 2.3, 5.9, 10.5, 29.1, 5.3, -2.4, -14.5, 2.9, 2.3]]
-**[prompt ghci> ]**[command groupBy (\x y -> (x > 0) == (y > 0)) values]
+ghci> let values = [-4.3, -2.4, -1.2, 0.4, 2.3, 5.9, 10.5, 29.1, 5.3, -2.4, -14.5, 2.9, 2.3]
+ghci> groupBy (\x y -> (x > 0) == (y > 0)) values
 [[-4.3,-2.4,-1.2],[0.4,2.3,5.9,10.5,29.1,5.3],[-2.4,-14.5],[2.9,2.3]]
 ```
 
@@ -630,8 +588,7 @@ f `on` g = \x y -> f (g x) (g y)
 따라서 ``(==) `on` (> 0)``은 `\x y -> (x > 0) == (y > 0)`과 같은 동등함수를 리턴합니다. `on`은 아래 예제와 같이 _By_ 함수와 함께 자주 사용됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command groupBy ((==) `on` (> 0)) values]
+ghci> groupBy ((==) `on` (> 0)) values
 [[-4.3,-2.4,-1.2],[0.4,2.3,5.9,10.5,29.1,5.3],[-2.4,-14.5],[2.9,2.3]]
 ```
 
@@ -642,9 +599,8 @@ f `on` g = \x y -> f (g x) (g y)
 리스트들은 비교할 수는 있지만 사전식으로 비교가 됩니다. 만약 리스트의 리스트가 있을때 리스트의 내용이 아니라 내부 리스트의 길이에 따라서 정렬하려면 어떻게 해야할까요? 아래 예와 같이 `sortBy`를 사용해서 해결할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let xs = [[5,4,5,4,4],[1,2,3],[3,5,4,3],[],[2],[2,2]]]
-**[prompt ghci> ]**[command sortBy (compare `on` length) xs]
+ghci> let xs = [[5,4,5,4,4],[1,2,3],[3,5,4,3],[],[2],[2,2]]
+ghci> sortBy (compare `on` length) xs
 [[],[2],[2,2],[1,2,3],[3,5,4,3],[5,4,5,4,4]]
 ```
 
@@ -738,46 +694,42 @@ f `on` g = \x y -> f (g x) (g y)
 지금까지 살펴본 함수들의 타입은 `Char -> Bool`입니다. 문자열같은 것을 필터링하거나 `Data.List`의 `all` 함수와 함께 활용되기도 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command all isAlphaNum "bobby283"]
+ghci> all isAlphaNum "bobby283"
 True
-**[prompt ghci> ]**[command all isAlphaNum "eddy the fish!"]
+ghci> all isAlphaNum "eddy the fish!"
 False
 ```
 
 `all`은 조건문\(predicate\)와 리스트를 받아서 모든 값이 조건을 만족하면 `True`를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command words "hey guys its me"]
+ghci> words "hey guys its me"
 ["hey","guys","its","me"]
-**[prompt ghci> ]**[command groupBy ((==) `on` isSpace) "hey guys its me"]
+ghci> groupBy ((==) `on` isSpace) "hey guys its me"
 ["hey"," ","guys"," ","its"," ","me"]
 ```
 
 `isSpace`를 활용해서 `words` 함수를 흉내낸 예제입니다. 하지만 공백이 제거되지 않고 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hey guys its me"]
+ghci> filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hey guys its me"
 ["hey","guys","its","me"]
 ```
 
 `filter`를 사용하여 공백문자를 제거하였습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command generalCategory ' ']
+ghci> generalCategory ' '
 Space
-**[prompt ghci> ]**[command generalCategory 'A']
+ghci> generalCategory 'A'
 UppercaseLetter
-**[prompt ghci> ]**[command generalCategory 'a']
+ghci> generalCategory 'a'
 LowercaseLetter
-**[prompt ghci> ]**[command generalCategory '.']
+ghci> generalCategory '.'
 OtherPunctuation
-**[prompt ghci> ]**[command generalCategory '9']
+ghci> generalCategory '9'
 DecimalNumber
-**[prompt ghci> ]**[command map generalCategory " \t\nA9?|"]
+ghci> map generalCategory " \t\nA9?|"
 [Space,Control,Control,UppercaseLetter,DecimalNumber,OtherPunctuation,MathSymbol]
 ```
 
@@ -800,10 +752,9 @@ DecimalNumber
 문자를 `Int`로 바꾸어 줍니다. 이때 문자는 `'0'..'9'`, `'a'..'f'`, `'A'..'F'` 범위내에 있어야 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command map digitToInt "34538"]
+ghci> map digitToInt "34538"
 [3,4,5,3,8]
-**[prompt ghci> ]**[command map digitToInt "FF85AB"]
+ghci> map digitToInt "FF85AB"
 [15,15,8,5,10,11]
 ```
 
@@ -812,10 +763,9 @@ DecimalNumber
 `digitToInt`와 반대입니다. `0..15` 범위의 `Int`를 받아서 소문자로 바꾸어 줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command intToDigit 15]
+ghci> intToDigit 15
 'f'
-**[prompt ghci> ]**[command intToDigit 5]
+ghci> intToDigit 5
 '5'
 ```
 
@@ -824,12 +774,11 @@ DecimalNumber
 문자를 상응하는 아스키 코드 숫자로 바꾸어 주거나 그 반대로 바꾸어 줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command ord 'a']
+ghci> ord 'a'
 97
-**[prompt ghci> ]**[command chr 97]
+ghci> chr 97
 'a'
-**[prompt ghci> ]**[command map ord "abcdefgh"]
+ghci> map ord "abcdefgh"
 [97,98,99,100,101,102,103,104]
 ```
 
@@ -848,14 +797,13 @@ Caesar cipher는 문자를 알파벳의 고정된 숫자만큼 이동시켜 메�
 만약 composition을 사용한다면 함수의 몸제는 `map (chr . (+shift) . ord) msg`와 같이 작성될 수 있습니다 실행하면 아래와 같은 결과를 볼 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command encode 3 "Heeeeey"]
+ghci> encode 3 "Heeeeey"
 "Khhhhh|"
-**[prompt ghci> ]**[command encode 4 "Heeeeey"]
+ghci> encode 4 "Heeeeey"
 "Liiiii}"
-**[prompt ghci> ]**[command encode 1 "abcd"]
+ghci> encode 1 "abcd"
 "bcde"
-**[prompt ghci> ]**[command encode 5 "Marry Christmas! Ho ho ho!"]
+ghci> encode 5 "Marry Christmas! Ho ho ho!"
 "Rfww~%Hmwnxyrfx&%Mt%mt%mt&"
 ```
 
@@ -867,12 +815,11 @@ decode shift msg = encode (negate shift) msg
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command encode 3 "Im a little teapot"]
+ghci> encode 3 "Im a little teapot"
 "Lp#d#olwwoh#whdsrw"
-**[prompt ghci> ]**[command decode 3 "Lp#d#olwwoh#whdsrw"]
+ghci> decode 3 "Lp#d#olwwoh#whdsrw"
 "Im a little teapot"
-**[prompt ghci> ]**[command decode 5 . encode 5 $ "This is a sentence"]
+ghci> decode 5 . encode 5 $ "This is a sentence"
 "This is a sentence"
 ```
 
@@ -918,12 +865,11 @@ findKey key = foldr (\(k,v) acc -> if key == k then Just v else acc) Nothing
 **일반적으로 표준 리스트 재귀 패턴을 직접 사용하는 것보다는 fold를 사용하는 것이 가독성과 식별이 쉽습니다.** `foldr`이 보이면 모든 사람은 fold를 한다는 것을 알지만, 재귀를 쓰면 코드를 이해하기 위해서 시간을 들여야 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command findKey "penny" phoneBook]
+ghci> findKey "penny" phoneBook
 Just "853-2492"
-**[prompt ghci> ]**[command findKey "betty" phoneBook]
+ghci> findKey "betty" phoneBook
 Just "555-2938"
-**[prompt ghci> ]**[command findKey "wilma" phoneBook]
+ghci> findKey "wilma" phoneBook
 Nothing
 ```
 
@@ -941,10 +887,9 @@ import qualified Data.Map as Map
 연관리스트를 받아서 동일한 연관성을 가지는 맵을 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.fromList [("betty","555-2938"),("bonnie","452-2928"),("lucille","205-2928")]]
+ghci> Map.fromList [("betty","555-2938"),("bonnie","452-2928"),("lucille","205-2928")]
 fromList [("betty","555-2938"),("bonnie","452-2928"),("lucille","205-2928")]
-**[prompt ghci> ]**[command Map.fromList [(1,2),(3,4),(3,2),(5,5)]]
+ghci> Map.fromList [(1,2),(3,4),(3,2),(5,5)]
 fromList [(1,2),(3,2),(5,5)]
 ```
 
@@ -963,8 +908,7 @@ Map.fromList :: (Ord k) => [(k, v)] -> Map.Map k v
 비어있는 맵을 나타내는 것으로서 입력이 없고 단지 비어있는 맵을 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.empty]
+ghci> Map.empty
 fromList []
 ```
 
@@ -973,14 +917,13 @@ fromList []
 key, value, map을 입력받아서 맵에 해당 key, value를 포함한 새로운 맵을 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.empty]
+ghci> Map.empty
 fromList []
-**[prompt ghci> ]**[command Map.insert 3 100 Map.empty]
+ghci> Map.insert 3 100 Map.empty
 fromList [(3,100)]
-**[prompt ghci> ]**[command Map.insert 5 600 (Map.insert 4 200 ( Map.insert 3 100  Map.empty))]
+ghci> Map.insert 5 600 (Map.insert 4 200 ( Map.insert 3 100  Map.empty))
 fromList [(3,100),(4,200),(5,600)]
-**[prompt ghci> ]**[command Map.insert 5 600 . Map.insert 4 200 . Map.insert 3 100 $ Map.empty]
+ghci> Map.insert 5 600 . Map.insert 4 200 . Map.insert 3 100 $ Map.empty
 fromList [(3,100),(4,200),(5,600)]
 ```
 
@@ -998,10 +941,9 @@ foldr를 사용하여 비어있는 맵에서 오른쪽부터 접으면서 key-va
 맵이 비어있는지 검사합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.null Map.empty]
+ghci> Map.null Map.empty
 True
-**[prompt ghci> ]**[command Map.null $ Map.fromList [(2,3),(5,5)]]
+ghci>d Map.null $ Map.fromList [(2,3),(5,5)]
 False
 ```
 
@@ -1010,10 +952,9 @@ False
 맵의 크기를 알려줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.size Map.empty]
+ghci> Map.size Map.empty
 0
-**[prompt ghci> ]**[command Map.size $ Map.fromList [(2,4),(3,3),(4,2),(5,4),(6,4)]]
+ghci> Map.size $ Map.fromList [(2,4),(3,3),(4,2),(5,4),(6,4)]
 5
 ```
 
@@ -1022,10 +963,9 @@ False
 key, value를 받아서 입력받은 key-value쌍 한개만 가진 맵을 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.singleton 3 9]
+ghci> Map.singleton 3 9
 fromList [(3,9)]
-**[prompt ghci> ]**[command Map.insert 5 9 $ Map.singleton 3 9]
+ghci> Map.insert 5 9 $ Map.singleton 3 9
 fromList [(3,9),(5,9)]
 ```
 
@@ -1038,10 +978,9 @@ fromList [(3,9),(5,9)]
 key와 맵을 입력받아서 맵안에 key가 있는지를 알려줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.member 3 $ Map.fromList [(3,6),(4,3),(6,9)]]
+ghci> Map.member 3 $ Map.fromList [(3,6),(4,3),(6,9)]
 True
-**[prompt ghci> ]**[command Map.member 3 $ Map.fromList [(2,5),(4,5)]]
+ghci> Map.member 3 $ Map.fromList [(2,5),(4,5)]
 False
 ```
 
@@ -1050,10 +989,9 @@ False
 리스트의 `map`,`filter`와 동일한 기능을 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.map (*100) $ Map.fromList [(1,1),(2,4),(3,9)]]
+ghci> Map.map (*100) $ Map.fromList [(1,1),(2,4),(3,9)]
 fromList [(1,100),(2,400),(3,900)]
-**[prompt ghci> ]**[command Map.filter isUpper $ Map.fromList [(1,'a'),(2,'A'),(3,'b'),(4,'B')]]
+ghci> Map.filter isUpper $ Map.fromList [(1,'a'),(2,'A'),(3,'b'),(4,'B')]
 fromList [(2,'A'),(4,'B')]
 ```
 
@@ -1062,8 +1000,7 @@ fromList [(2,'A'),(4,'B')]
 `fromList`와 반대의 기능을 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.toList . Map.insert 9 2 $ Map.singleton 4 3]
+ghci> Map.toList . Map.insert 9 2 $ Map.singleton 4 3
 [(4,3),(9,2)]
 ```
 
@@ -1097,12 +1034,11 @@ phoneBookToMap xs = Map.fromListWith (\number1 number2 -> number1 ++ ", " ++ num
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.lookup "patsy" $ phoneBookToMap phoneBook]
+ghci> Map.lookup "patsy" $ phoneBookToMap phoneBook
 "827-9162, 943-2929, 493-2928"
-**[prompt ghci> ]**[command Map.lookup "wendy" $ phoneBookToMap phoneBook]
+ghci> Map.lookup "wendy" $ phoneBookToMap phoneBook
 "939-8282"
-**[prompt ghci> ]**[command Map.lookup "betty" $ phoneBookToMap phoneBook]
+ghci> Map.lookup "betty" $ phoneBookToMap phoneBook
 "342-2492, 555-2938"
 ```
 
@@ -1114,24 +1050,21 @@ phoneBookToMap xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.lookup "patsy" $ phoneBookToMap phoneBook]
+ghci> Map.lookup "patsy" $ phoneBookToMap phoneBook
 ["827-9162","943-2929","493-2928"]
 ```
 
 만약 중복된 키가 있으면 해당하는 키의 값들을 묶어서 찾은 키에 해당하는 모든 값들을 하나의 리스트에 리턴합니다. 번호들을 묶기 위해서 `++`를 사용할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.fromListWith max [(2,3),(2,5),(2,100),(3,29),(3,22),(3,11),(4,22),(4,15)]]
+ghci> Map.fromListWith max [(2,3),(2,5),(2,100),(3,29),(3,22),(3,11),(4,22),(4,15)]
 fromList [(2,100),(3,29),(4,22)]
 ```
 
 또다른 예로 중복된 키가 발견되면 값들중 가장 큰 것만 남기는 함수를 만들 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.fromListWith (+) [(2,3),(2,5),(2,100),(3,29),(3,22),(3,11),(4,22),(4,15)]]
+ghci> Map.fromListWith (+) [(2,3),(2,5),(2,100),(3,29),(3,22),(3,11),(4,22),(4,15)]
 fromList [(2,108),(3,62),(4,37)]
 ```
 
@@ -1142,8 +1075,7 @@ fromList [(2,108),(3,62),(4,37)]
 `fromList`에 `fromListWith`가 있는 것처럼 `insert`에는 `insertWith`가 잇습니다. 맵에 key-value쌍을 넣지만, 만약 맵에 키가 이미 존재한다면 무엇을 해야할지를 결정하는 함수를 제공합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Map.insertWith (+) 3 100 $ Map.fromList [(3,4),(5,103),(6,339)]]
+ghci> Map.insertWith (+) 3 100 $ Map.fromList [(3,4),(5,103),(6,339)]
 fromList [(3,104),(5,103),(6,339)]
 ```
 
@@ -1171,12 +1103,11 @@ text2 = "The old man left his garbage can out and now his trash is all over my l
 리스트를 받아서 Set으로 바꾸는 함수입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let set1 = Set.fromList text1]
-**[prompt ghci> ]**[command let set2 = Set.fromList text2]
-**[prompt ghci> ]**[command set1]
+ghci> let set1 = Set.fromList text1
+ghci> let set2 = Set.fromList text2
+ghci> set1
 fromList " .?AIRadefhijlmnorstuy"
-**[prompt ghci> ]**[command set2]
+ghci> set2
 fromList " !Tabcdefghilmnorstuvwy"
 ```
 
@@ -1187,8 +1118,7 @@ fromList " !Tabcdefghilmnorstuvwy"
 두개의 Set을 받아서 양쪽에서 동일하게 가지고 있는 구성요소들의 리스트를 리턴합니다. 즉, 교집합을 구합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Set.intersection set1 set2]
+ghci> Set.intersection set1 set2
 fromList " adefhilmnorstuy"
 ```
 
@@ -1197,10 +1127,9 @@ fromList " adefhilmnorstuy"
 두개의 Set을 받아서 첫번째 Set에는 있는데 두번째 Set에는 없는 구성요소들의 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Set.difference set1 set2]
+ghci> Set.difference set1 set2
 fromList ".?AIRj"
-**[prompt ghci> ]**[command Set.difference set2 set1]
+ghci> Set.difference set2 set1
 fromList "!Tbcgvw"
 ```
 
@@ -1209,28 +1138,26 @@ fromList "!Tbcgvw"
 두개의 Set을 받아서 양쪽에 있는 모든 유일한 문자들의 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Set.union set1 set2 ]
+ghci> Set.union set1 set2
 fromList " !.?AIRTabcdefghijlmnorstuvwy"
 ```
 
 ### null, size, member, empty, singleton, insert, delete
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Set.null Set.empty]
+ghci> Set.null Set.empty
 True
-**[prompt ghci> ]**[command Set.null $ Set.fromList [3,4,5,5,4,3]]
+ghci> Set.null $ Set.fromList [3,4,5,5,4,3]
 False
-**[prompt ghci> ]**[command Set.size $ Set.fromList [3,4,5,3,4,5]]
+ghci> Set.size $ Set.fromList [3,4,5,3,4,5]
 3
-**[prompt ghci> ]**[command Set.singleton 9]
+ghci> Set.singleton 9
 fromList [9]
-**[prompt ghci> ]**[command Set.insert 4 $ Set.fromList [9,3,8,1]]
+ghci> Set.insert 4 $ Set.fromList [9,3,8,1]
 fromList [1,3,4,8,9]
-**[prompt ghci> ]**[command Set.insert 8 $ Set.fromList [5..10]]
+ghci> Set.insert 8 $ Set.fromList [5..10]
 fromList [5,6,7,8,9,10]
-**[prompt ghci> ]**[command Set.delete 4 $ Set.fromList [3,4,5,4,3,4,5]]
+ghci> Set.delete 4 $ Set.fromList [3,4,5,4,3,4,5]
 fromList [3,5]
 ```
 
@@ -1239,24 +1166,22 @@ fromList [3,5]
 두개의 Set을 받아서 첫번째 Set이 두번째 Set의 subset인지 확인합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Set.fromList [2,3,4] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]]
+ghci> Set.fromList [2,3,4] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]
 True
-**[prompt ghci> ]**[command Set.fromList [1,2,3,4,5] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]]
+ghci> Set.fromList [1,2,3,4,5] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]
 True
-**[prompt ghci> ]**[command Set.fromList [1,2,3,4,5] `Set.isProperSubsetOf` Set.fromList [1,2,3,4,5]]
+ghci> Set.fromList [1,2,3,4,5] `Set.isProperSubsetOf` Set.fromList [1,2,3,4,5]
 False
-**[prompt ghci> ]**[command Set.fromList [2,3,4,8] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]]
+ghci> Set.fromList [2,3,4,8] `Set.isSubsetOf` Set.fromList [1,2,3,4,5]
 False
 ```
 
 ### map && filter
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Set.filter odd $ Set.fromList [3,4,5,6,7,2,3,4]]
+ghci> Set.filter odd $ Set.fromList [3,4,5,6,7,2,3,4]
 fromList [3,5,7]
-**[prompt ghci> ]**[command Set.map (+1) $ Set.fromList [3,4,5,6,7,2,3,4]]
+ghci> Set.map (+1) $ Set.fromList [3,4,5,6,7,2,3,4]
 fromList [3,4,5,6,7,8]
 ```
 
@@ -1265,11 +1190,10 @@ fromList [3,4,5,6,7,8]
 Set은 가끔 리스트에서 중복된 값을 제거하기 위해서 사용됩니다. `fromList`로 리스트를 Set으로 바꾸고 `toList`로 다시 리스트로 만들면 중복 데이터가 제거됩니다.`Data.List`에는 이미 중복 제거를 위한 `nub` 함수이 있지만 거대한 리스트에서 중복을 제거할때는 'nub'을 사용하는 것보다 빠릅니다. 그러나 `nub`은 구성요소의 타입이 `Eq`이면 사용이 가능하지만, Set을 사용하는 방법은 `Ord`이어야 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let setNub xs = Set.toList $ Set.fromList xs]
-**[prompt ghci> ]**[command setNub "HEY WHATS CRACKALACKIN"]
+ghci> let setNub xs = Set.toList $ Set.fromList xs
+ghci> setNub "HEY WHATS CRACKALACKIN"
 " ACEHIKLNRSTWY"
-**[prompt ghci> ]**[command nub "HEY WHATS CRACKALACKIN"]
+ghci> nub "HEY WHATS CRACKALACKIN"
 "HEY WATSCRKLIN"
 ```
 
