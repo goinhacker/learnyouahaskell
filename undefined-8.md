@@ -79,10 +79,9 @@ ghci> intersperse 0 [1,2,3,4,5,6]
 중첩 리스트와 리스트를 입력받아서, 중첩 리스트의 리스트 사이사이에 입력된 리스트를 넣은 리스트를 리턴합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command intercalate " " ["hey","there","guys"]]
+ghci> intercalate " " ["hey","there","guys"]
 "hey there guys"
-**[prompt ghci> ]**[command intercalate [0,0,0] [[1,2,3],[4,5,6],[7,8,9]]]
+ghci> intercalate [0,0,0] [[1,2,3],[4,5,6],[7,8,9]]
 [1,2,3,0,0,0,4,5,6,0,0,0,7,8,9]
 ```
 

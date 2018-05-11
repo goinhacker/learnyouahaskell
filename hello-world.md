@@ -21,8 +21,7 @@ main = putStrLn "hello, world"
 터미널에서 `helloworld.hs` 파일이 위치한 디렉토리로 이동한 후, 위와같이 실행하여 컴파일합니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command ./helloworld]
+$ ./helloworld
 hello, world
 ```
 
@@ -31,10 +30,9 @@ hello, world
 이제 helloworld 예제에서 사용된 `putStrLn` 함수에 대해서 살펴보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t putStrLn]
+ghci> :t putStrLn
 putStrLn :: String -> IO ()
-**[prompt ghci> ]**[command :t putStrLn "hello, world"]
+ghci> :t putStrLn "hello, world"
 putStrLn "hello, world" :: IO ()
 ```
 
@@ -58,8 +56,7 @@ main = do
 여기서 `name <- getLine`은 입력 라인을 읽어서 `name` 변수에 저장하는 것처럼 보입니다. 정말 그런지 확인해 보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t getLine]
+ghci> :t getLine
 getLine :: IO String
 ```
 
@@ -108,8 +105,7 @@ name = getLine
 한개의 I/O 작업은 `main` 함수에서 수행될 수 있고, 여러개의 I/O 작업을 합성하는 것은 _do_ 블록내에서 가능합니다. 그리고 아래 예제와 같이 GHCI에서 바로 결과를 리턴받을때도 I/O 작업을 쓸 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command putStrLn "HEEY"]
+ghci> putStrLn "HEEY"
 HEEY
 ```
 

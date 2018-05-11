@@ -23,14 +23,13 @@ data List a = Empty | Cons { listHead :: a, listTail :: List a} deriving (Show, 
 여기서 `Cons`는 `:`입니다. `:`**는 실제로 값과 다른 리스트를 받아서 리스트를 리턴하는 생성자 입니다.** 이 생성자는 두개의 필드를 가지고있고, 하나는 `a` 타입이고 다른 필드는 `[a]` 타입입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Empty]
+ghci> Empty
 Empty
-**[prompt ghci> ]**[command 5 `Cons` Empty]
+ghci> 5 `Cons` Empty
 Cons 5 Empty
-**[prompt ghci> ]**[command 4 `Cons` (5 `Cons` Empty)]
+ghci> 4 `Cons` (5 `Cons` Empty)
 Cons 4 (Cons 5 Empty)
-**[prompt ghci> ]**[command 3 `Cons` (4 `Cons` (5 `Cons` Empty))]
+ghci> 3 `Cons` (4 `Cons` (5 `Cons` Empty))
 Cons 3 (Cons 4 (Cons 5 Empty))
 ```
 
@@ -48,11 +47,10 @@ data List a = Empty | a :-: (List a) deriving (Show, Read, Eq, Ord)
 이제 리스트 타입에 리스트를 작성할때 `Cons a (List a)` 대신 `a :-: (List a)`를 사용할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 3 :-: 4 :-: 5 :-: Empty]
+ghci> 3 :-: 4 :-: 5 :-: Empty
 (:-:) 3 ((:-:) 4 ((:-:) 5 Empty))
-**[prompt ghci> ]**[command let a = 3 :-: 4 :-: 5 :-: Empty]
-**[prompt ghci> ]**[command 100 :-: a]
+ghci> let a = 3 :-: 4 :-: 5 :-: Empty
+ghci> 100 :-: a
 (:-:) 100 ((:-:) 3 ((:-:) 4 ((:-:) 5 Empty)))
 ```
 
@@ -79,10 +77,9 @@ Empty .++ ys = ys
 이렇게 정의된 함수는 아래와 같이 동작될 것 입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let a = 3 :-: 4 :-: 5 :-: Empty]
-**[prompt ghci> ]**[command let b = 6 :-: 7 :-: Empty]
-**[prompt ghci> ]**[command a .++ b]
+ghci> let a = 3 :-: 4 :-: 5 :-: Empty
+ghci> let b = 6 :-: 7 :-: Empty
+ghci> a .++ b
 (:-:) 3 ((:-:) 4 ((:-:) 5 ((:-:) 6 ((:-:) 7 Empty))))
 ```
 
@@ -138,24 +135,22 @@ treeElem x (Node a left right)
 이제 트리를 수동으로 만드는 대신 리스트로부터 트리를 만들어 보겠습니다. 이전에 리스트를 하나씩 검색하여 어떤 종류의 값을 리턴하는 것은 `fold`를 사용하여 구현될 수 있다는 것을 배웠습니다. 여기서는 빈트리에서 시작해서 리스트의 오른쪽에서부터 accumulator 트리안에 노드 뒤에 새로운 노드를 추가해나갈 것입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let nums = [8,6,4,1,7,3,5]]
-**[prompt ghci> ]**[command let numsTree = foldr treeInsert EmptyTree nums]
-**[prompt ghci> ]**[command numsTree]
+ghci> let nums = [8,6,4,1,7,3,5]
+ghci> let numsTree = foldr treeInsert EmptyTree nums
+ghci> numsTree
 Node 5 (Node 3 (Node 1 EmptyTree EmptyTree) (Node 4 EmptyTree EmptyTree)) (Node 7 (Node 6 EmptyTree EmptyTree) (Node 8 EmptyTree EmptyTree))
 ```
 
 `foldr`에서 `treeInsert`는 folding 함수\(트리와 리스트의 값을 입력받아서 새로운 트리를 리턴하는..\)이고 `EmptyTree`는 초기값입니다. `nums`는 folding할 리스트입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 8 `treeElem` numsTree]
+ghci> 8 `treeElem` numsTree
 True
-**[prompt ghci> ]**[command 100 `treeElem` numsTree]
+ghci> 100 `treeElem` numsTree
 False
-**[prompt ghci> ]**[command 1 `treeElem` numsTree]
+ghci> 1 `treeElem` numsTree
 True
-**[prompt ghci> ]**[command 10 `treeElem` numsTree]
+ghci> 10 `treeElem` numsTree
 False
 ```
 

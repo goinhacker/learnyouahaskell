@@ -22,8 +22,7 @@ main = do
 `getArgs`의 결과를 `args`, `getProgName`의 결과를 `progName`에 바인딩 하였습니다. 그리고 어떤 내용을 포함하는지 출력하였습니다. `arg-test`라는 프로그램명으로 실행하면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command ./arg-test first second w00t "multi word arg"]
+$ ./arg-test first second w00t "multi word arg"
 The arguments are:  
 first  
 second  
@@ -156,23 +155,22 @@ remove [fileName, numberString] = do
 만약 다른 언어로 작성했다면, switch case문 같은 것을 사용하여 작성했을 것 입니다. 여기서는 고계함수를 사용하여 dispatch 리스트에서 입력 매개변수에 대한 I/O 작업을 제공하는 함수를 찾았습니다. 이제 프로그램의 각 기능을 실행해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command ./todo view todo.txt]
+$ ./todo view todo.txt
 0 - Iron the dishes  
 1 - Dust the dog  
 2 - Take salad out of the oven
 
-**[prompt $ ]**[command ./todo add todo.txt "Pick up children from drycleaners"]
+$ ./todo add todo.txt "Pick up children from drycleaners"
 
-**[prompt $ ]**[command ./todo view todo.txt]
+$ ./todo view todo.txt
 0 - Iron the dishes  
 1 - Dust the dog  
 2 - Take salad out of the oven  
 3 - Pick up children from drycleaners
 
-**[prompt $ ]**[command ./todo remove todo.txt 2]
+$ ./todo remove todo.txt 2
 
-**[prompt $ ]**[command ./todo view todo.txt]
+$ ./todo view todo.txt
 0 - Iron the dishes  
 1 - Dust the dog  
 2 - Pick up children from drycleaners

@@ -90,14 +90,13 @@ data Either a b = Left a | Right b deriving (Eq, Ord, Read, Show)
 여기에서는 두개의 값 생성자를 가집니다. 만약 `Left`가 사용되면 컨텐츠의 타입은 `a`이고, `Rigth`가 사용되면 컨텐츠의 타입은 `b` 입니다. 그래서 두개의 서로 다른 타입의 값을 캡슐화한 타입을 사용할 수 있습니다. 그리고 나서 타입 `Either a b`의 값을 얻을 수 있습니다. 일반적으로 `Left`와 `Right` 모두에서 패턴매칭하고, 그 중 어떤 것이었는지에 따라 다른 타입으로 사용합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Right 20]
+ghci> Right 20
 Right 20
-**[prompt ghci> ]**[command Left "w00t"]
+ghci> Left "w00t"
 Left "w00t"
-**[prompt ghci> ]**[command :t Right 'a']
+ghci> :t Right 'a'
 Right 'a' :: Either a Char
-**[prompt ghci> ]**[command :t Left True]
+ghci> :t Left True
 Left True :: Either Bool b
 ```
 
@@ -144,16 +143,15 @@ lockers = Map.fromList
 이제 실제로 사용해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command lockerLookup 101 lockers]
+ghci> lockerLookup 101 lockers
 Right "JAH3I"
-**[prompt ghci> ]**[command lockerLookup 100 lockers]
+ghci> lockerLookup 100 lockers
 Left "Locker 100 is already taken!"
-**[prompt ghci> ]**[command lockerLookup 102 lockers]
+ghci> lockerLookup 102 lockers
 Left "Locker number 102 doesn't exist!"
-**[prompt ghci> ]**[command lockerLookup 110 lockers]
+ghci> lockerLookup 110 lockers
 Left "Locker 110 is already taken!"
-**[prompt ghci> ]**[command lockerLookup 105 lockers]
+ghci> lockerLookup 105 lockers
 Right "QOTSA"
 ```
 

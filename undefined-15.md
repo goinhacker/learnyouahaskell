@@ -9,10 +9,9 @@
 I/O 코드\(순수하지 못한 코드\)는 예외를 발생시킬수 있습니다. 그렇다면 순수한 코드에서는 어떨까요? 순수한 코드에서도 예외가 발생할 수 있습니다. `div`, `head` 함수의 타입은 각각 `(Integral a) => a -> a -> a`와 `[a] -> a` 입니다. `Maybe`나 `Either`를 반환하지 않습니다. 하지만 이 함수들을 실패할 수 있습니다. `div` 함수는 0으로 나누면 실패하고, `head` 함수는 리스트가 비어있을때 실패할 것 입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 4 `div` 0]
+ghci> 4 `div` 0
 *** Exception: divide by zero
-**[prompt ghci> ]**[command head []]
+ghci> head []
 *** Exception: Prelude.head: empty list
 ```
 
@@ -34,8 +33,7 @@ main = do (fileName:_) <- getArgs
 커맨드라인에서 입력받은 이름을 가진 파일을 열고, 파일에 라인수를 출력하는 프로그램입니다. `getArgs`의 첫번째 문자열만 `fileName`에 바인딩하고, 파일을 읽어서 `contents`에 바인딩 합니다. 마지막으로 `lines` 함수에 `contents`를 넣어서 라인단위로 분리하고, 분리된 리스트의 길이를 계산합니다. 여기서 만약 존재하지않는 파일명을 입력으로 준다면 어떻게 될까요?
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell linecount.hs i_dont_exist.txt]
+$ runhaskell linecount.hs i_dont_exist.txt
 linecount.hs: i_dont_exist.txt: openFile: does not exist (No such file or directory)
 ```
 
@@ -85,10 +83,9 @@ handler e = putStrLn "Whoops, had some trouble!"
 이 예제에서는 `catch` 함수의 입력 매개변수 두개를 infix로 받기위해서 backtick\(`)을 사용하였습니다. 이렇게 사용한 이유는 가독성을 높이기 위함입니다. 결과적으로`toTry `catch` handler`는`catch toTry handler`와 동일합니다.`toTry`함수는 I/O 작업을 시도할 작업 내용을 가지고 있고,`handler`함수는`IOError\` 예외에 대한 처리 작업을 포함하고 있습니다. 이 프로그램을 아래와 같이 동작합니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell count_lines.hs i_exist.txt]
+$ runhaskell count_lines.hs i_exist.txt
 The file has 3 lines!
-**[prompt $ ]**[command runhaskell count_lines.hs i_dont_exist.txt]
+$ runhaskell count_lines.hs i_dont_exist.txt
 Whoops, had some trouble!
 ```
 

@@ -27,15 +27,14 @@ main = forever $ do
 이 프로그램은 사용자에게 한 라인을 받아서 대문자로 바꾸는 작업을 계속 반복합니다. 이 프로그램을 컴파일하고 위에서 만든 텍스트 파일을 넣어보면 아래와 같이 동작합니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command ghc --make capslocker]
+$ ghc --make capslocker
 [1 of 1] Compiling Main             ( capslocker.hs, capslocker.o )
 Linking capslocker ...
-**[prompt $ ]**[command cat haiku.txt]
+$ cat haiku.txt
 I'm a lil' teapot  
 What's with that airplane food, huh?  
 It's so small, tasteless
-**[prompt $ ]**[command cat haiku.txt | ./capslocker]
+$ cat haiku.txt | ./capslocker
 I'M A LIL' TEAPOT  
 WHAT'S WITH THAT AIRPLANE FOOD, HUH?  
 IT'S SO SMALL, TASTELESS
@@ -57,8 +56,7 @@ main = do
 이 예제는 `getContents` 수행해서 받은 결과를 `contents`에 바인딩 하였습니다. 그리고 나서 `toUpper` 함수를 사용해서 대문자로 변경한 후, 콘솔에 출력합니다. 이 예제에서 문자열은 본래 리스트이기 때문에 lazy하게 동작하고, `getContents`는 위에서도 언급한 것처럼 lazy I/O입니다. 또한 한번에 전체를 읽지않기 때문에 화면에 출력하기 전에 메모리에 저장하고, 정말 필요할때 입력으로부터 한 라인씩만 읽어서 화면에 출력합니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command cat haiku.txt | ./capslocker]
+$ cat haiku.txt | ./capslocker
 I'M A LIL' TEAPOT  
 WHAT'S WITH THAT AIRPLANE FOOD, HUH?  
 IT'S SO SMALL, TASTELESS
@@ -67,8 +65,7 @@ IT'S SO SMALL, TASTELESS
 `capslocker` 프로그램을 직접 실행하면 아래와 같이 라인단위로 입력하고 출력할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command ./capslocker]
+$ ./capslocker
 hey ho  
 HEY HO  
 lets go  
@@ -114,11 +111,10 @@ short
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command ghc -make shortlinesonly]
+$ ghc -make shortlinesonly
 [1 of 1] Compiling Main             ( shortlinesonly.hs, shortlinesonly.o )  
 Linking shortlinesonly ... 
-**[prompt $ ]**[command cat shortlines.txt | ./shortlinesonly]
+$ cat shortlines.txt | ./shortlinesonly
 i'm short  
 so am i  
 short
@@ -177,8 +173,7 @@ main = interact respondPalindromes
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell palindromes.hs]
+$ runhaskell palindromes.hs
 hehe  
 not a palindrome  
 ABCBA  
@@ -201,8 +196,7 @@ madam
 위와같은 내용을 담은 파일 `words.txt`가 있다고 했을때,
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command cat words.txt | runhaskell palindromes.hs]
+$ cat words.txt | runhaskell palindromes.hs
 not a palindrome
 palindrome
 palindrome
@@ -239,8 +233,7 @@ main = do
 프로그램을 만들고, 실행해보면 아래와 같이 파일의 내용이 콘솔에 그대로 출력되는 것을 확인할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell girlfriend.hs]
+$ runhaskell girlfriend.hs
 Hey! Hey! You! You!  
 I don't like your girlfriend!  
 No way! No way!  
@@ -327,9 +320,8 @@ main = do
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell girlfriendtocaps.hs]
-**[prompt $ ]**[command cat girlfriendcaps.txt]
+$ runhaskell girlfriendtocaps.hs
+$ cat girlfriendcaps.txt
 HEY! HEY! YOU! YOU!  
 I DON'T LIKE YOUR GIRLFRIEND!  
 NO WAY! NO WAY!  
@@ -349,14 +341,13 @@ main = do
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell appendtodo.hs]
+$ runhaskell appendtodo.hs
 Iron the dishes
-**[prompt $ ]**[command runhaskell appendtodo.hs]
+$ runhaskell appendtodo.hs
 Dust the dog
-**[prompt $ ]**[command runhaskell appendtodo.hs]
+$ runhaskell appendtodo.hs
 Take salad out of the oven  
-**[prompt $ ]**[command cat todo.txt]
+$ cat todo.txt
 Iron the dishes  
 Dust the dog  
 Take salad out of the oven
@@ -440,8 +431,7 @@ todo.txt 파일의 내용을 `contents`에 바인딩 하였습니다. 그리고�
 더 적은 라인으로 프로그램을 작성할 수도 있지만, 기존 파일을 덮어쓰지 않도록 임시 파일을 생성하여 프로그램을 만들었습니다. 이제 실행해보겠습니다!!
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell deletetodo.hs]
+$ runhaskell deletetodo.hs
 These are your TO-DO items:  
 0 - Iron the dishes  
 1 - Dust the dog  
@@ -449,18 +439,18 @@ These are your TO-DO items:
 Which one do you want to delete?  
 1
 
-**[prompt $ ]**[command cat todo.txt]
+$ cat todo.txt
 Iron the dishes  
 Take salad out of the oven
 
-**[prompt $ ]**[command runhaskell deletetodo.hs]
+$ runhaskell deletetodo.hs
 These are your TO-DO items:  
 0 - Iron the dishes  
 1 - Take salad out of the oven  
 Which one do you want to delete?  
 0  
 
-**[prompt $ ]**[command cat todo.txt]
+$ cat todo.txt
 Take salad out of the oven
 ```
 

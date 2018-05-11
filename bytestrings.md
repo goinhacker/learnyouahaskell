@@ -24,10 +24,9 @@ import qualified Data.ByteString as S
 여기서 `Word8`은 `Int`와 비슷합니다. 단지 0-255 범위의 8-bit 숫자만 표현됩니다. `Int`처럼 `Num` 타입클래스에 포함됩니다. 예를들어 `5`는 숫자 타입처럼 동작한다는 점에서 다형성을 가지고, `Word8` 타입으로도 사용될 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command B.pack [99,97,110]]
+ghci> B.pack [99,97,110]
 Chunk "can" Empty
-**[prompt ghci> ]**[command B.pack [98..120]]
+ghci> B.pack [98..120]
 Chunk "bcdefghijklmnopqrstuvwx" Empty
 ```
 
@@ -40,8 +39,7 @@ Chunk "bcdefghijklmnopqrstuvwx" Empty
 `fromChunks` 함수는 strict bytestrings의 리스트를 받아서 lazy bytestrings로 변환해줍니다. `toChunks` 함수는 lazy bytestrings를 받아서 strict bytestrings의 리스트로 바꾸어줍니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command B.fromChunks [S.pack [40,41,42], S.pack [43,44,45], S.pack [46,47,48]]]
+ghci> B.fromChunks [S.pack [40,41,42], S.pack [43,44,45], S.pack [46,47,48]]
 Chunk "()*" (Chunk "+,-" (Chunk "./0" Empty))
 ```
 
@@ -50,15 +48,14 @@ Chunk "()*" (Chunk "+,-" (Chunk "./0" Empty))
 `:`의 bytestrings 버전으로 `cons` 함수가 있습니다. `cons`는 한개의 바이트를 받아서 bytestring의 첫번째 바이트에 넣어줍니다. 이 함수가 동작할때는 게으르게 동작해서 chunk가 가득차있지 않아도 내부적으로 새로운 chunk를 만들 것 입니다. 따라서 좀 더 효율적으로 하려면 strict 버전인 `cons'`를 사용합니다. 만약 많은 양의 바이트들을 bytestring의 첫번째 바이트를 추가해야한다면 strict 버전을 사용하는게 좋습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command B.cons 85 $ B.pack [80,81,82,84]]
+ghci> B.cons 85 $ B.pack [80,81,82,84]
 Chunk "U" (Chunk "PQRT" Empty)
-**[prompt ghci> ]**[command B.cons' 85 $ B.pack [80,81,82,84]]
+ghci> B.cons' 85 $ B.pack [80,81,82,84]
 Chunk "UPQRT" Empty
-**[prompt ghci> ]**[command foldr B.cons B.empty [50..60]]
+ghci> foldr B.cons B.empty [50..60]
 Chunk "2" (Chunk "3" (Chunk "4" (Chunk "5" (Chunk "6" (Chunk "7" (Chunk "8" (Chunk "9" (Chunk ":" (Chunk ";" (Chunk "<"  
 Empty))))))))))
-**[prompt ghci> ]**[command foldr B.cons' B.empty [50..60]]
+ghci> foldr B.cons' B.empty [50..60]
 Chunk "23456789:;<" Empty
 ```
 
@@ -87,8 +84,7 @@ copyFile source dest = do
 여기서는 두개의 `FilePath`를 받아서 bytestrings을 사용해서 하나의 파일을 다른 파일에 복사하는 I/O 작업을 반환하는 함수 `copyFile`을 만들었습니다. `main` 함수에서는 매개변수를 받아서 `copyFile`를 호출하는 역할만 하고 있습니다. 실행해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell bytestringcopy.hs something.txt]
+$ runhaskell bytestringcopy.hs something.txt
 ```
 
 언뜻보면 bytestring를 사용하지않는 프로그램처럼 보일 수 있습니다. 하지만 실제로는 `B.readFile`, `B.writeFile`을 사용하였습니다. 대부분은 간단히 qualified import로 모듈만 변경하는 것으로 `String`을 사용하는 프로그램을 `ByteString`을 사용하는 프로그램으로 바꿀 수 있습니다. 문자열에 많은 양의 데이터를 읽는 프로그램의 성능을 향상시킬때, bytestrings을 적용해보는 것으로도 성능을 향상시킬 수 있습니다.

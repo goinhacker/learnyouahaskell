@@ -21,8 +21,7 @@ randomNumber = 4
 수동을 랜덤 생성기를 만드려면 `mkStdGen` 함수를 사용합니다. 함수 타입은 `mkStdGen :: Int -> StdGen` 입니다. Integer값 하나를 받아서 랜덤 생성기를 반환합니다. `random`과 `mkStdGen`를 사용해서 랜덤 숫자를 얻어보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command random (mkStdGen 100)]
+ghci> random (mkStdGen 100)
 <interactive>:1:0:  
     Ambiguous type variable `a' in the constraint:  
       `Random a' arising from a use of `random' at <interactive>:1:0-20  
@@ -32,36 +31,32 @@ randomNumber = 4
 `random` 함수는 `Random` 타입클래스의 일부인 어떤 타입의 값을 반환할 수 있으므로, 타입을 명시해주어야 합니다. 따라서 아래와같이 실행되어야 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command random (mkStdGen 100) :: (Int, StdGen)]
+ghci> random (mkStdGen 100) :: (Int, StdGen)
 (-1352021624,651872571 1655838864)
 ```
 
 튜플의 첫번째 값은 숫자이고, 두번째 값은 새로운 랜덤 생성기의 문자열 표현입니다. 여기서 동일한 랜덤 생성기를 사용하여 다시 `random`을 호출하면 어떻게 될까?
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command random (mkStdGen 100) :: (Int, StdGen)]
+ghci> random (mkStdGen 100) :: (Int, StdGen)
 (-1352021624,651872571 1655838864)
 ```
 
 동일한 파라메터로 동일한 함수를 호출했으므로 동일한 결과가 나왔다. 이번에는 다른 랜덤 생성기를 파라메터로 실행해보자.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command random (mkStdGen 949494) :: (Int, StdGen)]
+ghci> random (mkStdGen 949494) :: (Int, StdGen)
 (539963926,466647808 1655838864)
 ```
 
 이번에는 다른 숫자가 나왔다. 타입 어노테이션을 바꾸면 다른 타입의 값을 얻을 수 있다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command random (mkStdGen 949488) :: (Float, StdGen)]
+ghci> random (mkStdGen 949488) :: (Float, StdGen)
 (0.8938442,1597344447 1655838864)
-**[prompt ghci> ]**[command random (mkStdGen 949488) :: (Bool, StdGen)]
+ghci> random (mkStdGen 949488) :: (Bool, StdGen)
 (False,1485632275 40692)
-**[prompt ghci> ]**[command random (mkStdGen 949488) :: (Integer, StdGen)]
+ghci> random (mkStdGen 949488) :: (Integer, StdGen)
 (1691547873,1597344447 1655838864)
 ```
 
@@ -81,14 +76,13 @@ threeCoins gen =
 `random` 함수를 호출하여 받은 새로운 랜덤 생성기를 다시 호출할때 파라메터로 사용하였습니다. 만약 계속 동일한 랜덤 생성기로 호출했다면 세개의 코인은 모두 같은 값을 반환해서 `(False, False, False)` 또는 `(True, True, True)`를 반환했을 것 입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command threeCoins (mkStdGen 21)]
+ghci> threeCoins (mkStdGen 21)
 (True,True,True)
-**[prompt ghci> ]**[command threeCoins (mkStdGen 22)]
+ghci> threeCoins (mkStdGen 22)
 (True,False,True)
-**[prompt ghci> ]**[command threeCoins (mkStdGen 943)]
+ghci> threeCoins (mkStdGen 943)
 (True,False,True)
-**[prompt ghci> ]**[command threeCoins (mkStdGen 944)]
+ghci> threeCoins (mkStdGen 944)
 (True,True,True)
 ```
 
@@ -97,12 +91,11 @@ threeCoins gen =
 4개 또는 5개의 동전을 뒤짚으려면 어떻게 해야할까요? 이때는 `randoms` 함수를 사용합니다. 이 함수는 하나의 랜덤 생성기를 받아서 값들을 계속해서 생성합니다.\(무한대\)
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command take 5 $ randoms (mkStdGen 11) :: [Int]]
+ghci> take 5 $ randoms (mkStdGen 11) :: [Int]
 [-1807975507,545074951,-1015194702,-1622477312,-502893664]
-**[prompt ghci> ]**[command take 5 $ randoms (mkStdGen 11) :: [Bool]]
+ghci> take 5 $ randoms (mkStdGen 11) :: [Bool]
 [True,True,True,True,False]
-**[prompt ghci> ]**[command take 5 $ randoms (mkStdGen 11) :: [Float]]
+ghci> take 5 $ randoms (mkStdGen 11) :: [Float]
 [7.904789e-2,0.62691015,0.26363158,0.12223756,0.38291094]
 ```
 
@@ -131,10 +124,9 @@ finiteRandoms n gen =
 지정된 범위내에서 랜덤값을 생성하려면 어떻게 할까요? 이때는 `randomR` 함수를 사용합니다. 이 함수의 타입은 `randomR :: (RandomGen g, Random a) :: (a, a) -> g -> (a, g)` 입니다. `random` 함수와의 차이점은 입력 파라메터로 값의 범위를 지정할 수 있는 튜플을 받는다는 것 입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command randomR (1,6) (mkStdGen 359353)]
+ghci> randomR (1,6) (mkStdGen 359353)
 (6,1494289578 40692)
-**[prompt ghci> ]**[command randomR (1,6) (mkStdGen 35935335)]
+ghci> randomR (1,6) (mkStdGen 35935335)
 (3,1250031057 40692)
 ```
 
@@ -143,8 +135,7 @@ finiteRandoms n gen =
 `randomRs` 함수는 지정된 범위내의 랜덤값들의 스트림을 만듭니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command take 10 $ randomRs ('a','z') (mkStdGen 3) :: [Char]]
+ghci> take 10 $ randomRs ('a','z') (mkStdGen 3) :: [Char]
 "ndkxbvmomg"
 ```
 
@@ -161,14 +152,13 @@ main = do
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell random_string.hs]
+$ runhaskell random_string.hs
 pybphhzzhuepknbykxhe
-**[prompt $ ]**[command runhaskell random_string.hs]
+$ runhaskell random_string.hs
 eiqgcxykivpudlsvvjpg
-**[prompt $ ]**[command runhaskell random_string.hs]
+$ runhaskell random_string.hs
 nzdceoconysdgcyqjruo
-**[prompt $ ]**[command runhaskell random_string.hs]
+$ runhaskell random_string.hs
 bakzhnnuzrkgvesqplrx
 ```
 
@@ -243,8 +233,7 @@ askForNumber gen = do
 프로그램을 실행하면 아래와같이 동작합니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell guess_the_number.hs]
+$ runhaskell guess_the_number.hs
 Which number in the range from 1 to 10 am I thinking of? 4  
 Sorry, it was 3  
 Which number in the range from 1 to 10 am I thinking of? 10  

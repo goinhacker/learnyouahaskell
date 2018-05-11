@@ -7,14 +7,13 @@
 펑터로 맵핑을 할때 보통은 하나의 매개변수만 받는 함수로 맵핑하였습니다. 하지만 만약 두개의 매개변수를 받는 `*` 같은 함수를 펑터로 맵핑할때는 어떻게 될까요? 예를들어 `fmap (*) (Just 3)`의 결과는 `Just ((*) 3)`이고, 이것은 `Just (* 3)`와 같습니다. 따라서 결과적으로 `Just`로 랩핑된 함수를 얻었습니다!!
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t fmap (++) (Just "hey")]
+ghci> :t fmap (++) (Just "hey")
 fmap (++) (Just "hey") :: Maybe ([Char] -> [Char])
-**[prompt ghci> ]**[command :t fmap compare (Just 'a')]
+ghci> :t fmap compare (Just 'a')
 fmap compare (Just 'a') :: Maybe (Char -> Ordering)
-**[prompt ghci> ]**[command :t fmap compare "A LIST OF CHARS"]
+ghci> :t fmap compare "A LIST OF CHARS"
 fmap compare "A LIST OF CHARS" :: [Char -> Ordering]
-**[prompt ghci> ]**[command :t fmap (\x y z -> x + y / z) [3,4,5,6]]
+ghci> :t fmap (\x y z -> x + y / z) [3,4,5,6]
 fmap (\x y z -> x + y / z) [3,4,5,6] :: (Fractional a) => [a -> a -> a]
 ```
 
@@ -23,11 +22,10 @@ fmap (\x y z -> x + y / z) [3,4,5,6] :: (Fractional a) => [a -> a -> a]
 여기서 매개변수가 여러개인 경우에는 펑터를 적용하면 함수를 가지고 있는 펑터가 된다는 것을 알았습니다. 그렇다면 이것들로 무엇을 할 수 있을까요? 우선 매개변수로 함수를 받는 함수를 맵핑할 수 있습니다. 왜냐하면 펑터안에 있는 것이 뭐든간에 매개변수로 맵핑하는 함수에 입력으로 주어지기 때문입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let a = fmap (*) [1,2,3,4]]
-**[prompt ghci> ]**[command :t a]
+ghci> let a = fmap (*) [1,2,3,4]
+ghci> :t a
 a :: [Integer -> Integer]
-**[prompt ghci> ]**[command fmap (\f -> f 9) a]
+ghci> fmap (\f -> f 9) a
 [9,18,27,36]
 ```
 
@@ -67,16 +65,15 @@ instance Applicative Maybe where
 `<*>`는 함수를 가지고있지않는`Nothing`에서 어떤 함수도 뽑아낼 수 없기때문에, 그대로 `Nothing`입니다. `Applicative`내의 클래스 선언을 보면, `Functor` 클래스 한정자가 있습니다. 따라서 `<*>`의 두개의 매개변수가 펑터라는 것을 알 수 있습니다. 따라서 첫번째 매개변수가 `Just`일때는 어떤 함수를 포함하게 됩니다. `<*>` 함수는 `Just`안에 포함된 함수로 두번째 매개변수인 포함된 값을 맵핑 합니다. `Nothing`인 경우는 어떤 함수를 맵핑시켜도 `Nothing`을 반환합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Just (+3) <*> Just 9]
+ghci> Just (+3) <*> Just 9
 Just 12
-**[prompt ghci> ]**[command pure (+3) <*> Just 10]
+ghci> pure (+3) <*> Just 10
 Just 13
-**[prompt ghci> ]**[command pure (+3) <*> Just 9]
+ghci> pure (+3) <*> Just 9
 Just 12
-**[prompt ghci> ]**[command Just (++"hahah") <*> Nothing]
+ghci> Just (++"hahah") <*> Nothing
 Nothing
-**[prompt ghci> ]**[command Nothing <*> Just "woot"]
+ghci> Nothing <*> Just "woot"
 Nothing
 ```
 
@@ -85,12 +82,11 @@ Nothing
 일반적인 펑터를 사용하면 함수를 펑터로 맵핑할 수 있고, 그 결과가 부분적용 함수일지라도 동일한 방법으로 그 결과를 얻을 수 있습니다. 반면에 어플리케이티브 펑터는 단일 함수로 여러개의 펑터들을 조작할 수 있습니다. 아래 코드에서 확인해보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command pure (+) <*> Just 3 <*> Just 5]
+ghci> pure (+) <*> Just 3 <*> Just 5
 Just 8
-**[prompt ghci> ]**[command pure (+) <*> Just 3 <*> Nothing]
+ghci> pure (+) <*> Just 3 <*> Nothing
 Nothing
-**[prompt ghci> ]**[command pure (+) <*> Nothing <*> Just 5]
+ghci> pure (+) <*> Nothing <*> Just 5
 Nothing
 ```
 
@@ -128,16 +124,14 @@ f <$> x = fmap f x
 값 `Just "johntra"`와 `Just "volta"`가 있을때는 하나의 `Maybe` 펑터안에 하나의 문자열로 합치고 있다면 아래와 같이 할 수 있다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (++) <$> Just "johntra" <*> Just "volta"]
+ghci> (++) <$> Just "johntra" <*> Just "volta"
 Just "johntravolta"
 ```
 
 내부적인 변환 과정은 아래 예제와 비교해보면 알 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (++) "johntra" "volta"]
+ghci> (++) "johntra" "volta"
 "johntravolta"
 ```
 
@@ -162,26 +156,23 @@ instance Applicative [] where
 이전에도 말했듯이 `pure`는 어떤 값을 받아서 기본 콘텍스트안에 그 값을 넣습니다. 리스트는 최소한의 컨텍스트로 빈리스트, `[]`가 될 수 있습니다. 따라서 빈리스트에는 `pure`를 사용할 수 없습니다. 이러한 이유로 `pure`는 한개의 값을 받아서 싱글톤 리스트에 그 값을 넣습니다. 유사하게 `Maybe`의 최소한의 컨텍스트는 `Nothing`이고, 값을 담을 수 없기때문에 `pure`는 `Just`로 구현되었습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command pure "Hey" :: [String]]
+ghci> pure "Hey" :: [String]
 ["Hey"]
-**[prompt ghci> ]**[command pure "Hey" :: Maybe String]
+ghci> pure "Hey" :: Maybe String
 Just "Hey"
 ```
 
 `<*>`의 경우, 타입을 리스트에 한정지으면 `(<*>) :: [a -> b] -> [a] -> [b]`가 됩니다. 그리고 `<*>`는 list comprehension으로 작성되어 있습니다. `<*>`은 왼쪽의 매개변수에서 함수를 추출하여 오른쪽 매개변수에 맵핑합니다. 하지만 리스트의 경우는 왼쪽의 리스트가 빈리스트이거나, 하나의 함수를 포함하거나, 여러개의 함수를 가질수도 있습니다. 오른쪽의 리스트도 여러개의 값들을 가질 수 있습니다. 그래서 list comprehension으로 두개의 리스트를 모두 표현하였습니다. 왼쪽 리스트의 가능한 함수를 오른쪽 리스트의 모든 가능한 값들에 적용합니다. 즉, 왼쪽의 함수들과 오른쪽 값들의 모든 가능한 조합의 리스트를 만듭니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command [(*0),(+100),(^2)] <*> [1,2,3]]
+ghci> [(*0),(+100),(^2)] <*> [1,2,3]
 [0,0,0,101,102,103,1,4,9]
 ```
 
 왼쪽에 세개의 함수와 오른쪽에 3개의 값이 있으므로 총 9개의 결과값을 가진 리스트가 반환됩니다. 만약 두개의 매개변수를 받는 함수들의 리스트를 가지고 있다면, 이 함수들에 두개의 리스트들을 적용할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command [(+),(*)] <*> [1,2] <*> [3,4]]
+ghci> [(+),(*)] <*> [1,2] <*> [3,4]
 [4,5,5,6,3,4,6,8]
 ```
 
@@ -192,8 +183,7 @@ Just "Hey"
 어플리케이티브 스타일로 아래와 같이 작성할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (++) <$> ["ha","heh","hmm"] <*> ["?","!","."]]
+ghci> (++) <$> ["ha","heh","hmm"] <*> ["?","!","."]
 ["ha?","ha!","ha.","heh?","heh!","heh.","hmm?","hmm!","hmm."]
 ```
 
@@ -202,24 +192,21 @@ Just "Hey"
 list comprehensions을 어플리케이티브 스타일을 사용하여 대체할 수 있습니다. `[2,5,10]`과 `[8,10,11]`의 가능한 모든 곱의 리스트를 만들고 싶다면 아래와같이 작성할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command [ x*y | x <- [2,5,10], y <- [8,10,11]]]
+ghci> [ x*y | x <- [2,5,10], y <- [8,10,11]]
 [16,20,22,40,50,55,80,100,110]
 ```
 
 이것을 어플리케이티브 스타일로 바꾸면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (*) <$> [2,5,10] <*> [8,10,11]]
+ghci> (*) <$> [2,5,10] <*> [8,10,11]
 [16,20,22,40,50,55,80,100,110]
 ```
 
 여기에서 50보다 큰값만 리스트 남기고 싶다면 아래와 같이 작성합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command filter (>50) $ (*) <$> [2,5,10] <*> [8,10,11]]
+ghci> filter (>50) $ (*) <$> [2,5,10] <*> [8,10,11]
 [55,80,100,110]
 ```
 
@@ -288,34 +275,30 @@ instance Applicative ((->) r) where
 `pure`에 의해서 어떤 값이 어플리케이티브 펑터에 들어갈때, 그 값의 결과값도 항상 동일한 값이어야 합니다. 따라서 `pure` 함수의 구현부는 어떤 값을 받아서 입력 매개변수를 무시하고 항상 받은 값을 그대로 반환하는 함수입니다. `(->) r`의 인스턴스에서 `pure`의 타입을 보면, `pure :: a -> (r -> a)`입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (pure 3) "blah"]
+ghci> (pure 3) "blah"
 3
 ```
 
 커링에 의해서 괄호는 아래와 같이 생략될 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command pure 3 "blah"]
+ghci> pure 3 "blah"
 3
 ```
 
 `<*>`의 구현부는 좀 어려워서 어플리케이티브 스타일로 직접 사용해보는 것이 이해하기 좋습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t (+) <$> (+3) <*> (*100)]
+ghci> :t (+) <$> (+3) <*> (*100)
 (+) <$> (+3) <*> (*100) :: (Num a) => a -> a
-**[prompt ghci> ]**[command (+) <$> (+3) <*> (*100) $ 5]
+ghci> (+) <$> (+3) <*> (*100) $ 5
 508
 ```
 
 두개의 어플리케이티브 펑터를 사용해서 `<*>`를 호출하면 결과는 어플리케이티브 펑터가 됩니다. 따라서 두개의 함수를 사용하면, 하나의 함수를 반환합니다. 여기서는 `(+) <$> (+3) <*> (*100)`를 실행하면 `(+3)`과 `(*100)`의 결과에 `+`를 사용한 결과를 반환하는 함수를 만듭니다. 따라서 `(+) <$> (+3) <*> (*100) $ 5`를 실행하면 `5`는 먼저 `(+3)`과 `(*100)`에 적용되서, `8`과 `500`이 됩니다. 그리고나서 `8`과 `100`을 매개변수로 `+`가 호출되어 `500`이 출력됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (\x y z -> [x,y,z]) <$> (+3) <*> (*2) <*> (/2) $ 5]
+ghci> (\x y z -> [x,y,z]) <$> (+3) <*> (*2) <*> (/2) $ 5
 [8.0,10.0,2.5]
 ```
 
@@ -352,14 +335,13 @@ instance Applicative ZipList where
 이제 어플리케이티브 스타일로 zip 리스트를 사용해보겠습니다. 여기서 `ZipList a` 타입은 `Show`의 인스턴스가 아니라서, zip 리스트에서 raw 리스트를 빼는 `getZipList` 함수를 사용하였습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command getZipList $ (+) <$> ZipList [1,2,3] <*> ZipList [100,100,100]]
+ghci> getZipList $ (+) <$> ZipList [1,2,3] <*> ZipList [100,100,100]
 [101,102,103]
-**[prompt ghci> ]**[command getZipList $ (+) <$> ZipList [1,2,3] <*> ZipList [100,100..]]
+ghci> getZipList $ (+) <$> ZipList [1,2,3] <*> ZipList [100,100..]
 [101,102,103]
-**[prompt ghci> ]**[command getZipList $ max <$> ZipList [1,2,3,4,5,3] <*> ZipList [5,3,1,2]]
+ghci> getZipList $ max <$> ZipList [1,2,3,4,5,3] <*> ZipList [5,3,1,2]
 [5,3,3,4]
-**[prompt ghci> ]**[command getZipList $ (,,) <$> ZipList "dog" <*> ZipList "cat" <*> ZipList "rat"]
+ghci> getZipList $ (,,) <$> ZipList "dog" <*> ZipList "cat" <*> ZipList "rat"
 [('d','c','r'),('o','a','a'),('g','t','t')]
 ```
 
@@ -381,18 +363,16 @@ liftA2 f a b = f <$> a <*> b
 우리는 두개의 어플리케이티브 펑터를 받아서 결과들을 가지고 있는 하나의 어플리케이티브 펑터안에 조합할 수 있습니다. 예를들어 `Just 3`과 `Just 4`를 가지고 있을때, `Just [4]`를 얻고 싶다면 아래와 같이 간단하게 처리할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap (\x -> [x]) (Just 4)]
+ghci> fmap (\x -> [x]) (Just 4)
 Just [4]
 ```
 
 `Just 3`과 `Just [4]`를 가지고 있을때, `Just [3,4]`를 얻고 싶다면? 아래와 같은 방법을 사용할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command liftA2 (:) (Just 3) (Just [4])]
+ghci> liftA2 (:) (Just 3) (Just [4])
 Just [3,4]
-**[prompt ghci> ]**[command (:) <$> Just 3 <*> Just [4]]
+ghci> (:) <$> Just 3 <*> Just [4]
 Just [3,4]
 ```
 
@@ -428,16 +408,15 @@ sequenceA = foldr (liftA2 (:)) (pure [])
 이 함수를 실행해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command sequenceA [Just 3, Just 2, Just 1]]
+ghci> sequenceA [Just 3, Just 2, Just 1]
 Just [3,2,1]
-**[prompt ghci> ]**[command sequenceA [Just 3, Nothing, Just 1]]
+ghci> sequenceA [Just 3, Nothing, Just 1]
 Nothing
-**[prompt ghci> ]**[command sequenceA [(+3),(+2),(+1)] 3]
+ghci> sequenceA [(+3),(+2),(+1)] 3
 [6,5,4]
-**[prompt ghci> ]**[command sequenceA [[1,2,3],[4,5,6]]]
+ghci> sequenceA [[1,2,3],[4,5,6]]
 [[1,4],[1,5],[1,6],[2,4],[2,5],[2,6],[3,4],[3,5],[3,6]]
-**[prompt ghci> ]**[command sequenceA [[1,2,3],[4,5,6],[3,4,4],[]]]
+ghci> sequenceA [[1,2,3],[4,5,6],[3,4,4],[]]
 []
 ```
 
@@ -450,20 +429,18 @@ Nothing
 `sequenceA`는 함수의 리스트를 가지고, 어떤 동일한 입력값을 모든 함수에 넣고 결과의 리스트를 보고싶을때 유용합니다. 예를들어 어떤 숫자를 가지고 리스트의 모든 조건들을 만족하는지 확인할때 사용될 수 있습니다. 유사한 동작을 아래와 같이할 수도 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command map (\f -> f 7) [(>4),(<10),odd]]
+ghci> map (\f -> f 7) [(>4),(<10),odd]
 [True,True,True]
-**[prompt ghci> ]**[command and $ map (\f -> f 7) [(>4),(<10),odd]]
+ghci> and $ map (\f -> f 7) [(>4),(<10),odd]
 True
 ```
 
 여기서 `and`는 boolean의 리스트를 받아서 모두 `True`면 `True`를 반환하는 함수입니다. 그리고 동일한 동작을 위해 `sequenceA`를 사용하면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command sequenceA [(>4),(<10),odd] 7]
+ghci> sequenceA [(>4),(<10),odd] 7
 [True,True,True]
-**[prompt ghci> ]**[command and $ sequenceA [(>4),(<10),odd] 7]
+ghci> and $ sequenceA [(>4),(<10),odd] 7
 True
 ```
 
@@ -474,18 +451,17 @@ True
 `[]`를 사용했을때, `sequenceA`는 리스트의 리스트를 받아서 리스트의 리스트를 반환합니다. 실제로는 리스트의 구성요소의 모든 가능한 조합들의 목록을 만듭니다. `sequenceA`로 한 작업을 그대로 리스트 정의\(list comprehension\)를 사용해서 실행해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command sequenceA [[1,2,3],[4,5,6]]]
+ghci> sequenceA [[1,2,3],[4,5,6]]
 [[1,4],[1,5],[1,6],[2,4],[2,5],[2,6],[3,4],[3,5],[3,6]]
-**[prompt ghci> ]**[command [[x,y] | x <- [1,2,3], y <- [4,5,6]]]
+ghci> [[x,y] | x <- [1,2,3], y <- [4,5,6]]
 [[1,4],[1,5],[1,6],[2,4],[2,5],[2,6],[3,4],[3,5],[3,6]]
-**[prompt ghci> ]**[command sequenceA [[1,2],[3,4]]]
+ghci> sequenceA [[1,2],[3,4]]
 [[1,3],[1,4],[2,3],[2,4]]
-**[prompt ghci> ]**[command [[x,y] | x <- [1,2], y <- [3,4]]]
+ghci> [[x,y] | x <- [1,2], y <- [3,4]]
 [[1,3],[1,4],[2,3],[2,4]]
-**[prompt ghci> ]**[command [[1,2],[3,4],[5,6]]]
+ghci> [[1,2],[3,4],[5,6]]
 [[1,3,5],[1,3,6],[1,4,5],[1,4,6],[2,3,5],[2,3,6],[2,4,5],[2,4,6]]
-**[prompt ghci> ]**[command [[x,y,z] | x <- [1,2], y <- [3,4], z <- [5,6]]]
+ghci> [[x,y,z] | x <- [1,2], y <- [3,4], z <- [5,6]]
 [[1,3,5],[1,3,6],[1,4,5],[1,4,6],[2,3,5],[2,3,6],[2,4,5],[2,4,6]]
 ```
 
@@ -511,7 +487,7 @@ True
 I/O 작업을 할때, `sequenceA`는 `sequence`와 동일합니다. I/O 작업의 리스트를 받아서 각 작업들을 수행할 I/O 작업을 반환합니다. 그리고 I/O 작업들의 결과의 리스트를 반환합니다. 따라서 `[IO a]`는 `IO [a]`됩니다. 모든 I/O 작업들은 순서대로 하나씩 수행되어야 합니다. 그리고 실제로 실행하지 않으면 값을 가져올 수 없습니다.
 
 ```haskell
-**[prompt ghci> ]**[command sequenceA [getLine, getLine, getLine]]
+ghci> sequenceA [getLine, getLine, getLine]
 heyh  
 ho  
 woo  

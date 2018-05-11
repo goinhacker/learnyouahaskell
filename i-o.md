@@ -13,8 +13,7 @@ main = do   putStr "Hey, "
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell putstr_test.hs]
+$ runhaskell putstr_test.hs
 Hey, I'm Andy!
 ```
 
@@ -31,8 +30,7 @@ main = do   putChar 't'
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell putchar_test.hs]
+$ runhaskell putchar_test.hs
 teh
 ```
 
@@ -61,8 +59,7 @@ main = do   print True
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell print_test.hs]
+$ runhaskell print_test.hs
 True  
 2  
 "haha"  
@@ -73,14 +70,13 @@ True
 이 예제에서는 I/O 작업을 위해서 `main`을 사용하였지만, GHCI를 사용할 수도 있습니다. 사실 엔터키를 누를때 GHCI는 내부적으로 `print`를 호출하여 콘솔에 출력합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 3]
+ghci> 3
 3
-**[prompt ghci> ]**[command print 3]
+ghci> print 3
 3
-**[prompt ghci> ]**[command map (++"!") ["hey","ho","woo"]]
+ghci> map (++"!") ["hey","ho","woo"]
 ["hey!","ho!","woo!"]
-**[prompt ghci> ]**[command print (map (++"!") ["hey","ho","woo"])]
+ghci> print (map (++"!") ["hey","ho","woo"])
 ["hey!","ho!","woo!"]
 ```
 
@@ -101,8 +97,7 @@ main = do
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell getchar_test.hs]
+$ runhaskell getchar_test.hs
 hello sir  
 hello
 ```
@@ -150,8 +145,7 @@ main = do
 `sequence`는 map 함수에 `print` 또는 `putStrLn`같은 함수들을 리스트로 적용할때 사용됩니다. `map print [1,2,3,4]`는 I/O 작업을 만들지 못합니다. 이 경우 `[print 1, print 2, print 3, print 4]`처럼 I/O 작업의 리스트를 만들게됩니다. 따라서 I/O 작업안에 I/O 작업들의 리스트로 변경하려면 아래와같이 `sequence`를 사용해야 합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command sequence (map print [1,2,3,4,5])]
+ghci> sequence (map print [1,2,3,4,5])
 1
 2
 3
@@ -167,13 +161,12 @@ main = do
 위와같이 I/O 작업을 리스트로 리턴하는 mapping 함수는 sequencing을 하는 것이 일반적이라서 `mapM`, `mapM_` 유틸리티 함수가 만들어졌습니다. `mapM`은 함수와 리스트를 받아서, 리스트에 함수들을 적용하고 순서대로 수행합니다. `mapM_`도 동일하나 I/O 작업 결과를 버린다는 점만 다릅니다. 일반적으로는 I/O 작업의 순서를 필요없기때문에 `mapM_`를 사용합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command mapM print [1,2,3]]
+ghci> mapM print [1,2,3]
 1
 2
 3
 [(),(),()]
-**[prompt ghci> ]**[command mapM_ print [1,2,3]]
+ghci> mapM_ print [1,2,3]
 1
 2
 3
@@ -216,8 +209,7 @@ main = do
 `forM` 함수는 리스트내의 모든 값들의 I/O 작업을 만든다고 생각할 수 있습니다. 각 I/O 작업은 사용된 값에따라 달라집니다. 최종적으로는 액션들을 수행하고 결과들은 어떤 것에 바인딩합니다.
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command form_test.hs]
+$ form_test.hs
 Which color do you associate with the number 1?  
 white  
 Which color do you associate with the number 2?  

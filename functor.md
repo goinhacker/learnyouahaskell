@@ -61,8 +61,7 @@ main = do line <- fmap (intersperse '-' . reverse . map toUpper) getLine
 ```
 
 ```haskell
-**[terminal]
-**[prompt $ ]**[command runhaskell fmapping_io.hs]
+$ runhaskell fmapping_io.hs
 hello there
 E-R-E-H-T- -O-L-L-E-H
 ```
@@ -88,16 +87,15 @@ instance Functor ((->) r) where
 따라서 함수들을 `fmap`에 맵핑한다는 것은 일종의 합성이라는 것을 알 수 있습니다. `:m + Control.Monad.Instances`를 하면, 아래와같이 실제 함수에 대한 맵핑을 할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t fmap (*3) (+100)]
+ghci> :t fmap (*3) (+100)
 fmap (*3) (+100) :: (Num a) => a -> a
-**[prompt ghci> ]**[command fmap (*3) (+100) 1]
+ghci> fmap (*3) (+100) 1
 303
-**[prompt ghci> ]**[command (*3) `fmap` (+100) $ 1]
+ghci> (*3) `fmap` (+100) $ 1
 303
-**[prompt ghci> ]**[command (*3) . (+100) $ 1]
+ghci> (*3) . (+100) $ 1
 303
-**[prompt ghci> ]**[command fmap (show . (*3)) (*100) 1]
+ghci> fmap (show . (*3)) (*100) 1
 "300"
 ```
 
@@ -110,10 +108,9 @@ fmap (*3) (+100) :: (Num a) => a -> a
 만약 `fmap :: (a -> b) -> (f a -> f b)`과 같이 작성하면 `fmap`은 `a -> b` 함수를 받아서 함수 `f a -> f b`를 반환합니다. 이러한 함수를 _lifting_ 함수라고 부릅니다. GHCI에 타입을 보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t fmap (*2)]
+ghci> :t fmap (*2)
 fmap (*2) :: (Num a, Functor f) => f a -> f a
-**[prompt ghci> ]**[command :t fmap (replicate 3)]
+ghci> :t fmap (replicate 3)
 fmap (replicate 3) :: (Functor f) => f a -> f [a]
 ```
 
@@ -126,16 +123,15 @@ fmap (replicate 3) :: (Functor f) => f a -> f [a]
 타입 `fmap (replicate 3) :: (Functor f) => f a -> f [a]`은 함수가 어떤 펑터와도 동작할 것을 의미한다. 어떤 펑터를 사용하는지에 따라서 정확한 동작이 결정됩니다. 만약 리스트에 `fmap (replicate 3)`를 사용하면 리스트안의 `fmap`의 구현체인 `map`을 쓸 것 입니다. 만약 `Maybe a`를 쓰면 `Just`안의 값에 `replicate 3`이 적용되거나 `Nothing`이 그대로 유지됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap (replicate 3) [1,2,3,4]]
+ghci> fmap (replicate 3) [1,2,3,4]
 [[1,1,1],[2,2,2],[3,3,3],[4,4,4]]
-**[prompt ghci> ]**[command fmap (replicate 3) (Just 4)]
+ghci> fmap (replicate 3) (Just 4)
 Just [4,4,4]
-**[prompt ghci> ]**[command fmap (replicate 3) (Right "blah")]
+ghci> fmap (replicate 3) (Right "blah")
 Right ["blah","blah","blah"]
-**[prompt ghci> ]**[command fmap (replicate 3) Nothing]
+ghci> fmap (replicate 3) Nothing
 Nothing
-**[prompt ghci> ]**[command fmap (replicate 3) (Left "foo")]
+ghci> fmap (replicate 3) (Left "foo")
 Left "foo"
 ```
 
@@ -148,18 +144,17 @@ Left "foo"
 이 법칙이 펑터의 몇가지 값에 대해서 지켜지는지 확인해보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap id (Just 3)]
+ghci> fmap id (Just 3)
 Just 3
-**[prompt ghci> ]**[command id (Just 3)]
+ghci> id (Just 3)
 Just 3
-**[prompt ghci> ]**[command fmap id [1..5]]
+ghci> fmap id [1..5]
 [1,2,3,4,5]
-**[prompt ghci> ]**[command id [1..5]]
+ghci> id [1..5]
 [1,2,3,4,5]
-**[prompt ghci> ]**[command fmap id []]
+ghci> fmap id []
 []
-**[prompt ghci> ]**[command fmap id Nothing]
+ghci> fmap id Nothing
 Nothing
 ```
 
@@ -194,16 +189,15 @@ data CMaybe a = CNothing | CJust Int a deriving (Show)
 여기서 C는 _counter_를 나타냅니다. `Maybe a`와 상당히 유사한 데이터 타입입니다. 하지만 `Just` 부분에서 두개의 필드를 받는다는 점이 다릅니다. `CJust` 값 생성자의 첫번째 필드의 타입은 `Int`이고, 어떤 숫자같은 것 입니다. 두번째 필드 `a`는 입력되는 타입에 따라서 `CMaybe a`의 구체적인 타입이 달라집니다. 이 새로운 타입을 사용해보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command CNothing]
+ghci> CNothing
 CNothing
-**[prompt ghci> ]**[command CJust 0 "haha"]
+ghci> CJust 0 "haha"
 CJust 0 "haha"
-**[prompt ghci> ]**[command :t CNothing]
+ghci> :t CNothing
 CNothing :: CMaybe a
-**[prompt ghci> ]**[command :t CJust 0 "haha"]
+ghci> :t CJust 0 "haha"
 CJust 0 "haha" :: CMaybe [Char]
-**[prompt ghci> ]**[command CJust 100 [1,2,3]]
+ghci> CJust 100 [1,2,3]
 CJust 100 [1,2,3]
 ```
 
@@ -218,22 +212,20 @@ instance Functor CMaybe where
 `CJust` 상자가 기본적으로 비어있지 않다는 점만 제외하면 `Maybe`와 유사합니다. `CJust`가 가지고 있는 것을 단순히 함수에 적용하는 것 뿐만 아니라 counter값을 1 증가시키고 있습니다. 이제 직접 실행해보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap (++"ha") (CJust 0 "ho")]
+ghci> fmap (++"ha") (CJust 0 "ho")
 CJust 1 "hoha"
-**[prompt ghci> ]**[command fmap (++"he") (fmap (++"ha") (CJust 0 "ho"))]
+ghci> fmap (++"he") (fmap (++"ha") (CJust 0 "ho"))
 CJust 2 "hohahe"
-**[prompt ghci> ]**[command fmap (++"blah") CNothing]
+ghci> fmap (++"blah") CNothing
 CNothing
 ```
 
 `CMaybe`는 펑터의 법칙을 만족할까요? 이것은 판단하기 위해서는 아래 한가지 예제를 보면 알 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap id (CJust 0 "haha")]
+ghci> fmap id (CJust 0 "haha")
 CJust 1 "haha"
-**[prompt ghci> ]**[command id (CJust 0 "haha")]
+ghci> id (CJust 0 "haha")
 CJust 0 "haha"
 ```
 

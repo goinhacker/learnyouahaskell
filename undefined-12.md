@@ -60,14 +60,13 @@ instance Show TrafficLight where
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command Red == Red]
+ghci> Red == Red
 True
-**[prompt ghci> ]**[command Red == Yellow]
+ghci> Red == Yellow
 False
-**[prompt ghci> ]**[command Red `elem` [Red, Yellow, Green]]
+ghci> Red `elem` [Red, Yellow, Green]
 True
-**[prompt ghci> ]**[command [Red, Yellow, Green]]
+ghci> [Red, Yellow, Green]
 [Red light,Yellow light,Green light]]
 ```
 
@@ -198,24 +197,23 @@ instance YesNo TrafficLight where
 이제 정의한 인스턴스들을 확인해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command yesno $ length []]
+ghci> yesno $ length []
 False
-**[prompt ghci> ]**[command yesno "haha"]
+ghci> yesno "haha"
 True
-**[prompt ghci> ]**[command yesno ""]
+ghci> yesno ""
 False
-**[prompt ghci> ]**[command yesno $ Just 0]
+ghci> yesno $ Just 0
 True
-**[prompt ghci> ]**[command yesno True]
+ghci> yesno True
 True
-**[prompt ghci> ]**[command yesno EmptyTree]
+ghci> yesno EmptyTree
 False
-**[prompt ghci> ]**[command yesno []]
+ghci> yesno []
 False
-**[prompt ghci> ]**[command yesno [0,0,0]]
+ghci> yesno [0,0,0]
 True
-**[prompt ghci> ]**[command :t yesno]
+ghci> :t yesno
 yesno :: (YesNo a) => a -> Bool
 ```
 
@@ -229,16 +227,15 @@ yesnoIf yesnoVal yesResult noResult = if yesno yesnoVal then yesResult else noRe
 `yesnoIf` 함수는 참거짓을 판단할 값과, 참일때 리턴할 값과 거짓일때 리턴할 값을 받습니다. 실제로 실행해보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command yesnoIf [] "YEAH!" "NO!"]
+ghci> yesnoIf [] "YEAH!" "NO!"
 "NO!" 
-**[prompt ghci> ]**[command yesnoIf [2,3,4] "YEAH!" "NO!"]
+ghci> yesnoIf [2,3,4] "YEAH!" "NO!"
 "YEAH!"
-**[prompt ghci> ]**[command yesnoIf True "YEAH!" "NO!"]
+ghci> yesnoIf True "YEAH!" "NO!"
 "YEAH!"
-**[prompt ghci> ]**[command yesnoIf (Just 500) "YEAH!" "NO!"]
+ghci> yesnoIf (Just 500) "YEAH!" "NO!"
 "YEAH!"
-**[prompt ghci> ]**[command yesnoIf Nothing "YEAH!" "NO!"]
+ghci> yesnoIf Nothing "YEAH!" "NO!"
 "NO!"
 ```
 
@@ -269,11 +266,10 @@ instance Functor [] where
 리스트로 만들었을때 `fmap`은 `map`과 동일하기 때문에, 아래와 같이 리스트에 대해서 동일한 결과를 리턴합니다.
 
 ```haskell
-**[terminal]
 map :: (a -> b) -> [a] -> [b]
-**[prompt ghci> ]**[command fmap (*2) [1..3]]
+ghci> fmap (*2) [1..3]
 [2,4,6]
-**[prompt ghci> ]**[command map (*2) [1..3]]
+ghci> map (*2) [1..3]
 [2,4,6]
 ```
 
@@ -292,14 +288,13 @@ instance Functor Maybe where
 어쨋든 `fmap` 구현 부분은 상당히 간단합니다. 만약 `Nothing`으로 비워져있다면, `Nothing`을 리턴합니다. 만약 비어있지 않고 `Just`안에 포장된 값이 있으면, `Just`가 가진 아이템에 입력받은 함수를 적용합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap (++ " HEY GUYS IM INSIDE THE JUST") (Just "Something serious.")]
+ghci> fmap (++ " HEY GUYS IM INSIDE THE JUST") (Just "Something serious.")
 Just "Something serious. HEY GUYS IM INSIDE THE JUST"
-**[prompt ghci> ]**[command fmap (++ " HEY GUYS IM INSIDE THE JUST") Nothing]
+ghci> fmap (++ " HEY GUYS IM INSIDE THE JUST") Nothing
 Nothing
-**[prompt ghci> ]**[command fmap (*2) (Just 200)]
+ghci> fmap (*2) (Just 200)
 Just 400
-**[prompt ghci> ]**[command fmap (*2) Nothing]
+ghci> fmap (*2) Nothing
 Nothing
 ```
 
@@ -314,10 +309,9 @@ instance Functor Tree where
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command fmap (*2) EmptyTree]
+ghci> fmap (*2) EmptyTree
 EmptyTree
-**[prompt ghci> ]**[command fmap (*4) (foldr treeInsert EmptyTree [5,7,3,2,1,7])]
+ghci> fmap (*4) (foldr treeInsert EmptyTree [5,7,3,2,1,7])
 Node 28 (Node 4 EmptyTree (Node 8 EmptyTree (Node 12 EmptyTree (Node 20 EmptyTree EmptyTree)))) EmptyTree
 ```
 
@@ -362,8 +356,7 @@ data Either a b = Left a | Right b
 GHCI에서 `:k` 명령을 사용하면 타입의 kind를 알 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :k Int]
+ghci> :k Int
 Int :: *
 ```
 
@@ -372,16 +365,14 @@ Int :: *
 `Maybe`의 kind는 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :k Maybe]
+ghci> :k Maybe
 Maybe :: * -> *
 ```
 
 `Maybe` 타입 생성자는 한개의 `Int`와 같은 구체적인 타입을 받아서 `Maybe Int`와 같은 구체적인 타입을 리턴합니다. `Maybe`에 타입 파라메터를 적용해보면 kind는 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :k Maybe Int]
+ghci> :k Maybe Int
 Maybe Int :: *
 ```
 
@@ -390,18 +381,16 @@ Maybe Int :: *
 `Either`의 kind를 살펴보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :k Either]
+ghci> :k Either
 Either :: * -> * -> *
 ```
 
 `Either`는 구체적인 타입을 만들기 위한 타입 파라메터로 두개의 구체적인 타입을 받습니다. `Either`도 두개의 값을 받아서 어떤 것을 리턴하는 함수의 타입 선언과 유사합니다. 타입 생성자도 함수처럼 커링이되서 부분 적용이 가능합니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :k Either String]
+ghci> :k Either String
 Either String :: * -> *
-**[prompt ghci> ]**[command :k Either String Int]
+ghci> :k Either String Int
 Either String Int :: *
 ```
 
@@ -432,12 +421,11 @@ data Frank a b  = Frank {frankField :: b a} deriving (Show)
 `a`를 `*`\(구체적인 타입\)으로 가정하면, `b`는 하나의 타입 파라메터 받으므로 kind는 `* -> *`입니다. 여기서 `a`와 `b`는 `Frank`의 두개의 파라메터이므로 kind가 `* -> (* -> *) -> *`가 됩니다. 첫번째 `*`는 `a`이고 `(* -> *)`는 `b`입니다. 이제 `Frank`의 값을 만들어 타입을 확인해 보겠습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :t Frank {frankField = Just "HAHA"}]
+ghci> :t Frank {frankField = Just "HAHA"}
 Frank {frankField = Just "HAHA"} :: Frank [Char] Maybe
-**[prompt ghci> ]**[command :t Frank {frankField = Node 'a' EmptyTree EmptyTree}]
+ghci> :t Frank {frankField = Node 'a' EmptyTree EmptyTree}
 Frank {frankField = Node 'a' EmptyTree EmptyTree} :: Frank Char Tree
-**[prompt ghci> ]**[command :t Frank {frankField = "YES"}]
+ghci> :t Frank {frankField = "YES"}
 Frank {frankField = "YES"} :: Frank Char []
 ```
 
@@ -451,10 +439,9 @@ instance Tofu Frank where
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command tofu (Just 'a') :: Frank Char Maybe]
+ghci> tofu (Just 'a') :: Frank Char Maybe
 Frank {frankField = Just 'a'}
-**[prompt ghci> ]**[command tofu ["HELLO"] :: Frank [Char] []]
+ghci> tofu ["HELLO"] :: Frank [Char] []
 Frank {frankField = ["HELLO"]}
 ```
 
@@ -467,8 +454,7 @@ data Barry t k p = Barry { yabba :: p, dabba :: t k }
 `Functor`의 kind는 `* -> *`인데 `Barry`는 3개의 파라메터를 받아서 `something -> something -> something -> *` 형태가 될 것 입니다. `Barry` 예에서 `p`의 kind는 `*`입니다. `k`는 `*`로 가정하면 `t`의 kind는 `* -> *`입니다. 이제 something을 kind로 바꾸어 보면 `(* -> *) -> * -> * -> *`가 됩니다. GHCI에서 확인해 보면 아래와 같습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command :k Barry]
+ghci> :k Barry
 Barry :: (* -> *) -> * -> * -> *
 ```
 
