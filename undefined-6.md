@@ -177,10 +177,9 @@ quicksort (x:xs) =
 아래는 `quicksort` 함수를 테스트해본 것입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command quicksort [10,2,5,3,1,6,7,4,2,3,4,8,9]]
+ghci> quicksort [10,2,5,3,1,6,7,4,2,3,4,8,9]
 [1,2,2,3,3,4,4,5,6,7,8,9,10]
-**[prompt ghci> ]**[command quicksort "the quick brown fox jumps over the lazy dog"]
+ghci> quicksort "the quick brown fox jumps over the lazy dog"
 "        abcdeeefghhijklmnoooopqrrsttuuvwxyz"
 ```
 
