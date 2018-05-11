@@ -11,40 +11,37 @@ doubleMe x = x + x
 위에서 작성한 내용은 하스켈의 함수 입니다. `doubleMe`는 함수명이고 첫번째 x는 함수의 인자입니다. 함수를 호출할 때와 유사하게 space로 함수명과 인자를 구분합니다. `=`의 오른쪽은 함수가 할일을 정의하는 부분입니다.
 
 ```haskell
-**[terminal]
-**[prompt ~/dev/practice/haskell$ ]**[command ls]
+~/dev/practice/haskell$ ls
 baby.hs
-**[prompt ~/dev/practice/haskell$ ]**[command ghci]
+~/dev/practice/haskell$ ghci
 GHCi, version 8.0.1: http://www.haskell.org/ghc/  :? for help
 Loaded GHCi configuration from /Users/wodydjjang/.ghc/ghci.conf
 Loaded GHCi configuration from /Users/wodydjjang/.ghci
-**[prompt ghci> ]**[command :l baby]
+ghci> :l baby
 [1 of 1] Compiling Main            (baby.hs, interpreted)
 Ok, modules loaded: Main.
-**[prompt ghci> ]**[command doubleMe 9]
+ghci>d doubleMe 9
 18
-**[prompt ghci> ]**[command doubleMe 8.3]
+ghci> doubleMe 8.3
 16.6
 ```
 
 작성한 파일을 로딩하여 사용해보았습니다. ghci에서 `:`은 명령 모드입니다. `:l` 명령을 통해서 작성된 hs 파일을 로딩할 수 있습니다. 로딩 후 해당 함수를 실행하면 곱하기 2가 동작하는 것을 확인할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command doubleUs x y = x*2 + y*2]
-**[prompt ghci> ]**[command doubleUs 4 9]
+ghci> doubleUs x y = x*2 + y*2
+ghci> doubleUs 4 9
 26
-**[prompt ghci> ]**[command doubleUs 2.3 34.2]
+ghci> doubleUs 2.3 34.2
 73.0
-**[prompt ghci> ]**[command doubleUs 28 88 + doubleMe 123]
+ghci> doubleUs 28 88 + doubleMe 123
 478
 ```
 
 위와같이 인자를 두개로 받는 함수를 정의해서 동작시켜 보았습니다. 다른 함수와의 조합도 간단히 수행해 봤습니다. \(하스켈의 함수가 수학의 함수와 상당히 유사하게 생기지 않았나요?\) 위에서 선언한 `doubleUs` 함수는 `doubleMe` 함수를 재사용하여 아래와 같이 선언하여 사용할 수도 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command doubleUs x y = doubleMe x + doubleMe y]
+ghci> doubleUs x y = doubleMe x + doubleMe y
 ```
 
 이 예제는 매우 간단하지만 하스켈을 사용할 때 자주 쓰이는 패턴입니다. 기본적인 함수들을 만들고 함수들의 조합으로 복잡한 함수를 만들 수 있습니다. 이런 방식으로 불필요한 중복도 피할 수 있습니다. 만약 어떤 수학자가 `doubleMe`가 곱하기 2가 아니라 3인 것을 증명했다면, 간단히 `doubleMe`를 x + x + x로 수정하여 `doubleUs`까지 함께 해결할 수 있습니다.
@@ -86,10 +83,9 @@ lucky x = "Sorry, you're out of luck, pal!"
 패턴매칭을 사용한 첫번째 예 입니다. `lucky`라는 함수가 호출됐을때 위에서부터 순서대로 매칭되는 함수의 바디를 실행합니다. 따라서 위 예제의 경우, 입력 파라메터가 7일 경우에만 첫번째 바디에 매칭되어 “LUCKY NUMBER SEVEN!”이 출력될 것입니다. 아래는 실행한 예입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command lucky 5]
+ghci> lucky 5
 "Sorry, you're out of luck, pal!"
-**[prompt ghci> ]**[command lucky 7]
+ghci> lucky 7
 "LUCKY NUMBER SEVEN!"
 ```
 
@@ -125,12 +121,11 @@ charName 'c' = "Cecil"
 만약 패턴매칭이 실패하면 아래 예제와 같은 예외가 발생하게 됩니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command charName 'a']
+ghci> charName 'a'
 "Albert"
-**[prompt ghci> ]**[command charName 'b']
+ghci> charName 'b'
 "Broseph"
-**[prompt ghci> ]**[command charName 'h']
+ghci> charName 'h'
 "*** Exception: tut.hs:(53,0)-(55,21): Non-exhaustive patterns in function charName
 ```
 
@@ -168,9 +163,8 @@ third (_, _, z) = z
 이 예제에서 `_`는 리스트 정의\(list comprehensions\)내에 있는 것과 동일합니다. 쉽게말해서 `_`**는 어떤 입력이 들어오든지 상관하지 않겠다는 의미**입니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let xs = [(1,3), (4,3), (2,4), (5,3), (5,6), (3,1)]]
-**[prompt ghci> ]**[command [a+b | (a,b) <- xs]]
+ghci> let xs = [(1,3), (4,3), (2,4), (5,3), (5,6), (3,1)]
+ghci> [a+b | (a,b) <- xs]
 [4,7,6,8,11,4]
 ```
 
@@ -191,10 +185,9 @@ head' (x:_) = x
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command head' [4,5,6]]
+ghci> head' [4,5,6]
 4
-**[prompt ghci> ]**[command head' "Hello"]
+ghci> head' "Hello"
 'H'
 ```
 
@@ -235,8 +228,7 @@ capital all@(x:xs) = "The first letter of " ++ all ++ " is " ++ [x]
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command capital "Dracula"]
+ghci> capital "Dracula"
 "The first letter of Dracula is D"
 ```
 
@@ -260,8 +252,7 @@ bmiTell bmi
 간단히 BMI를 입력받아서 비만 여부를 판단해서 출력해주는 함수를 작성하였습니다. 이 예제에서 가드를 사용하였습니다. **가드는 함수명과 파라메터 뒤에 **`|`**를 사용해서 표시**합니다. 가드는 기본적으로 boolean 입니다. 만약 `True`면, 해당하는 함수의 바디가 사용됩니다. 만약 `False`면 다음 가드로 넘어갑니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command bmiTell 24.3]
+ghci> bmiTell 24.3
 "You're supposedly normal. Pffft, I bet you're ugly!"
 ```
 
@@ -279,8 +270,7 @@ bmiTell weight height
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command bmiTell 85 1.90]
+ghci> bmiTell 85 1.90
 "You're supposedly normal. Pffft, I bet you're ugly!"
 ```
 
@@ -306,8 +296,7 @@ a `myCompare` b
 ```
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 3 `myCompare` 2]
+ghci> 3 `myCompare` 2
 GT
 ```
 
@@ -395,36 +384,32 @@ let의 형태는 `let <bindings> in <expression>`입니다. `<bindings>`에서�
 `let`과 `where`의 차이점은 `let`**은 그 자체로서 표현식\(expression\)이고, **`where`**는 문법적인 구조물이라는 점**입니다. 따라서 `let`은 표현식인 `if` 구문이나 `if else` 구문의 거의 어디에서나 사용될 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command [if 5 > 3 then "Woo" else "Boo", if 'a' > 'b' then "Foo" else "Bar"]]
+ghci> [if 5 > 3 then "Woo" else "Boo", if 'a' > 'b' then "Foo" else "Bar"]
 ["Woo", "Bar"]
-**[prompt ghci> ]**[command 4 * (if 10 > 5 then 10 else 0) + 2]
+ghci> 4 * (if 10 > 5 then 10 else 0) + 2
 42
 ```
 
 `let` 바인딩을 사용하면 아래와같이 사용할 수 있습니다
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command 4 * (let a = 9 in a + 1) + 2]
+ghci> 4 * (let a = 9 in a + 1) + 2
 42
-**[prompt ghci> ]**[command [let square x = x * x in (square 5, square 3, square 2)]]
+ghci> [let square x = x * x in (square 5, square 3, square 2)]
 [(25,9,4)]
 ```
 
 `let` 바인딩이 지역 범위에서 사용될 수 있는 함수 선언에도 사용될 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (let a = 100; b = 200; c = 300 in a*b*c, let foo="Hey "; bar = "there!" in foo ++ bar)]
+ghci> (let a = 100; b = 200; c = 300 in a*b*c, let foo="Hey "; bar = "there!" in foo ++ bar)
 (6000000,"Hey there!")
 ```
 
 한개 라인에 여러개의 변수를 바인딩 할때는 동일 컬럼에 정렬할 수 없고, `;`을 사용해서 바인딩이 가능합니다
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command (let (a,b,c) = (1,2,3) in a+b+c) * 100]
+ghci> (let (a,b,c) = (1,2,3) in a+b+c) * 100
 600
 ```
 
@@ -442,13 +427,12 @@ calcBmis xs = [bmi | (w, h) <- xs, let bmi = w / h ^ 2, bmi >= 25.0]
 리스트 정의 내에서 `let`을 사용할때는 `|` 이전 부분에서 정의되었기때문에 `in` 부분은 생략할 수 있습니다. 하지만 `predicate`에서 `let in` 바인딩을 사용할 수 있고, 이름의 범위도 `predicate`에서만 보이도록 선언할 수 있습니다.
 
 ```haskell
-**[terminal]
-**[prompt ghci> ]**[command let zoot x y z = x * y + z]
-**[prompt ghci> ]**[command zoot 3 9 2]
+ghci> let zoot x y z = x * y + z
+ghci> zoot 3 9 2
 29
-**[prompt ghci> ]**[command let boot x y z = x * y + z in boot 3 4 2]
+ghci> let boot x y z = x * y + z in boot 3 4 2
 14
-**[prompt ghci> ]**[command boot]
+ghci> boot
 <interactive>:1:0: Not in scope: `boot'
 ```
 
