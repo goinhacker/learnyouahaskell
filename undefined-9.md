@@ -527,7 +527,7 @@ ghci> Monday `compare` Wednesday
 LT
 ```
 
-`Bounded`에 속하기 때문에 가장 작은날과 가장 높은 날을 얻을 수 있습니다.
+`Bounded`에 속하기 때문에 가장 작은 날과 가장 많은 날을 얻을 수 있습니다.
 
 ```haskell
 ghci> minBound :: Day
