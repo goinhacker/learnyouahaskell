@@ -132,10 +132,12 @@ newtype Pair b a = Pair { getPair :: (a,b) }
 
 ```haskell
 instance Functor (Pair c) where  
-    fmap f (Pair (x,y)) = Pair (f x, y)
+    fmap f (Pair (x, y)) = Pair (f x, y)
 ```
 
-`instance Functor (Pair c) where`에서 `Pair c`는 `Functor`의 정의에서 `f`에 들어갑니다. 여기서 _newtype_으로 정의된 타입은 패턴매칭이 가능하다는 것을 확인할 수 있습니다. 패턴매칭을 통해서 `fmap` 함수안에서 튜플 `(x, y)`를 가져오고, 튜플의 첫번째 값을 `f` 함수에 적용했습니다. 그리고나서 `Pair `값 생성자를 사용해서 튜플의 순서를 `Pair b a`로 바꾸어 주었습니다. 이렇게 만들어진 `fmap` 함수의 타입은 아래와 같습니다.
+`instance Functor (Pair c) where`에서 `Pair c`는 `Functor`의 정의에서 `f`에 들어갑니다. 여기서  `c`는 `Pair b a` newtype 정의에 따라서 튜플의 두번째 매개변수 `b`이고, 이 부분은 `f` 함수에 의해서 변환되면 안되기 때문에 고정값입니다.
+
+그리고 `fmap` 함수의 두번째 매개변수로 받은 튜플을 패턴매칭에 의해서 `Pair (x,y)`로 매칭됩니다. \(여기서 _newtype_으로 정의된 타입은 패턴매칭이 가능하다는 것을 알수 있습니다.\) 이렇게 얻은 입력 튜플 `(x, y)`로 첫번째 값 `x`만 `f` 함수에 적용한 `(f x , y)`를 만들었습니다. 그리고나서 `Pair (f x, y)`로 값 생성자를 호출하여 `Pair b a`로 바꾸어 주었습니다. 완성된 `fmap` 함수의 타입은 아래와 같습니다. 
 
 ```haskell
 fmap :: (a -> b) -> Pair c a -> Pair c b
