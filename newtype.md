@@ -99,23 +99,56 @@ getCharList :: CharList -> [Char]
 
 #### _newtype_으로 타입클래스 인스턴스 만들기
 
+이전 섹션에서 특정 타입클래스의 인스턴스인 사용자 정의 타입을 만드는 것을 배웠습니다. 하지만 타입의 타입 매개변수에 따라서 타입을 정의하기가 어려울 때도 있습니다. 정의하기 쉬운 예로는 `Functor`의 인스턴스로 `Maybe`를 만드는 것입니다. 
 
+```haskell
+class Functor f where  
+    fmap :: (a -> b) -> f a -> f b  
+```
 
+`Functor` 타입클래스 정의는 타입 매개변수 `f` 자리에 그대로 `Maybe`가 들어가면 됩니다. 따라서 아래와 같이 쉽게 `Maybe` 타입을 정의할 수 있었습니다. 
 
+```haskell
+instance Functor Maybe where
+```
 
+이제 아래와 같이 `Maybe`의 `fmap` 함수만 작성하면 `Maybe` 타입의 정의가 완료됩니다.
 
+```haskell
+fmap :: (a -> b) -> Maybe a -> Maybe b
+```
 
+여기서  `Maybe`는 단 한개의 타입 매개변수만 필요하기 때문에 쉽게 `Functor`의 인스턴스로 정의될 수 있었습니다.
 
+만약 튜플을 `Functor`의 인스턴스로 만들고, `fmap` 함수에 적용했을때 튜플의 첫번째 값이 변환되도록 만든다면 어떻게 할 수 있을까요?  이 경우, `fmap (+3) (1, 1)`의 결과는 `(4, 1)`이 될 것입니다. 하지만 `fmap` 함수는 `(a, b)`의 첫번째 타입 매개변수 `a`만 바꾸고 끝나기 때문에 `Maybe`와 같은 방식으로는 처리가 불가능합니다.
 
+이 문제를 해결하려면, 두번째 타입 매개변수는 튜플의 첫번째 값의 타입을 나타내는 튜플의 `newtype`을 만들어야 합니다.
 
+```haskell
+newtype Pair b a = Pair { getPair :: (a,b) } 
+```
 
+이제 튜플의 첫번째 값만 바꾸는 `Functor`의 인스턴스를 만들어보면 아래와 같습니다.
 
+```haskell
+instance Functor (Pair c) where  
+    fmap f (Pair (x,y)) = Pair (f x, y)
+```
 
+`instance Functor (Pair c) where`에서 `Pair c`는 `Functor`의 정의에서 `f`에 들어갑니다. 여기서 _newtype_으로 정의된 타입은 패턴매칭이 가능하다는 것을 확인할 수 있습니다. 패턴매칭을 통해서 `fmap` 함수안에서 튜플 `(x, y)`를 가져오고, 튜플의 첫번째 값을 `f` 함수에 적용했습니다. 그리고나서 `Pair `값 생성자를 사용해서 튜플의 순서를 `Pair b a`로 바꾸어 주었습니다. 이렇게 만들어진 `fmap` 함수의 타입은 아래와 같습니다.
 
+```haskell
+fmap :: (a -> b) -> Pair c a -> Pair c b
+```
 
+이제 튜플을 `Pair b a`로 바꾸면, `fmap`을 사용할 수 있고, 함수 `(a -> b)`는 첫번째 값에 매핑됩니다.
 
-
-
+```haskell
+ghci> getPair $ fmap (*100) (Pair (2,3))  
+(200,3)  
+ghci> getPair $ fmap reverse (Pair ("london calling", 3))  
+("gnillac nodnol",3)
+```
 
 
 
