@@ -152,7 +152,60 @@ ghci> getPair $ fmap reverse (Pair ("london calling", 3))
 ("gnillac nodnol",3)
 ```
 
+#### 게으른 평가의 _newtype_
 
+위에서 _newtype_은 보통 _data_ 보다 빠르다고 했습니다. _newtype_을 사용해서 할 수 있는 것은 기존 타입을 새로운 타입으로 바꾸는 것 뿐이기 때문에 내부적으로 하스켈은 _newtype_으로 정의된 타입의 값을 기존의 타입과 동일하게 나타낼 수 있습니다. 하지만 분명히 두 타입은 구분되어 있음을 유의해야 합니다. 사실 _newtype_은 빠를뿐만 아니라 lazy 합니다. 이제부터 왜 게으른지 알아보겠습니다.
 
+하스켈은 기본적으로 게으른 특성을 가지고 있습니다. 이말은 실제로 함수의 결과가 출력될때 계산이 발생한다는 것입니다. 또한 결과를 내기위해서 필요한 계산만 수행합니다. 하스켈에서 `undefined` 값은 잘못된 계산을 나타냅니다. 실제로 이 값을 터미널에 출력해서 값의 평가가 발생하도록 하면, 하스켈은 예외를 발생시킵니다. 
 
+```haskell
+ghci> undefined  
+*** Exception: Prelude.undefined
+```
+
+하지만 만약 어떤 `undefined` 값들을 가진 리스트를 만들고 리스트의 첫번째 값을 요청하면 `undefined`가 아닙니다. 왜냐하면 하스켈은 리스트의 다른 값들은 평가할 필요가 없기 때문입니다. 첫번째 값만 확인하면 됩니다. 
+
+```haskell
+ghci> head [3,4,5,undefined,2,undefined]  
+3 
+```
+
+아래와 같은 `CoolBool` 타입이 있다고 해보겠습니다.
+
+```haskell
+data CoolBool = CoolBool { getCoolBool :: Bool }
+```
+
+_data_ 키워드를 사용해서 정의된 평범한 대수형 타입입니다. 한개의 값 생성자를 가지고 있고, 값 생성자는 `Bool` 타입의 필드 한개를 가지고 있습니다. 이제 `CoolBool`을 패턴 매칭해서 `CoolBool`의 `Bool`이 `True`던 `False`던 관계없이 "hello"를 반환하는 함수를 만들어 보겠습니다. 
+
+```haskell
+helloMe :: CoolBool -> String  
+helloMe (CoolBool _) = "hello"
+```
+
+이 함수를 일반적인 `CoolBool`에 적용하는 대신 `undefined`를 적용해 보겠습니다. 
+
+```haskell
+ghci> helloMe undefined  
+"*** Exception: Prelude.undefined
+```
+
+여기서 예외가 발생하는 이유는 _data_ 키워드로 정의된 타입들은 여러개의 값 생성자를 가질 수 있기 때문입니다. \(`CoolBool`은 한개만 있음\) 따라서 함수의 입력값이 `(CoolBool _)` 패턴인지 확인할때, 값 생성에 사용된 값 생성자가 어떤 것인지 확인하기 위해서 여러번 평가하고, `undefined`가 평가될때 예외가 발생합니다.
+
+`CoolBool`에 _data_ 키워드 대신 _newtype_을 사용해 보겠습니다.
+
+```haskell
+newtype CoolBool = CoolBool { getCoolBool :: Bool }
+```
+
+다시 `helloMe` 함수에 `undefined` 값을 적용하면 아래와같이 예외가 발생하지 않습니다.
+
+```haskell
+ghci> helloMe undefined  
+"hello"
+```
+
+newtype으로 정의된 타입은 정상동작하는 이유는 하스켈이 내부적으로 본래의 타입과 동일한 방식으로 새로운 타입을 표현하기 때문입니다. newtype 키워드는 하나의 필드만 가진 하나의 값 생성자만 정의가 가능하기 때문에, 하스켈은 `(CoolBool _)`에 패턴매칭 되는지 확인하기 위해서 이것저것 평가해볼 필요가 없습니다. 
+
+_data_와 _newtype_ 키워드는 얼핏보면 비슷해보이기 때문에 차이점에 대해서 잘 이해하고 사용해야 합니다. _data_는 완전히 새로운 타입을 만들때 사용하고, _newtype_은 기존 타입에서 새로운 타입을 만들때 사용됩니다. newtype에서의 패턴매칭은 data와 달리 어떤 타입이라는 상자안에서 값을 꺼내오지않고, 어떤 타입을 다른 타입으로 직접 바꾸는 것에 가깝습니다.  
 
