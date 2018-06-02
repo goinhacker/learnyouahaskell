@@ -76,7 +76,7 @@ class  Bounded a  where
 
 앞의 두가지 법칙은 `mempty`가 identity로 `mappend`에 입력됐을때, 순서에 관계없이 항상 결과가 동일해야 한다는 것을 말합니다. 그리고 세번째 법칙은 `mappend`가 연관성에 대한 법칙입니다. 즉, 여러개의 값으로 `mappend`를 사용해서 하나의 값을 줄일때 순서에 관계없이 결과가 같아야 합니다. 하스켈에서는 이러한 법칙을 따르도록 강제하지 않았기 때문에 프로그래머가 인스턴스를 만들때 주의해서 작성해야 합니다. 
 
-#### 리스트 모노이드
+### 리스트 모노이드
 
 리스트는 모노이드입니다. `++` 함수와 빈리스트 `[]`로 모노이드가 될 수 있습니다. 
 
@@ -120,7 +120,7 @@ ghci> "two" `mappend` "one"
 
 이전에 살펴보았던 `*`의 경우는 `3 * 5`와 `5 * 3`의 결과가 같았지만, 모든 모노이드에 대해서 적용되는게 아니라는 것을 확인할 수 있습니다. 
 
-#### `Product`와 `Sum`
+### `Product`와 `Sum`
 
 우리는 이미 숫자에 대해서 모노이드인 `*`를 확인해봤습니다. `*`는 바이너리 함수이고, 항등값\(identity value\)는 `1`입니다. 그리고 또다른 바이너리 함수로 `+`가 있고, 항등값은 `0`입니다. 
 
@@ -135,7 +135,54 @@ ghci> 1 + (3 + 5)
 9 
 ```
 
-0을 어떤 값에서 더해도 값을 변경하지 않고, 연광성을 가진 것도 확인했습니다. 따라서 숫자가 모노이드가 되는 방법은 두가지\(`*`와 `+`\)입니다. 
+0을 어떤 값에서 더해도 값을 변경하지 않고, 연광성을 가진 것도 확인했습니다. 따라서 숫자가 모노이드가 되는 방법은 두가지\(`*`와 `+`\)입니다. 여기서 기억해야할 것은 어떤 타입은 여러가지 방법으로 동일한 타입클래스의 인스턴스가 될 수 있다는 것입니다. 어떤 타입을 _newtype_으로 래핑한 후에 다시 타입클래스의 인스턴스로 만들 수도 있습니다. 
+
+`Data.Monoid` 모듈은 `Product`와 `Sum`이라는 타입을 가지고 있습니다. 그중 `Product`는 아래와 같이 정의되어 있습니다. 
+
+```haskell
+newtype Product a =  Product { getProduct :: a }  
+    deriving (Eq, Ord, Read, Show, Bounded) 
+```
+
+간단하게 몇가지 타입클래스의 인스턴스로서 하나의 타입 파라메터를 받는 _newtype_으로 래핑되었습니다. 이 타입을 모노이드의 인스턴스로 만들면 아래와 같습니다. 
+
+```haskell
+instance Num a => Monoid (Product a) where  
+    mempty = Product 1  
+    Product x `mappend` Product y = Product (x * y)
+```
+
+`mempty`는 `Product` 생성자에 `1`을 넣어서 래핑했습니다. `mappend`는 `Product`가 가진 두 숫자를 곱하고, 다시  `Product`로 래핑했습니다. 그리고 여기서 `a`는 `Num a` 클래스 한정자에 의해서 `Num`의 인스턴스이어야 합니다. 이제 `Product a`를 모노이드로 사용하면 아래와 같습니다. 
+
+```haskell
+ghci> getProduct $ Product 3 `mappend` Product 9  
+27  
+ghci> getProduct $ Product 3 `mappend` mempty  
+3  
+ghci> getProduct $ Product 3 `mappend` Product 4 `mappend` Product 2  
+24  
+ghci> getProduct . mconcat . map Product $ [3,4,2]  
+24
+```
+
+이 예제는 모노이드 타입클래스의 예를 보여주지만, 그렇다고 `3 * 9`와 `3 * 1`을 대신해서 사용하지는 않을 것입니다. 모노이드 인스턴스의 장점은 뒤에서 살펴볼 것 입니다. 
+
+`Sum`은 `Product`와 유사하게 정의하면 아래와 같이 동일한 방식으로 사용할 수 있습니다. 
+
+```haskell
+ghci> getSum $ Sum 2 `mappend` Sum 9  
+11  
+ghci> getSum $ mempty `mappend` Sum 3  
+3  
+ghci> getSum . mconcat . map Sum $ [1,2,3]  
+6 
+```
+
+### `Any`와 `All`
+
+
+
+
 
 
 
