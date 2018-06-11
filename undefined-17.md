@@ -259,9 +259,7 @@ instance Monoid Ordering where
     GT `mappend` _ = GT
 ```
 
-`mappend` 함수는 두개의 `Ordering` 값을 받는데, `EQ`일때는 제외하면 `mappend`의 왼쪽 매개변수만 사용했습니다. 여기서 `EQ`는 항등값입니다. 
-
-만약 두 단어를 알파벳순으로 비교하는 한다면, 처음 두 문자가 같으면 다음 두 문자를 비교하는 과정을 반복할 것입니다. 예를들어 "ox"와 "on"을 비교한다면, 첫번째 문자가 같으므로 두번째 문자를 비교합니다. 'x'가 'n'보다는 크므로 "ox"가 더 큽니다. 여기에 "oix"와 "oin"과 같이 동일한 위치에 동일한 문자를 추가해도 순서는 바뀌지 않습니다. 
+`mappend` 함수는 두개의 `Ordering` 값을 받는데, `EQ`일때는 제외하면 `mappend`의 왼쪽 매개변수만 사용했습니다. 여기서 `EQ`는 항등값입니다.  
 
 여기서 주의해야할 점은 ``x `mappend` y``와 ``y `mappend` x``가 같지 않다는 것입니다. EQ가 아닐때는 왼쪽 매개변수만 유지하기 때문에, ``LT `mappend` GT``는 `LT`이고 ``GT `mappend` LT``는 `GT`가 됩니다. 
 
@@ -293,8 +291,56 @@ lengthCompare x y = let a = length x `compare` length y
 import Data.Monoid
 lengthCompare :: String -> String -> Ordering
 lengthCompare x y = (length x compare length y) mappend
-                    (x compare y)
+                    (x compare y) 
 ```
+
+이 함수를 실행해보면 아래와 같이 동작합니다. 
+
+```haskell
+ghci> lengthCompare "zen" "ants"
+LT
+ghci> lengthCompare "zen" "ant"
+GT
+```
+
+`mappend`를 사용하면 `EQ`가 아닐때 왼쪽 매개변수가 항상 결과가 되지만, 여기서는 왼쪽인 `EQ`이면  오른쪽 매개변수가 결과를 만들었습니다. 따라서 더 중요한 기준이 되는 길이 비교를 첫번째 매개변수로 하였습니다. 여기에 만약 모음자의 개수로 비교하는 함수를 추가하고, 이게 알바벳순 비교보다 중요하다면, 함수를 아래와 같이 수정하면 됩니다. 
+
+```haskell
+import Data.Monoid
+
+lengthCompare :: String -> String -> Ordering
+lengthCompare x y = (length x `compare` length y) `mappend`
+                    (vowels x `compare` vowels y) `mappend`
+                    (x `compare` y)
+    where vowels = length . filter (`elem` "aeiou")
+```
+
+여기서는 문자열을 받아서 얼마나 많은 모음자가 있는지 알려주는 헬퍼 함수 `vowels`를 만들었습니다. 이 함수는 `"aeiou"`를 포함한 문자만 필터링하고, `length`로 개수를 구하도록 구현되어 있습니다. 이제 실행해보면 아래와 같이 동작합니다. 
+
+```haskell
+ghci> lengthCompare "zen" "anna"
+LT
+ghci> lengthCompare "zen" "ana"
+LT
+ghci> lengthCompare "zen" "ana"
+GT
+```
+
+첫번째는 길이 비교, 두번째는 모음자 개수 비교, 세번째는 길이와 모음자 개수가 모두 같아서 알파벳순으로 비교되었습니다. 
+
+Ordering 모노이드는 여러가지 다른 기준들을 쉽게 비교할 수 있도록 해줍니다. 중요한 기준부터 순서대로 넣어서 비교할 수 있기 때문에 매우 유용합니다. 
+
+### `Maybe` 모노이드
+
+이번에는 `Maybe a`를 `Monoid`의 인스턴스로 만드는 다양한 방법을 알아보고, 왜 유용한지 살펴보겠습니다. 
+
+첫번째 방법은 타입 파라메터인 `a`가 모노이드인 경우에만, `Maybe a`를 모노이드로 취급하는 것입니다. 그리고나서 `mappend` 함수에는 `Just`로 랩핑된 값을 사용해서 구현합니다. `Nothing`을 항등값으로 사용하고, `mappend` 함수의 매개변수중 하나라도 Nothing이면 나머지 값을 그대로 유지합니다. 아래 구현 예를 보겠습니다. 
+
+
+
+
+
+
 
 
 
