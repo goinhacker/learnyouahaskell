@@ -180,23 +180,84 @@ ghci> getSum . mconcat . map Sum $ [1,2,3]
 
 ### `Any`와 `All`
 
+모노이드의 동작을 할 수 있는 또다른 예를 보겠습니다. 첫번째로 `||` \(or 함수\)를 보겠습니다. or 함수는 바이너리 함수이고, 항등값으로 `False`가 있습니다. 함수의 두 입력중 하나라도  `True`가 있으면  `True`를 반환하므로, 기존 값이 `False`이든 `True`이든 `Flase`와 or 하면 기존 값을 그대로 반환하게 됩니다. `Any` _newtype_ 생성자는 이런 기능의 `Monoid` 인스턴스 입니다.
 
+```haskell
+newtype Any = Any { getAny :: Bool }  
+    deriving (Eq, Ord, Read, Show, Bounded)
+```
 
+`Monoid`의 인스턴스로 정의하면 아래와 같습니다. 
 
+```haskell
+instance Monoid Any where  
+        mempty = Any False  
+        Any x `mappend` Any y = Any (x || y)
+```
 
+`Any`를 세개 이상 `mappend`해도 하나라도 `True`가 있으면 `True`가 됩니다. 
 
+```haskell
+ghci> getAny $ Any True `mappend` Any False  
+True  
+ghci> getAny $ mempty `mappend` Any True  
+True  
+ghci> getAny . mconcat . map Any $ [False, False, False, True]  
+True  
+ghci> getAny $ mempty `mappend` mempty  
+False
+```
 
+이번에는 반대로 `&&` \(and 함수\)를 `Monoid`의 인스턴스로 만들어 보겠습니다. &&도 바이너리 함수이고, True가 항등원이 됩니다. 그리고 모든 매개변수가 True일때만 True를 반환합니다. 아래와 같이 정의됩니다. 
 
+```haskell
+newtype All = All { getAll :: Bool }  
+        deriving (Eq, Ord, Read, Show, Bounded)
+```
 
+```haskell
+instance Monoid All where  
+        mempty = All True  
+        All x `mappend` All y = All (x && y)
+```
 
+`All` 타입의 `mappend`는 모든 값이 `True`일때만, `True`를 반환합니다.
 
+```haskell
+ghci> getAll $ mempty `mappend` All True  
+True  
+ghci> getAll $ mempty `mappend` All False  
+False  
+ghci> getAll . mconcat . map All $ [True, True, True]  
+True  
+ghci> getAll . mconcat . map All $ [True, True, False]  
+False
+```
 
+`Any`와 `All`에 대해서 `mconcat`이 유용해 보이지만, 일반적으로는 `Bool`의 리스트를 받아서 `or`와 `and` 함수를 사용하는 것이 더 간단합니다. 
 
+### `Ordering` 모노이드
 
+Ordering은 어떤 값들을 비교해서 LT, EQ, GT, 세가지 값이 될 수 있는 타입입니다. 
 
+```haskell
+ghci> 1 `compare` 2  
+LT  
+ghci> 2 `compare` 2  
+EQ  
+ghci> 3 `compare` 2  
+GT 
+```
 
+리스트, 숫자, Boolean에서는 이미 일반적으로 사용되는 함수로 모노이드가 어떤 동작를 하는지 살펴본 것에 불과했습니다. `Ordering`은 좀더 어렵지만 유용한 `Monoid` 인스턴스를 만들어 볼 것입니다.
 
-
+```haskell
+instance Monoid Ordering where  
+    mempty = EQ  
+    LT `mappend` _ = LT  
+    EQ `mappend` y = y  
+    GT `mappend` _ = GT
+```
 
 
 
