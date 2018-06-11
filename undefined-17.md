@@ -266,8 +266,69 @@ instance Monoid Ordering where
 여기서 주의해야할 점은 ``x `mappend` y``와 ``y `mappend` x``가 같지 않다는 것입니다. EQ가 아닐때는 왼쪽 매개변수만 유지하기 때문에, ``LT `mappend` GT``는 `LT`이고 ``GT `mappend` LT``는 `GT`가 됩니다. 
 
 ```haskell
-
+ghci> LT `mappend` GT
+LT
+ghci> GT `mappend` LT
+GT
+ghci> mempty `mappend` LT
+LT
+ghci> mempty `mappend` GT
+GT
 ```
+
+그럼 이제 모노이드가 어떻게 유용한지 살펴보기 위해서 두 문자열을 받아서 길이를 비교해서 Ordering을 반환하는 함수를 작성해보겠습니다. 단, 만약에 문자열의 길이가 같으면, EQ를 반환하는 대신에 사전 순서로 비교합니다.  이 함수는 아래와 같이 작성될 수 있습니다.
+
+```haskell
+lengthCompare :: String -> String -> Ordering
+lengthCompare x y = let a = length x `compare` length y
+                        b = x `compare` y
+                    in  if a == EQ then b else a
+```
+
+여기서 `a`는 길이를 비교하고, `b`는 알파벳 순으로 비교합니다. 따라서 `if a == EQ then b else a`에서 `a`의 결과가 `EQ`이면 `b`를 수행해서 최종 결과를 반환합니다. 
+
+모노이드 `Ordering`을 사용하면 아래와 같이 재작성될 수 있습니다. 
+
+```haskell
+import Data.Monoid
+lengthCompare :: String -> String -> Ordering
+lengthCompare x y = (length x compare length y) mappend
+                    (x compare y)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
