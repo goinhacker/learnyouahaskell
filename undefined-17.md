@@ -384,9 +384,23 @@ ghci> getFirst $ First (Just 'a') `mappend` First Nothing
 Just 'a'
 ```
 
+여러개의 `Maybe` 중에 누가 첫번째 `Just`인지 알고싶을때, `First`와 `mconcat` 함수를 사용하여 간단하게 구현할 수 있습니다. 
 
+```haskell
+ghci> getFirst . mconcat . map First $ [Nothing, Just 9, Just 10]
+Just 9
+```
 
+만약에 `mappend`에 두개의 `Just`가 입력됐을때, 두번째 `Just` 매개변수를 유지한려면, `Data.Monoid`에서 제공하는 `Last a` 타입을 사용할 수 있습니다. `Last a`를 사용하면 `First a`와 유사하게 여러개의 `Just`중 마지막 `Just`값을 구할 수 있습니다.
 
+```haskell
+ghci> getLast . mconcat . map Last $ [Nothing, Just 9, Just 10]
+Just 10
+ghci> getLast $ Last (Just "one") `mappend` Last (Just "two")
+Just "two"
+```
+
+### fold 자료구조에서 모노이드를 사용하기
 
 
 
