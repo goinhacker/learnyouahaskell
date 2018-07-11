@@ -307,7 +307,7 @@ ghci> lengthCompare "zen" "ant"
 GT
 ```
 
-`mappend`를 사용하면 `EQ`가 아닐때 왼쪽 매개변수가 항상 결과가 되지만, 여기서는 왼쪽인 `EQ`이면  오른쪽 매개변수가 결과를 만들었습니다. 따라서 더 중요한 기준이 되는 길이 비교를 첫번째 매개변수로 하였습니다. 여기에 만약 모음자의 개수로 비교하는 함수를 추가하고, 이게 알바벳순 비교보다 중요하다면, 함수를 아래와 같이 수정하면 됩니다. 
+`mappend`를 사용하면 `EQ`가 아닐때 왼쪽 매개변수가 항상 결과가 되지만, 여기서는 왼쪽인 `EQ`이면  오른쪽 매개변수가 결과를 만들었습니다. 따라서 더 중요한 기준이 되는 길이 비교를 첫번째 매개변수로 하였습니다. 여기에 만약 모음자의 개수로 비교하는 함수를 추가하고, 이게 알파벳순 비교보다 중요하다면, 함수를 아래와 같이 수정하면 됩니다. 
 
 ```haskell
 import Data.Monoid
@@ -322,11 +322,11 @@ lengthCompare x y = (length x `compare` length y) `mappend`
 여기서는 문자열을 받아서 얼마나 많은 모음자가 있는지 알려주는 헬퍼 함수 `vowels`를 만들었습니다. 이 함수는 `"aeiou"`를 포함한 문자만 필터링하고, `length`로 개수를 구하도록 구현되어 있습니다. 이제 실행해보면 아래와 같이 동작합니다. 
 
 ```haskell
-ghci> lengthCompare "zen" "anna"
-LT
-ghci> lengthCompare "zen" "ana"
-LT
-ghci> lengthCompare "zen" "ana"
+ghci> lengthCompare "zen" "anna"  
+LT  
+ghci> lengthCompare "zen" "ana"  
+LT  
+ghci> lengthCompare "zen" "ann"  
 GT
 ```
 
