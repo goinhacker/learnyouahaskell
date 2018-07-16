@@ -41,7 +41,7 @@ ghci> doubleUs 28 88 + doubleMe 123
 위와같이 인자를 두개로 받는 함수를 정의해서 동작시켜 보았습니다. 다른 함수와의 조합도 간단히 수행해 봤습니다. \(하스켈의 함수가 수학의 함수와 상당히 유사하게 생기지 않았나요?\) 위에서 선언한 `doubleUs` 함수는 `doubleMe` 함수를 재사용하여 아래와 같이 선언하여 사용할 수도 있습니다.
 
 ```haskell
-ghci> doubleUs x y = doubleMe x + doubleMe y
+doubleUs x y = doubleMe x + doubleMe y
 ```
 
 이 예제는 매우 간단하지만 하스켈을 사용할 때 자주 쓰이는 패턴입니다. 기본적인 함수들을 만들고 함수들의 조합으로 복잡한 함수를 만들 수 있습니다. 이런 방식으로 불필요한 중복도 피할 수 있습니다. 만약 어떤 수학자가 `doubleMe`가 곱하기 2가 아니라 3인 것을 증명했다면, 간단히 `doubleMe`를 x + x + x로 수정하여 `doubleUs`까지 함께 해결할 수 있습니다.
@@ -49,17 +49,17 @@ ghci> doubleUs x y = doubleMe x + doubleMe y
 하스켈에서 함수들은 특정한 순서가 없습니다. 따라서 `doubleMe`를 먼저 정의하고 `doubleUs`를 하거나 또는 다른 방식으로 해도 관계가 없습니다.
 
 ```haskell
-doubleUs x y = doubleMe x + doubleMe y
+doubleSmallNumber x = if x > 100  
+                        then x  
+                        else x*2
 ```
 
-위와 같이 `x`가 100보다 작거나 같을때만 2를 곱하는 함수를 만들었습니다. 여기서 하스켈의 `if`문을 살펴볼 수 있습니다. 위의 예제를 보면 **다른 명령형 언어와 다른 점은** `else`**구문이 반드시 존재**해야 한다는 점입니다. 명령형 언어에서는 `else`를 생략할 수 있었지만 하스켈에서는 모든 expression과 함수는 반드시 리턴을 해야합니다.
+위와 같이 `x`가 100보다 작을때만 2를 곱하는 함수를 만들었습니다. 여기서 하스켈의 `if`문을 살펴볼 수 있습니다. 위의 예제를 보면 **다른 명령형 언어와 다른 점은** `else`**구문이 반드시 존재**해야 한다는 점입니다. 명령형 언어에서는 `else`를 생략할 수 있었지만 하스켈에서는 모든 expression과 함수는 반드시 리턴을 해야합니다.
 
 **하스켈의** `if`**문은 expression**입니다. expression은 기본적으로 어떤 값을 리턴하는 코드 조각을 의미합니다. 예를들어 `5`는 `5`라는 값을 리턴하기 때문에 expression입니다. `4 + 8, x + y`도 역시 값을 리턴하기 때문에 expression이라고 할 수 있습니다. 하스켈의 `if`문은 `else`가 생략될 수 없으므로, 항상 어떤 값을 리턴하기 때문에 expression 입니다. 만약에 `doubleSmallNumber`의 모든 결과값에 1을 더하고 싶다면 아래와 같이 수정할 수 있습니다.
 
 ```haskell
-doubleSmallNumber x = if x > 100
-                        then x
-                        else x*2
+doubleSmallNumber' x = (if x > 100 then x else x*2) + 1
 ```
 
 여기서 괄호를 생략하면 `x`가 100보다 클때만 1을 더하게 될 것 입니다. 여기서 함수명 뒤에 `‘`\(apostrophe\)가 있는 것을 볼 수 있습니다. 하스켈에서는 함수명에 `‘`를 사용할 수 있습니다. 함수명에 `‘`를 쓰는 경우는 게으르지 않은 함수\(isn’t lazy\)나 함수 또는 변수가 약간 수정된 버전등을 표시할 때 사용됩니다. 함수명에서 `‘`가 허용되는 문자이기 때문에 아래와 같은 함수를 만들 수도 있습니다.
