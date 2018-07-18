@@ -6,7 +6,7 @@
 
 ## Functor
 
-우리는 이미 [타입클래스 챕터](https://jaeyongcho.gitbooks.io/learnyouahaskell/content/d0c0-c785-d074-b798-c2a4.html)에서 펑터에 대해서 공부했습니다. 기억이 안난다면 간단히 복습해볼 것을 권장합니다.
+우리는 이미 [타입클래스 챕터](https://goinhacker.gitbook.io/learnyouahaskell/~/edit/drafts/-LHhydJ4NJcrq7OdTR6v/undefined-12)에서 펑터에 대해서 공부했습니다. 기억이 안난다면 간단히 복습해볼 것을 권장합니다.
 
 간단히 리마인드 해보면, 펑터는 `List`, `Maybe`, `Tree`와 같이 맵핑할 수 있는 타입의 타입클래스입니다. `Functor` 타입클래스는 `fmap`이라는 함수 한개를 가집니다. `fmap` 함수의 타입은 `fmap :: (a -> b) -> f a -> f b` 입니다. 타입의 의미는 `a`를 받아서 `b`를 반환하는 함수와 `a` 한개 또는 여러개를 담은 박스를 받아서 `b`를 한개 또는 여러개 담은 박스를 반환합니다. 박스안에 아이템은 입력받은 함수가 적용됩니다.
 
