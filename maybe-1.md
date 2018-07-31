@@ -190,7 +190,44 @@ Nothing
 m >> n = m >>= \_ -> n 
 ```
 
-일반적으로 매개변수를 무시하고 항상 어떤 정해진 값을 반환하는 함수에 값을 전달하면, 정해진 값을 반환합니다.
+일반적으로 매개변수를 무시하고 항상 어떤 정해진 값을 반환하는 함수에 값을 전달하면, 정해진 값을 반환합니다. 하지만 모나드의 경우는 컨텍스트와 의미도 고려해야 합니다. `Maybe`의 `>>`를 사용해보면 아래와 같습니다.
+
+```haskell
+ghci> Nothing >> Just 3  
+Nothing  
+ghci> Just 3 >> Just 4  
+Just 4  
+ghci> Just 3 >> Nothing  
+Nothing
+```
+
+예제에서 `>>`를 `>>= \_ ->`로 바꾸어서 생각해보면 왜 이렇게 동작하는지 이해하기 쉽습니다. 이제 `banana` 함수를 `>>`와 `Nothing`으로 바꾸면 아래와 같이 동작합니다.
+
+```haskell
+ghci> return (0,0) >>= landLeft 1 >> Nothing >>= landRight 1  
+Nothing 
+```
+
+만약에 이와같은 동작을 `Maybe` 모나드를 사용하지않고 구현한다면 어떻게 될까요? 실패한 컨텍스트를 처리하기 위한 코드는 아래와 같이 될 것 입니다. 
+
+```haskell
+routine :: Maybe Pole  
+routine = case landLeft 1 (0,0) of  
+    Nothing -> Nothing  
+    Just pole1 -> case landRight 4 pole1 of   
+        Nothing -> Nothing  
+        Just pole2 -> case landLeft 2 pole2 of  
+            Nothing -> Nothing  
+            Just pole3 -> landLeft 1 pole3
+```
+
+매 단계마다 실패 여부를 판단하고 다음 단계로 넘기는 작업을 반복해야 합니다. 이러한 지저분한 작업을 &gt;&gt;=를 사용해서 깔끔한 체인으로 변환하면 `Maybe` 모나드가 실패할 가능성이있는 계산을 연속적으로 수행할때 많은 시간을 절약할 수 있습니다. 
+
+`Maybe`에서 `>>=`는 어떤 값이 `Nothing`이면, 바로 `Nothing`을 반환하고, 아니면 연산을 진행한 후, `Just`에 담는 로직입니다.
+
+이번 절에서는 실패할 가능성이 있는 값에 적합한 함수들을 살펴보았습니다. 이러한 값을 `Maybe` 값으로 바꾸고 `>>=`를 사용하면 컨텍스트를 유지하면도 간결하게 실패를 처리할 수 있었습니다. 
+
+
 
 
 
