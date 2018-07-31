@@ -115,6 +115,83 @@ landRight n (left,right)
     | otherwise                    = Nothing  
 ```
 
+두 함수 모두 반환값을 `Maybe Pole`로 변경하였습니다. 함수의 입력 매개변수는 동일하지만, 가드를 사용해서 왼쪽과 오른쪽의 새의 차이를 구해서 4보다 크면 `Nothing`을 반환하고 작으면 `Just`에 새로운 `Pole`를 넣어서 반환합니다.
+
+```haskell
+ghci> landLeft 2 (0,0)  
+Just (2,0)  
+ghci> landLeft 10 (0,3)  
+Nothing
+```
+
+이제 새가 앉으므로 인해 균형을 잃으면 `Nothing`을 잃지않으면 `Pole`을 `Just`로 래핑해서 반환합니다. 근데 문제가 생겼습니다. 더이상 연속된 작업을 처리할 수 없습니다. 예를들어, `landLeft 1(landRight 1 (0, 0))`는 `landRight 1`에 `(0, 0)`을 적용했을때 `Pole`이 아니라 `Maybe Pole`을 반환하기 때문에 컴파일 에러가 발생합니다.
+
+이 문제를 해결하려면 `Maybe Pole`를 `Pole`을 받아서 `Maybe Pole`를 반환하는 함수의 입력으로 넣어야 합니다. 다행이도 `>>=` 함수가 이런 기능을 합니다.
+
+```haskell
+ghci> landRight 1 (0,0) >>= landLeft 2  
+Just (2,1) 
+```
+
+여기서 `landLeft 2`의 타입은 `Pole -> Maybe Pole`입니다. 따라서 일반적으로는 `landRight 1 (0, 0)`의 반환 타입인 `Maybe Pole`을 입력으로 줄 수 없습니다. 그래서 `>>=`를 사용해서 컨텍스트값 `Maybe Pole`을 받아서 `landLeft 2`의 입력으로 넘긴 것 입니다. 만약 `landLeft 2`에 `Nothing`을 넘기면, 그대로 `Nothing`을 반환합니다. 이와같이 `>>=`는 컨텍스트값인 `Maybe`를 그냥 값처럼 다룰 수 있게 해줍니다. 
+
+```haskell
+ghci> Nothing >>= landLeft 2  
+Nothing
+```
+
+이제 `>>=`가 모나딕 값\(monadic value\)을 받아서 일반 값을 받는 함수에 입력으로 넣을 수 있게 해주기 때문에 실패를 다루면서도 체이닝이 가능합니다.
+
+```haskell
+ghci> return (0,0) >>= landRight 2 >>= landLeft 2 >>= landRight 2  
+Just (2,4)
+```
+
+처음에 막대를 받아서 `Just`로 래핑하기 위해서 `return`을 사용했습니다. `landRight 2`에 `(0, 0)`을 적용하면 결과는 변함이 없지만 `>>=`를 사용해서 일관성있게 처리할 수 있습니다. `Just (0, 0)`은 다시 `landRight 2`의 입력으로 주어지고, 결과는 `Just (0, 2)`가 됩니다. 다음은 `landLeft 2`의 입력으로 주어져서 `Just (2, 2)`가 반환되고 최종적으로 `Just (2, 4)`가 반환되었습니다. 
+
+이번에는 이전에 실패하는 경우를 설명할때 사용한 예제를 보겠습니다. 
+
+```haskell
+ghci> (0,0) -: landLeft 1 -: landRight 4 -: landLeft (-1) -: landRight (-2)  
+(0,2) 
+```
+
+이 예제에서는 중간에 피에르가 균형을 잃고 쓰러지는 것이 반영되지 못했습니다. 하지만 `>>=`를 사용해서 재작성하면 실패가 반영되는 것을 확인할 수 있습니다. 
+
+```haskell
+ghci> return (0,0) >>= landLeft 1 >>= landRight 4 >>= landLeft (-1) >>= landRight (-2)  
+Nothing 
+```
+
+예상했던대로 실패가 반환되었습니다. 실행 과정을 보면, `return`에 의해서 `(0, 0)`은 `Just (0, 0)`이 되었고, `Just (0, 0) >>= landLeft 1`가 호출됩니다. `Just (0, 0)`에서 `(0, 0)`이 `landLeft 1`에 전달되고, `Just (1, 0)`을 반환합니다. `Just (1, 0) >>= landRight 4`가 호출되고, 결과는 `Just (1, 4)`입니다. 여전히 균형을 잡는데는 문제가 없습니다. `Just (1, 4)`는 `landLeft (-1)`의 입력으로 주어져서, `landLeft (-1) (1, 4)`가 실행됩니다. 이 연산의 결과는 균형을 잃어서 `Nothing`이 됩니다. 이제 마지막으로 `landRight (-2)`에 `Nothing`이 입력되어 최종 결과로 `Nothing`을 반환합니다. 
+
+애플리케이티브의 Maybe로는 이러한 결과를 얻을 수 없습니다. 애플리케이티브 펑터는 애플리케이티브 값끼리 서로 상호 작용할 수 없기 때문입니다. 애플리케이티브 스타일을 사용해서 함수의 매개변수로 활용하는 정도만 가능합니다. 애플리케이티브 연산자는 연산 결과를 애플리케이티브에 적합한 방식으로 함수의 입력으로 전달하고, 최종 애플리케이티브 값을 넣지만, 결과 값 사이의 상호작용이 있진 않습니다. 하지만 모나드는 각 단계가 이전 결과값에 의존합니다. 새가 앉을때마다 이전 결과를 기반으로 막대가 균형을 잡을 수 있을지 성공/실패 여부가 판단됩니다.
+
+여기에 현재 막대 위에 새의 수에 관계없이 피에르가 미끄러져서 실패할 수 있는 변수인 `banana`를 추가할 수도 있습니다.
+
+```haskell
+banana :: Pole -> Maybe Pole  
+banana _ = Nothing
+```
+
+피에르가 `banana`를 만나면 항상 떨어지게 될 것 입니다. `banana`는 아래와 같이 `landLeft`, `landRight`와 체이닝이 가능합니다.
+
+```haskell
+ghci> return (0,0) >>= landLeft 1 >>= banana >>= landRight 1  
+Nothing
+```
+
+여기서는 `Just (1, 0)`이 `banana`의 입력되면서 `Nothing`이 되어버립니다.
+
+입력을 무시하고 미리 지정된 모나딕 값을 반환하는 함수를 만드는 대신 `>>` 함수를 사용할 수 있습니다. 이 함수는 `Monad` 타입클래스에 아래와 같이 기본 구현체가 있습니다.
+
+```haskell
+(>>) :: (Monad m) => m a -> m b -> m b  
+m >> n = m >>= \_ -> n 
+```
+
+일반적으로 매개변수를 무시하고 항상 어떤 정해진 값을 반환하는 함수에 값을 전달하면, 정해진 값을 반환합니다.
+
 
 
 
