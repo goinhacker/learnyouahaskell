@@ -114,8 +114,6 @@ ghci> h 3
 
 이게 Associativity 법칙과 어떤 관계가 있을까요? 합성의 관점에서 법칙을 보면 `f <=< (g <=< h)`와 `(f <=< g) <=< h`는 같습니다. 이것은 모나드의 경우, 동작의 중첩은 중요하지 않다는 것을 증명하는 또다른 방법입니다.
 
-If we translate the first two laws to use &lt;=&lt;, then the left identity law states that for every monadic function f, f &lt;=&lt; return is the same as writing just f and the right identity law says that return &lt;=&lt; f is also no different from f.
-
 `<=<`을 사용해서 처음 두법칙을 설명하면, 모든 모나드 함수 `f`에 대해서 `f <=< return`은 `f`와 같고, `return <=< f`도 `f`와 같으므로 모두 만족한다고 할 수 있다. 
 
 `f`가 그냥 일반 함수라고 해도 매우 유사하다. `(f . g) . h`는 `f . (g . h)`와 같고, `f . id`는 `f`와 같으며, `id . f`도 `f`와 같다. 
