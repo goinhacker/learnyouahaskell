@@ -1,4 +1,4 @@
-# Writer 모나드
+# Writer 모나드 for 로깅
 
 #### 시작하기 전에..
 
@@ -143,15 +143,15 @@ ghci> ("dogmeat", Sum 5) `applyLog` addDrink `applyLog` addDrink
 
 #### Writer 타입
 
-지금까지 모나딕값처럼 작용하는 모노이드를 붙인 값을 보았습니다. 이번에는 `Monad` 인스턴스에 대해서도 적용해보겠습니다. `Control.Monad.Writer` 모듈에는 `Monad` 인스턴스와 함께 `Writer w a`를 노출하고 있습니다. 그리고 이 타입을 다루기위한 유용한 함수들을 제공합니다. 
+지금까지 모나딕값처럼 작용하는 모노이드를 붙인 값을 보았습니다. 이번에는 `Monad` 인스턴스에 대해서도 적용해보겠습니다. `Control.Monad.Writer` 모듈에는 `Monad` 인스턴스와 함께 `Writer w a`가 있습니다. 그리고 이 타입을 다루기위한 유용한 함수들을 제공합니다. 
 
-모나드를 값에 붙이기 위해서 튜플안에 그것들을 추가하면됩니다. `Write w a` 타입은 단지 이것을 _newtype_으로 래핑한 것 입니다. 이것은 아래와 같이 선언되어 있습니다. 
+모나드를 값에 붙이기 위해서 튜플안에 그것들을 추가하면 됩니다. `Write w a` 타입은 단지 이것을 _newtype_으로 래핑한 것 입니다. 이것은 아래와 같이 선언되어 있습니다. 
 
 ```haskell
 newtype Writer w a = Writer { runWriter :: (a, w) }
 ```
 
-newtype으로 래핑되어 Monad 인스턴스가 될 수 있고, 그 타입이 일반 튜플과 분리되어 있습니다. a와 w 타입 매개변수는 각각 값과 붙여질 모노이드 값의 타입을 나타냅니다. 모나이드 인스턴스는 아래와 같이 정의됩니다. 
+_newtype_으로 래핑되어 `Monad` 인스턴스가 될 수 있고, 그 타입이 일반 튜플과 분리되어 있습니다. `a`와 `w` 타입 매개변수는 각각 값과 붙여질 모노이드 값의 타입을 나타냅니다. 모나이드 인스턴스는 아래와 같이 정의됩니다. 
 
 ```haskell
 instance (Monoid w) => Monad (Writer w) where  
@@ -159,7 +159,178 @@ instance (Monoid w) => Monad (Writer w) where
     (Writer (x,v)) >>= f = let (Writer (y, v')) = f x in Writer (y, v `mappend` v')
 ```
 
-먼저 &gt;&gt;= 함수는 기본적으로 applyLog 함수와 동일합니다. 
+먼저 `>>=` 함수는 기본적으로 튜플이 `Writer` _newtype_으로 래핑되어 있다는 점을 제외하고는  `applyLog` 함수와 유사합니다. 따라서 구현부에서 패턴매칭을 통해서 언래핑하였습니다. `x`값을 얻어서 `f` 함수에 적용했습니다. 그리고 그 결과값은 `Writer w a`를 반환합니다. 여기서 `let`은 `f x`의 결과값을 다시 패턴매칭하기 위해서 사용했습니다. `y`는 새로운 결과값입니다. `mappend`를 사용해서 기존의 모노이드값과 새로운 모노이드를 결합합니다. 그리고 이렇게 만들어진 튜플을 다시 `Writer` 생성자로 포장했습니다.
+
+`return` 함수는 값을 입력받아서 최소한의 컨텍스트안에 넣어서 반환합니다. `Writer`에서 최소한의 컨텍스트는 가능한 다른 모노이드에 영향을 미치지 않는 것입니다. 따라서 항등원을 의미하는 `mempty`가 가장 적합할 것 입니다. `mempty`는 `""`, `Sum 0`, 비어있는 bytestrings 같은 것들이 됩니다. `mempty`와 다른 모노이드를 `mappend`하면 결과를 항상 다른 모노이드가 그대로 반환됩니다. 따라서 `return`으로 `Writer`를 만들고 `>>=`를 사용해서 함수의 입력으로 넣으면, 함수의 반환값이되는 모노이드를 그대로 반환할 것입니다. 예제와 같이 숫자 `3`에 `return`을 여러번 사용해보면, 모두 다른 모노이드와의 쌍이 반환됩니다. 
+
+```haskell
+ghci> runWriter (return 3 :: Writer String Int)  
+(3,"")  
+ghci> runWriter (return 3 :: Writer (Sum Int) Int)  
+(3,Sum {getSum = 0})  
+ghci> runWriter (return 3 :: Writer (Product Int) Int)  
+(3,Product {getProduct = 1})
+```
+
+`Writer`는 `Show`의 인스턴스가 아니기 때문에 `runWriter`를 사용해서 `Writer` 값을 튜플로 변환했습니다. `String`일때는 빈 문자열을 반환하고, `Sum`일때는 더하기의 항등원인 `0`을 래핑한 결과를 반환했습니다. `Product`는 곱하기의 항등원인 `1`을 반환한 것을 확인할 수 있습니다. 
+
+`Writer` 인스턴스는 `fail`이 구현되어 있지 않습니다. 따라서 `do` 구문에서 패턴매칭에 실패하면 `error`가 호출됩니다. 
+
+#### do 구문에서 Writer 사용하기
+
+이제 우리는 모나드 인스턴스가 생겼습니다. `Writer` 값을 `do` 구문에서 사용할 수 있습니다. 이것은 여러개의 `Writer` 값들을 가지고 작업을 할때 유용합니다. 다른 모나드들과 같이 컨텍스트를 신경쓰지않고 일반 값들처럼 사용할 수 있습니다. 이 경우, 붙여진 모든 모노이드 값들이 최종 결과값에 `mappend`로 반영되어 집니다. 아래는 두 숫자를 곱하기 위한 `Writer`를 `do` 구문에서 사용한 예제입니다.
+
+```haskell
+import Control.Monad.Writer  
+  
+logNumber :: Int -> Writer [String] Int  
+logNumber x = Writer (x, ["Got number: " ++ show x])  
+  
+multWithLog :: Writer [String] Int  
+multWithLog = do  
+    a <- logNumber 3  
+    b <- logNumber 5  
+    return (a*b)
+```
+
+`logNumber` 함수는 숫자를 받아서 `Writer`를 반환합니다. 모노이드는 문자열의 리스트이고, 각 문자열은 가지고있는 숫자에 대해서 설명합니다. `multWithLog`는 `3`과 `5`를 곱한 `Writer` 값입니다. 그리고 `3`과 `5`에 대한 로그가 최종로그에 붙여집니다. 마지막으로 최소한의 컨텍스트안에 넣어주는 `return`을 사용해서 `a*b`를 반환했습니다. 이 과정에서 우리는 어떤 로그도 직접 추가하지 않았습니다. 동작시켜 보겠습니다. 
+
+```haskell
+ghci> runWriter multWithLog  
+(15,["Got number: 3","Got number: 5"])
+```
+
+모노이드 값을 특정 시점에만 포함시키고 싶을때도 있을 것입니다. 이때는 `tell` 함수를 사용합니다. 이 함수는 `MonadWriter` 타입클래스에 있고, `["This is going on"]`와 같은 모노이드값을 받아서 더미값 `()`에 원하는 모노이드 값만 붙여진 `Writer` 값을 생성합니다. 결과로 `()`를 가진 모나드 값을 가지고 있을때는 변수에 할당하지 않습니다. 하지만 새로 작성된 `multWithLog`는 `tell`을 사용해서 이러한 부가정보를 포함할 수 있습니다. 
+
+```haskell
+multWithLog :: Writer [String] Int  
+multWithLog = do  
+    a <- logNumber 3  
+    b <- logNumber 5  
+    tell ["Gonna multiply these two"]  
+    return (a*b)
+```
+
+여기서 `(a*b)`가 마지막 라인에 있다는 것이 중요합니다. 왜냐하면 `do` 표현에서 마지막 라인의 결과는 전체 `do` 구문의 결과를 의미하기 때문입니다. `tell` 함수를 마지막에 넣으면, 최종 결과는 `()`가 될 것입니다. 다시 동작시켜보면 아래와 같습니다. 
+
+```haskell
+ghci> runWriter multWithLog  
+(15,["Got number: 3","Got number: 5","Gonna multiply these two"])
+```
+
+#### 프로그램에 로깅하기
+
+유클리드는 두개의 숫자를 받아서 최대공약수를 구하는 알고리즘입니다. 하스켈은 이미 최대공약수를 구하는 `gcd` 함수를 가지고 있습니다. 하지만 여기서 직접 구현하면서 로깅을 포함시켜 볼 것입니다. 아래는 일반적인 알고리즘입니다.
+
+```haskell
+gcd' :: Int -> Int -> Int  
+gcd' a b   
+    | b == 0    = a  
+    | otherwise = gcd' b (a `mod` b) 
+```
+
+알고리즘은 매우 심플합니다. 먼저 두번째 값이 0인지 체크하고 만약 0이면 첫번째 입력 값을 반환합니다. 만약 두번째 값이 0이 아니면, 두번째 값과 첫번째 값에서 두번째 값을 나눈 나머지 값의 최대공약수를 구해서 반환합니다. 예를들어 8과 3의 최대공약수를 구한다면, 3이 0이 아니기 때문에 3과 8에서 3를 나눈 나머지인 2의 최대공약수를 구합니다. 다음에 3과 2의 최대공약수를 구하는데, 이번에도 2는 0이 아니므로, 2와 1의 최대공약수를 구합니다. 여전히 두번째 값이 0이 아니므로 1과 0의 최대공약수를 구하고, 비로소 두번째 값이 0이므로 최종 결과는 1이 됩니다. 동작시켜보면 아래와 같습니다. 
+
+```haskell
+ghci> gcd' 8 3  
+1
+```
+
+이제 결과를 반환하는 컨텍스트에 로그로 모노이드 값을 넣을 것입니다. 로깅을 위한 모노이드로는 문자열의 리스트를 사용할 것입니다. 따라서 `gcd` 함수의 타입은 아래와 같습니다. 
+
+```haskell
+gcd' :: Int -> Int -> Writer [String] Int 
+```
+
+이제 함수에 로그를 추가해보겠습니다.
+
+```haskell
+import Control.Monad.Writer  
+  
+gcd' :: Int -> Int -> Writer [String] Int  
+gcd' a b  
+    | b == 0 = do  
+        tell ["Finished with " ++ show a]  
+        return a  
+    | otherwise = do  
+        tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]  
+        gcd' b (a `mod` b)
+```
+
+`gcd'` 함수는 두개의 `Int` 값을 받아서 `Writer [String] Int`를 반환합니다. 여기서 각 `Int`는 로그 컨텍스트를 포함하게 됩니다. `b`가 `0`이며, 결과를 그대로 주는 대신 로그를 `Writer`에 포함해서 반환하기 위해서 `do`구문을 사용합니다. 먼저 `tell` 함수를 사용해서 계산이 끝났다는 것을 로깅하고, `return`을 사용해서 `do` 구문의 결과 `a`를 반환합니다. `do` 구문 대신에 아래와 같이 작성할 수도 있습니다. \(개인적으로는 `do` 구문을 사용하는 것이 낫다고 생각한다.\)
+
+```haskell
+Writer (a, ["Finished with " ++ show a])
+```
+
+ 다음으로 `b`가 `0`이 아닌 경우,  `mod` 연산자를 사용해서 나머지를 구할때 사용한 `a`와 `b`를 로깅하였습니다. 그리고나서 `do` 구문의 두번째 라인에 재귀적으로 `gcd'`를 호출합니다. 여기서 `gcd'`는 결과적으로 `Writer` 값을 반환한다는 점을 기억해야 합니다. 따라서 ``gcd' b (a `mod` b)``는 올바른 결과를 반환하게 됩니다. 
+
+새로운 `gcd'` 함수는 로그를 통해서 내부적으로 어떻게 동작하는지 흐름을 추적하기에 용이합니다. 이제 새로운 `gcd'`를 사용해보겠습니다. `Wrtier [String] Int`를 언래핑하면 튜플를 얻을 수 있고, 튜플의 첫번째 값이 계산 결과값입니다.
+
+```haskell
+ghci> fst $ runWriter (gcd' 8 3)  
+1 
+```
+
+잘 동작한 것을 확인했으나 튜플의 첫번째 값만 가져왔으므로 로그는 출력되지 않았습니다. 로그는 문자열의 리스트이기 때문에, `mapM_ putStrLn`을 사용해서 화면에 출력하도록 하겠습니다. 
+
+```haskell
+ghci> mapM_ putStrLn $ snd $ runWriter (gcd' 8 3)  
+8 mod 3 = 2  
+3 mod 2 = 1  
+2 mod 1 = 0  
+Finished with 1
+```
+
+우리가 만든 알고리즘이 어떻게 동작하는지 알 수 있는 아주 좋은 방법입니다. 이러한 과정을 직접 로그를 계속 추가하지않고, 값이 바뀌는 것만으로 모나딕 값들을 만들어갑니다. 로그에 대해서는 `>>=`를 구현해 주는 것만으로 `Writer`가 알아서 처리해줍니다. 이러한 로깅 매카니즘은 일반 값을 `Writer`로 바꾸는 것만으로도 어떤 함수에든 추가할 수 있습니다. 그리고 `do` 구문을 사용해서 가독성을 높일 수 있습니다. 
+
+#### 비효율적인 리스트 생성 문제
+
+`Writer`를 사용할때, 리스트가 매우 느리게 동작할 수 있기 때문에 주의깊게 사용해야 합니다. 이게 느려지는 이유는 `mappend`를 위해서 리스트가 `++` 함수를 사용하고, `++` 함수를 사용하는 것은 리스트의 맨뒤에 추가하는 것이기 때문입니다. 리스트가 매우 길어지면, 이 작업은 매우 느려질 수 있습니다. 
+
+gcd' 함수에서는 아래와 같이 리스트에 추가하기 때문에 로깅이 빠릅니다. 
+
+```haskell
+a ++ (b ++ (c ++ (d ++ (e ++ f)))) 
+```
+
+여기서는 리스트가 왼쪽에서 오른쪽으로 쌓이는 데이터 구조입니다. 그리고 이때는 리스트의 왼쪽 부분을 완전히 만든다음에 오른쪽의 긴 리스트를 추가하기 때문에 효율적으로 동작합니다. 하지만 주의해서 사용하지 않으면 Writer 모나드가 아래와 같은 붙이는 리스트를 사용하게 될 수 있습니다. 
+
+```haskell
+((((a ++ b) ++ c) ++ d) ++ e) ++ f 
+```
+
+이때는 오른쪽에서 왼쪽으로 데이터를 쌓고 있습니다. 이때는 리스트의 왼쪽 부분에 오른쪽 부분을 추가할 때마다 처음부터 왼쪽 부분을 구성해야 하기 때문에 비효율적입니다.
+
+아래 gcd' 함수는 로깅이 반대 순서로 동작하도록 작성된 것입니다. 먼저 나중에 수행될 연산에 대한 로그를 생성한 다음에 현재 단계의 로그를 마지막에 추가합니다.   
+
+```haskell
+import Control.Monad.Writer  
+  
+gcdReverse :: Int -> Int -> Writer [String] Int  
+gcdReverse a b  
+    | b == 0 = do  
+        tell ["Finished with " ++ show a]  
+        return a  
+    | otherwise = do  
+        result <- gcdReverse b (a `mod` b)  
+        tell [show a ++ " mod " ++ show b ++ " = " ++ show (a `mod` b)]  
+        return result 
+```
+
+이 예제는 재귀를 먼저 수행하고 결과에 결과값을 할당합니다. 그리고 현재 단계의 로그가 추가됩니다. 하지만 현재 단계는 재귀에 의해 생성된 로그의 마지막 부분에 있습니다. 결과적으로 최종 결과는 재귀의 결과가 됩니다. 실행해보면 아래와 같습니다. 
+
+```haskell
+ghci> mapM_ putStrLn $ snd $ runWriter (gcdReverse 8 3)  
+Finished with 1  
+2 mod 1 = 0  
+3 mod 2 = 1  
+8 mod 3 = 2
+```
+
+이 경우는 ++ 함수가 오른쪽 방향이 아닌 왼쪽 방향으로 사용되기 때문에 비효율적으로 동작합니다.
+
+####  효율적으로 동작하는 리스트 만들기
 
 
 

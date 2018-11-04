@@ -34,5 +34,5 @@
 * [리스트 모나드](undefined-19.md)
 * [리스트 모나드 활용 예제](undefined-20.md)
 * [모나드 법칙](undefined-21.md)
-* [Writer 모나드](writer.md)
+* [Writer 모나드 for 로깅](writer.md)
 
