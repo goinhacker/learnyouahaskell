@@ -409,15 +409,49 @@ Finished with 2
 
 `gcdReverse 110 34`를 호출하고, `runWriter`를 사용해서 언래핑하고, `snd`를 사용해서 로그를 꺼내고, `fromDiffList`로 일반 리스트로 바꾸고, 마지막으로 화면에 출력했습니다. 
 
+#### 성능 비교하기
 
+이번에는 일반 리스트와 디퍼런스 리스트의 성능을 비교해보겠습니다. 아래 함수는 `finalCountDown` 함수는 `gcdReverse` 함수처럼 거꾸로 로그를 만들면서 카운트를 0까지 감소시키는 함수입니다. 따라서 실제로 출력될때는 로그가 발생할때마다 숫자는 증가할 것입니다.
 
+```haskell
+finalCountDown :: Int -> Writer (DiffList String) ()  
+finalCountDown 0 = do  
+    tell (toDiffList ["0"])  
+finalCountDown x = do  
+    finalCountDown (x-1)  
+    tell (toDiffList [show x])
+```
 
+입력 값이 `0`이면 첫번째 카운트 다운으로 그냥  `0`을 로깅하고 숫자를 로그에 추가합니다. 따라서 `finalCountDown` 함수에 `100`을 적용하면 `100`이 마지막에 로깅됩니다. 이제 이 함수에 `500000`을 넣고 테스트해보면 `0`부터 빠르게 `500000`까지 출력되는 것을 확인할 수 있습니다. 
 
+```haskell
+ghci> mapM_ putStrLn . fromDiffList . snd . runWriter $ finalCountDown 500000  
+0  
+1  
+2  
+... 
+```
 
+하지만 디퍼런스 리스트를 일반 리스트로 바꾸고,
 
+```haskell
+finalCountDown :: Int -> Writer [String] ()  
+finalCountDown 0 = do  
+    tell ["0"]  
+finalCountDown x = do  
+    finalCountDown (x-1)  
+    tell [show x]
+```
 
+동일하게 테스트해보면
 
+```haskell
+ghci> mapM_ putStrLn . snd . runWriter $ finalCountDown 500000
+```
 
+로그가 매우 느리게 출력되는 것을 확인할 수 있습니다. 
+
+프로그램의 성능을 측정하는 아주 과학적인 방법은 아니지만, 디퍼런스 리스트와 일반 리스트가 최종적으로 모든 로그를 만들기까지 체감으로 차이를 느낄 수 있습니다.
 
 
 
