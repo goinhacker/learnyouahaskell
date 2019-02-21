@@ -35,7 +35,7 @@
 * [리스트 모나드 활용 예제](undefined-20.md)
 * [모나드 법칙](undefined-21.md)
 * [Writer 모나드 for 로깅](writer.md)
-* [제목 미정](undefined-25.md)
+* [Reader 모나드\(함수 모나드\)](undefined-25.md)
 * [상태 모나드](undefined-23.md)
 * [예외](undefined-22.md)
 * [유용한 모나딕 함수](undefined-24.md)
